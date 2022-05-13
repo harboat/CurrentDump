@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   application:
@@ -21,10 +21,10 @@ spring:
 
 rabbitmq:
   exchanges:
-    internal: internal-placement.exchange
-    response: internal-placement-response.exchange
+    placement: internal-placement.exchange
+    game: internal-game.exchange
   queues:
     placement: placement.queue
   routing-keys:
-    internal-placement: internal.placement.routing-key
-    placement-response: internal.placement-response.routing-key
+    placement: internal.placement.routing-key
+    game-placement: internal.game-placement.routing-key

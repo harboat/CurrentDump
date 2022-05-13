@@ -12,14 +12,14 @@ public class PlacementSender {
 
     private final RabbitMQMessageProducer producer;
 
-    @Value("${rabbitmq.exchanges.response}")
+    @Value("${rabbitmq.exchanges.game}")
     private String internalExchange;
 
-    @Value("${rabbitmq.routing-keys.placement-response}")
-    private String placementResponseRoutingKey;
+    @Value("${rabbitmq.routing-keys.game-placement}")
+    private String gamePlacementRoutingKey;
 
     void sendResponse(PlacementResponse placementResponse) {
-        producer.publish(placementResponse, internalExchange, placementResponseRoutingKey);
+        producer.publish(placementResponse, internalExchange, gamePlacementRoutingKey);
     }
 
 }

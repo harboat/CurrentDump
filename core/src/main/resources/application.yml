@@ -28,13 +28,13 @@ spring:
 
 rabbitmq:
   exchanges:
+    notification: internal-notification.exchange
     placement: internal-placement.exchange
-    placement-response: internal-placement-response.exchange
   queues:
-    placement-response: placement-response.queue
+    notification: notification.queue
   routing-keys:
-    internal-placement: internal.placement.routing-key
-    placement-response: internal.placement-response.routing-key
+    notification: internal.notification.routing-key
+    placement: internal.placement.routing-key
 
 broker:
   application-destination-prefix: ${rabbit_clients_stomp_application_destination}

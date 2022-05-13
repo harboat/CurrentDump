@@ -13,14 +13,14 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class BattleshipConfiguration {
 
-    @Value("${rabbitmq.exchanges.placement-response}")
+    @Value("${rabbitmq.exchanges.game}")
     private String internalExchange;
 
-    @Value("${rabbitmq.queues.placement-response}")
-    private String placementResponseQueue;
+    @Value("${rabbitmq.queues.game-placement}")
+    private String gamePlacementQueue;
 
-    @Value("${rabbitmq.routing-keys.placement-response}")
-    private String internalPlacementResponseRoutingKey;
+    @Value("${rabbitmq.routing-keys.game-placement}")
+    private String internalGamePlacementResponseRoutingKey;
 
     @Bean
     public TopicExchange internalTopicExchange() {
@@ -29,7 +29,7 @@ public class BattleshipConfiguration {
 
     @Bean
     public Queue placementQueue() {
-        return new Queue(placementResponseQueue);
+        return new Queue(gamePlacementQueue);
     }
 
     @Bean
@@ -37,6 +37,6 @@ public class BattleshipConfiguration {
         return BindingBuilder
                 .bind(placementQueue())
                 .to(internalTopicExchange())
-                .with(internalPlacementResponseRoutingKey);
+                .with(internalGamePlacementResponseRoutingKey);
     }
 }

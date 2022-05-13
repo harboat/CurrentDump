@@ -13,13 +13,13 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class PlacementConfiguration {
 
-    @Value("${rabbitmq.exchanges.internal}")
+    @Value("${rabbitmq.exchanges.placement}")
     private String internalExchange;
 
     @Value("${rabbitmq.queues.placement}")
     private String placementQueue;
 
-    @Value("${rabbitmq.routing-keys.internal-placement}")
+    @Value("${rabbitmq.routing-keys.placement}")
     private String internalPlacementRoutingKey;
 
     @Bean

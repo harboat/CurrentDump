@@ -13,14 +13,14 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class CoreConfiguration {
 
-    @Value("${rabbitmq.exchanges.placement-response}")
+    @Value("${rabbitmq.exchanges.notification}")
     private String internalExchange;
 
-    @Value("${rabbitmq.queues.placement-response}")
-    private String placementResponseQueue;
+    @Value("${rabbitmq.queues.notification}")
+    private String notificationQueue;
 
-    @Value("${rabbitmq.routing-keys.placement-response}")
-    private String internalPlacementResponseRoutingKey;
+    @Value("${rabbitmq.routing-keys.notification}")
+    private String internalNotificationRoutingKey;
 
     @Bean
     public TopicExchange internalTopicExchange() {
@@ -28,15 +28,15 @@ public class CoreConfiguration {
     }
 
     @Bean
-    public Queue placementQueue() {
-        return new Queue(placementResponseQueue);
+    public Queue notificationQueue() {
+        return new Queue(notificationQueue);
     }
 
     @Bean
-    public Binding internalToPlacementBinding() {
+    public Binding internalToNotificationBinding() {
         return BindingBuilder
-                .bind(placementQueue())
+                .bind(notificationQueue())
                 .to(internalTopicExchange())
-                .with(internalPlacementResponseRoutingKey);
+                .with(internalNotificationRoutingKey);
     }
 }

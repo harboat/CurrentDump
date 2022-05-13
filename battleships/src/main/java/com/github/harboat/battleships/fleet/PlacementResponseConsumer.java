@@ -12,7 +12,7 @@ public class PlacementResponseConsumer {
     private FleetService service;
 
     @RabbitListener(
-            queues = {"${rabbitmq.queues.placement-response}"}
+            queues = {"${rabbitmq.queues.game-placement}"}
     )
     void consume(PlacementResponse response) {
         service.create(response);

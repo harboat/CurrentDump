@@ -15,7 +15,6 @@ public class BoardService {
     private final BoardRepository repository;
 
     public Size createBoard(String userId, String gameId, Size size) {
-        // TODO: validation if exits (?)
         Board board = Board.builder()
                 .gameId(gameId)
                 .playerId(userId)

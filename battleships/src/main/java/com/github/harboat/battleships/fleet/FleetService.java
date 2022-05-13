@@ -1,11 +1,9 @@
 package com.github.harboat.battleships.fleet;
 
-import com.github.harboat.battleships.websocket.Event;
-import com.github.harboat.battleships.websocket.EventType;
-import com.github.harboat.battleships.websocket.WebsocketService;
-import com.github.harboat.clients.board.Size;
+import com.github.harboat.battleships.NotificationProducer;
+import com.github.harboat.clients.notification.EventType;
+import com.github.harboat.clients.notification.NotificationRequest;
 import com.github.harboat.clients.placement.Masts;
-import com.github.harboat.clients.placement.PlacementRequest;
 import com.github.harboat.clients.placement.PlacementResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,23 +16,16 @@ import java.util.stream.Collectors;
 public class FleetService {
 
     private FleetRepository repository;
-    private PlacementRequestSender sender;
-    private WebsocketService websocketService;
-
-    public void create(String gameId, String playerId, Size size) {
-        sender.sendRequest(
-                new PlacementRequest(gameId, playerId, size)
-        );
-    }
+    private NotificationProducer producer;
 
     public void create(PlacementResponse response) {
         List<Ship> ships = getShips(response);
         Fleet fleet = buildFleet(response, ships);
-        Event<FleetDto> fleetDto = new Event<>(
-            EventType.FLEET_CREATED, fleet.toDto()
-        );
         repository.save(fleet);
-        websocketService.notifyFrontEnd(response.playerId(), fleetDto);
+        NotificationRequest<FleetDto> notificationRequest = new NotificationRequest<>(
+                response.playerId(), EventType.FLEET_CREATED, fleet.toDto()
+        );
+        producer.sendNotification(notificationRequest);
     }
 
     private Fleet buildFleet(PlacementResponse response, List<Ship> ships) {

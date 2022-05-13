@@ -1,12 +1,14 @@
 package com.github.harboat.battleships.fleet;
 
 import com.github.harboat.battleships.NotificationProducer;
+import com.github.harboat.battleships.board.BoardService;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.clients.notification.NotificationRequest;
 import com.github.harboat.clients.placement.Masts;
 import com.github.harboat.clients.placement.PlacementResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,11 +19,14 @@ public class FleetService {
 
     private FleetRepository repository;
     private NotificationProducer producer;
+    private BoardService boardService;
 
+    @Transactional
     public void create(PlacementResponse response) {
         List<Ship> ships = getShips(response);
         Fleet fleet = buildFleet(response, ships);
         repository.save(fleet);
+        boardService.markOccupied(response.gameId(), response.playerId(), fleet.getAllCells());
         NotificationRequest<FleetDto> notificationRequest = new NotificationRequest<>(
                 response.playerId(), EventType.FLEET_CREATED, fleet.toDto()
         );

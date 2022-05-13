@@ -7,6 +7,8 @@ import com.github.harboat.core.games.GameService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class PlacementService {
@@ -14,10 +16,11 @@ public class PlacementService {
     private GameService gameService;
     private PlacementQueueProducer producer;
 
-    public void palaceShips(String gameId, String playerId, Size size) {
-//        if (gameService.isPlayerInGame(gameId, playerId)) throw new BadRequest("Game not found for the user!");
+    public void palaceShips(String gameId, String playerId) {
+        Optional<Size> size = gameService.getGameSize(gameId, playerId);
+        if (size.isEmpty()) throw new BadRequest("Game not found for the user!");
         producer.sendRequest(
-                new PlacementRequest(gameId, playerId, size)
+                new PlacementRequest(gameId, playerId, size.get())
         );
     }
 }

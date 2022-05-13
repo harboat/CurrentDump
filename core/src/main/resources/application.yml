@@ -28,13 +28,18 @@ spring:
 
 rabbitmq:
   exchanges:
+    core: internal-core.exchange
     notification: internal-notification.exchange
     placement: internal-placement.exchange
+    game: internal-game.exchange
   queues:
     notification: notification.queue
+    game-creation-response: game-creation-response.queue
   routing-keys:
+    core-game-creation-response: internal.core-game-creation-response.routing-key
     notification: internal.notification.routing-key
     placement: internal.placement.routing-key
+    game-creation: internal.game-creation.routing-key
 
 broker:
   application-destination-prefix: ${rabbit_clients_stomp_application_destination}

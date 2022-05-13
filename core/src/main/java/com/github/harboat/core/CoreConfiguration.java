@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class CoreConfiguration {
 
     @Value("${rabbitmq.exchanges.notification}")
-    private String internalExchange;
+    private String internalNotificationExchange;
 
     @Value("${rabbitmq.queues.notification}")
     private String notificationQueue;
@@ -22,9 +22,18 @@ public class CoreConfiguration {
     @Value("${rabbitmq.routing-keys.notification}")
     private String internalNotificationRoutingKey;
 
+    @Value("${rabbitmq.exchanges.core}")
+    private String internalCoreExchange;
+
+    @Value("${rabbitmq.queues.game-creation-response}")
+    private String gameCreationResponseQueue;
+
+    @Value("${rabbitmq.routing-keys.core-game-creation-response}")
+    private String internalCoreGameCreationResponseRoutingKey;
+
     @Bean
-    public TopicExchange internalTopicExchange() {
-        return new TopicExchange(internalExchange);
+    public TopicExchange internalNotificationExchange() {
+        return new TopicExchange(internalNotificationExchange);
     }
 
     @Bean
@@ -33,10 +42,29 @@ public class CoreConfiguration {
     }
 
     @Bean
-    public Binding internalToNotificationBinding() {
+    public Binding internalNotificationToNotificationBinding() {
         return BindingBuilder
                 .bind(notificationQueue())
-                .to(internalTopicExchange())
+                .to(internalNotificationExchange())
                 .with(internalNotificationRoutingKey);
     }
+
+    @Bean
+    public TopicExchange internalCoreExchange() {
+        return new TopicExchange(internalCoreExchange);
+    }
+
+    @Bean
+    public Queue gameCreationResponseQueue() {
+        return new Queue(gameCreationResponseQueue);
+    }
+
+    @Bean
+    public Binding internalCoreToGameCreationResponseBinding() {
+        return BindingBuilder
+                .bind(gameCreationResponseQueue())
+                .to(internalCoreExchange())
+                .with(internalCoreGameCreationResponseRoutingKey);
+    }
+
 }

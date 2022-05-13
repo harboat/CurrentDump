@@ -1,29 +1,32 @@
-package com.github.harboat.core.placement;
+package com.github.harboat.core.board;
 
+import com.github.harboat.clients.board.Size;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
-@RequestMapping("/api/v1/placements")
+@RequestMapping("/api/v1/boards")
 @AllArgsConstructor
 @Validated
-public class PlacementController {
+public class BoardController {
 
-    private PlacementService service;
+    private BoardService service;
 
-    @PostMapping("{gameId}")
-    public ResponseEntity<?> randomPlacement(
-            @AuthenticationPrincipal UserDetails details,
-            @PathVariable String gameId
+    @PostMapping
+    ResponseEntity<?> create(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody Size size
     ) {
-        service.palaceShips(gameId, details.getUsername());
+        service.create(userDetails.getUsername(), size);
         return ResponseEntity.ok().build();
     }
 

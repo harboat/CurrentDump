@@ -1,0 +1,30 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: placement
+  data:
+    mongodb:
+      uri: ${mongo_uri}
+  rabbitmq:
+    addresses: ${rabbit_uri}
+    username: ${rabbit_username}
+    password: ${rabbit_password}
+  multirabbitmq:
+    enabled: true
+    connections:
+      logger:
+        addresses: ${rabbit_logger_uri}
+        username: ${rabbit_logger_username}
+        password: ${rabbit_logger_password}
+
+rabbitmq:
+  exchanges:
+    internal: internal-placement.exchange
+    response: internal-placement-response.exchange
+  queues:
+    placement: placement.queue
+  routing-keys:
+    internal-placement: internal.placement.routing-key
+    placement-response: internal.placement-response.routing-key

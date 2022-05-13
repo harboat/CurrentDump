@@ -1,0 +1,213 @@
+:root {
+    --nord0: #2e3440;
+    --nord1: #3b4252;
+    --nord2: #434c5e;
+    --nord3: #4c566a;
+    --nord4: #d8dee9;
+    --nord5: #e5e9f0;
+    --nord6: #eceff4;
+    --nord11: #bf616a;
+    --nord12: #F2B7BD;
+
+}
+
+body {
+    transition: 0.8s;
+    background-color: var(--nord0);
+}
+
+/*Buttons*/
+.menuButton {
+    transition: 0.2s;
+    position: absolute;
+    width: 40vw;
+    height: 5vw;
+    background: var(--nord0);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord4);
+    font-size: 1.5vw;
+}
+
+.menuButton:hover {
+    background: var(--nord1);
+    border-color: var(--nord0);
+}
+
+.gameCreate {
+    top: 10vw;
+}
+
+.gameJoin {
+    top: 16vw;
+}
+
+/*Text-Based*/
+.gameId {
+    transition: 0.5s;
+    color: var(--nord4);
+    margin: auto;
+    font-size: 0.8vw;
+    position: absolute;
+    text-align: left
+}
+
+.text {
+    color: var(--nord4);
+}
+
+.turn {
+    transition: 0.5s;
+    top: 1.3vw;
+    position: absolute;
+    color: var(--nord4);
+    margin: auto;
+    font-size: 2vw;
+}
+
+.game-id {
+    position: absolute;
+    color: var(--nord4);
+    margin: auto;
+    font-size: 0.7vw;
+}
+
+/*Containers*/
+.boardContainer {
+    transition: 0.5s;
+    position: absolute;
+    left: 30vw;
+    margin: 4.2vw auto;
+    background-color: var(--nord0);
+    height: 40vw;
+    width: 40vw;
+    border: solid var(--nord0);
+    border-radius: 10px;
+}
+
+.container {
+    position: absolute;
+    margin: 4.2vw auto;
+    background-color: var(--nord1);
+    display: flex;
+    height: 40vw;
+    width: 40vw;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    border: solid var(--nord1);
+    border-radius: 10px;
+}
+
+.player {
+    left: -50vw;
+    opacity: 0;
+}
+
+.enemy {
+    left: -50vw;
+    opacity: 0;
+}
+
+/*Cells*/
+.cell {
+    height: 3.6vw;
+    width: 3.6vw;
+    transition: 0.2s;
+    border: solid 0.2vw var(--nord0);
+    border-radius: 0.5vw;
+    margin: auto;
+    background-color: var(--nord2);
+}
+
+.cell:hover {
+    background-color: var(--nord2);
+}
+
+@font-face {
+    font-family: "VT323-Regular";
+    src: url('VT323-Regular.ttf')
+}
+
+.cellCoordinate {
+    position: center;
+    height: 3.6vw;
+    width: 3.6vw;
+    transition: 0.6s;
+    color: var(--nord2);
+    text-align: center;
+    font-family: 'VT323-Regular';
+    font-size: 3vw;
+}
+
+.cellCoordinate:hover {
+    color: var(--nord0);
+}
+
+.cellCoordinate:active {
+    opacity: 0;
+}
+
+.ship {
+    border-color: var(--nord2);
+    background-color: var(--nord0);
+}
+
+.ship:hover {
+    background-color: var(--nord1);
+}
+
+.shipHit {
+    background-color: var(--nord11);
+    border-color: var(--nord0);
+    cursor: default;
+    pointer-events: none;
+}
+
+.cellHit {
+    background-color: var(--nord1);
+    cursor: default;
+    pointer-events: none;
+}
+
+.cellSunk {
+    background-color: var(--nord12);
+    cursor: default;
+    pointer-events: none;
+}
+
+.deactivate {
+    pointer-events: none;
+}
+
+/*Animations*/
+.fadeout {
+    animation-name: fadeout-animation;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+}
+
+.fadein {
+    animation-name: fadein-animation;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadein-animation {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeout-animation {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}

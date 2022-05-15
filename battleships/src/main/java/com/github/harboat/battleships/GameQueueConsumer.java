@@ -5,6 +5,7 @@ import com.github.harboat.battleships.fleet.FleetService;
 import com.github.harboat.battleships.game.GameService;
 import com.github.harboat.clients.core.board.BoardCreation;
 import com.github.harboat.clients.core.game.GameCreation;
+import com.github.harboat.clients.core.game.PlayerJoin;
 import com.github.harboat.clients.core.placement.GamePlacement;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -35,6 +36,11 @@ public class GameQueueConsumer {
     @RabbitHandler
     public void consume(GamePlacement gamePlacement) {
         fleetService.create(gamePlacement);
+    }
+
+    @RabbitHandler
+    public void consume(PlayerJoin playerJoin) {
+        gameService.playerJoin(playerJoin);
     }
 
 }

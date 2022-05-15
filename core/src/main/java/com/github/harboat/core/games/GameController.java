@@ -26,7 +26,7 @@ public class GameController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("{gameId}")
+    @PostMapping("{gameId}/join")
     public ResponseEntity<?> join(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String gameId

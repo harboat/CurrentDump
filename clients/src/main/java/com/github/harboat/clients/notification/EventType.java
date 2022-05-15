@@ -6,7 +6,9 @@ public enum EventType {
     GAME_CREATED,
     BOARD_CREATED,
     FLEET_CREATED,
+    GAME_JOINED,
     ENEMY_JOIN,
+    GAME_STARTED,
     ENEMY_SHOT,
     ENEMY_WIN,
     ENEMY_MISS

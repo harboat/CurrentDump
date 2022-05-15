@@ -44,4 +44,8 @@ public class BoardService {
         repository.save(board);
     }
 
+    public void createBoardForSecondPlayer(String gameId, String playerId) {
+        Board board = repository.findByGameId(gameId).orElseThrow();
+        createBoard(new BoardCreation(gameId, playerId, board.getSize()));
+    }
 }

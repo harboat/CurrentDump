@@ -2,6 +2,7 @@ package com.github.harboat.core;
 
 import com.github.harboat.clients.core.board.BoardCreationResponse;
 import com.github.harboat.clients.core.game.GameCreationResponse;
+import com.github.harboat.clients.core.game.PlayerJoinedResponse;
 import com.github.harboat.core.board.BoardService;
 import com.github.harboat.core.games.GameService;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,11 @@ public class CoreQueueConsumer {
     @RabbitHandler
     public void consume(BoardCreationResponse creationResponse) {
         boardService.create(creationResponse);
+    }
+
+    @RabbitHandler
+    public void consume(PlayerJoinedResponse playerJoinedResponse) {
+        gameService.playerJoined(playerJoinedResponse);
     }
 
 }

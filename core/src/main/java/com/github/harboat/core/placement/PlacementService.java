@@ -4,7 +4,10 @@ import com.github.harboat.clients.core.board.Size;
 import com.github.harboat.clients.core.placement.PlacementRequest;
 import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.core.games.GameService;
+import com.github.harboat.core.games.GameUtility;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,11 +16,11 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PlacementService {
 
-    private GameService gameService;
     private PlacementQueueProducer producer;
+    private GameUtility gameUtility;
 
     public void palaceShips(String gameId, String playerId) {
-        Optional<Size> size = gameService.getGameSizeForUser(gameId, playerId);
+        Optional<Size> size = gameUtility.getGameSizeForUser(gameId, playerId);
         if (size.isEmpty()) throw new BadRequest("Game not found for the user!");
         producer.sendRequest(
                 new PlacementRequest(gameId, playerId, size.get())

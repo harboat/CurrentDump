@@ -18,12 +18,11 @@ public class Game {
 
     private Collection<String> playerIds;
 
-    @DocumentReference(lazy = true)
-    // TODO: double check ids or do lookup
-    private Collection<Board> boardIds;
-
-    @DocumentReference(lazy = true)
-    private Collection<Fleet> fleetIds;
+//    @DocumentReference(lookup = "{'gameId':?#{#self._id} }")
+//    private Collection<Board> boards;
+//
+//    @DocumentReference(lookup = "{'gameId':?#{#self._id} }")
+//    private Collection<Fleet> fleets;
 
     private String turnOfPlayer;
 }

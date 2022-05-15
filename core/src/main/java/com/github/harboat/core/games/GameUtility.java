@@ -17,4 +17,10 @@ public class GameUtility {
         if (game.isEmpty() || game.get().getSize() == null) return Optional.empty();
         return Optional.of(game.get().getSize());
     }
+
+    public Optional<Game> findByGameId(String gameId) {
+        return repository.findByGameId(gameId);
+    }
+
+
 }

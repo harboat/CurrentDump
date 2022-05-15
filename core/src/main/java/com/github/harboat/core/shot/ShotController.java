@@ -13,7 +13,7 @@ import javax.validation.Valid;
 @AllArgsConstructor
 public class ShotController {
 
-    private final ShootService service;
+    private final ShotService service;
 
     @PostMapping
     public ResponseEntity<?> shot(

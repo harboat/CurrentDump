@@ -54,8 +54,6 @@ public class GameService {
                 .toList();
     }
 
-
-
     public void setBoardSizeForGame(String gameId, Size size) {
         Game game = repository.findByGameId(gameId).orElseThrow();
         game.setSize(size);

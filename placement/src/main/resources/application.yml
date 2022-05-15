@@ -23,8 +23,10 @@ rabbitmq:
   exchanges:
     placement: internal-placement.exchange
     game: internal-game.exchange
+    logger: internal-logger.exchange
   queues:
     placement: placement.queue
   routing-keys:
     placement: internal.placement.routing-key
     game: internal.game.routing-key
+    logger: internal.placement-logger.routing-key

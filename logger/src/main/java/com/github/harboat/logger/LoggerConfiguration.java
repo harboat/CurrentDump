@@ -16,8 +16,17 @@ public class LoggerConfiguration {
     @Value("${rabbitmq.exchanges.internal}")
     private String internalExchange;
 
-    @Value("${rabbitmq.queues.main-logger}")
-    private String mainQueue;
+    @Value("${rabbitmq.queues.core-logger}")
+    private String coreQueue;
+
+    @Value("${rabbitmq.routing-keys.internal-core-logger}")
+    private String internalCoreLoggerRoutingKey;
+
+    @Value("${rabbitmq.queues.game-logger}")
+    private String gameQueue;
+
+    @Value("${rabbitmq.routing-keys.internal-game-logger}")
+    private String internalGameLoggerRoutingKey;
 
     @Value("${rabbitmq.queues.placement-logger}")
     private String placementQueue;
@@ -25,25 +34,36 @@ public class LoggerConfiguration {
     @Value("${rabbitmq.routing-keys.internal-placement-logger}")
     private String internalPlacementLoggerRoutingKey;
 
-    @Value("${rabbitmq.routing-keys.internal-main-logger}")
-    private String internalMainLoggerRoutingKey;
-
     @Bean
     public TopicExchange internalTopicExchange() {
         return new TopicExchange(internalExchange);
     }
 
     @Bean
-    public Queue mainQueue() {
-        return new Queue(mainQueue);
+    public Queue coreQueue() {
+        return new Queue(coreQueue);
     }
 
     @Bean
-    public Binding internalToMainBinding() {
+    public Binding internalToCoreBinding() {
         return BindingBuilder
-                .bind(mainQueue())
+                .bind(coreQueue())
                 .to(internalTopicExchange())
-                .with(internalMainLoggerRoutingKey);
+                .with(internalCoreLoggerRoutingKey);
+    }
+
+
+    @Bean
+    public Queue gameQueue() {
+        return new Queue(gameQueue);
+    }
+
+    @Bean
+    public Binding internalToGameBinding() {
+        return BindingBuilder
+                .bind(gameQueue())
+                .to(internalTopicExchange())
+                .with(internalGameLoggerRoutingKey);
     }
 
     @Bean

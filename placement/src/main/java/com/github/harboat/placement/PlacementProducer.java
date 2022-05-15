@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PlacementSender {
+public class PlacementProducer {
 
     private final RabbitMQMessageProducer producer;
 

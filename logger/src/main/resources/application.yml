@@ -14,10 +14,12 @@ spring:
 
 rabbitmq:
   exchanges:
-    internal: internal.exchange
+    internal: internal-logger.exchange
   queues:
-    main-logger: main.queue
+    core-logger: core.queue
     placement-logger: placement.queue
+    game-logger: game.queue
   routing-keys:
     internal-placement-logger: internal.placement-logger.routing-key
-    internal-main-logger: internal.main-logger.routing-key
+    internal-core-logger: internal.core-logger.routing-key
+    internal-game-logger: internal.game-logger.routing-key

@@ -10,11 +10,15 @@ import org.springframework.stereotype.Service;
 public class PlacementQueueConsumer {
 
     private final PlacementService service;
+    private final PlacementLogProducer placementLogProducer;
 
     @RabbitListener(
             queues = {"${rabbitmq.queues.placement}"}
     )
     public void consume(PlacementRequest placementRequest) {
+        placementLogProducer.sendLog(
+
+        );
         service.generate(placementRequest);
     }
 

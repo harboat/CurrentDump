@@ -13,7 +13,7 @@ import java.util.Collection;
 public class PlacementService {
 
     private final PlacementRepository repository;
-    private final PlacementSender sender;
+    private final PlacementProducer sender;
 
     void generate(PlacementRequest placementRequest) {
         RandomShipsPlacementGenerator generator = new RandomShipsPlacementGenerator(placementRequest.size());

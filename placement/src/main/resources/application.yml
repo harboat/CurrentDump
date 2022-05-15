@@ -27,4 +27,4 @@ rabbitmq:
     placement: placement.queue
   routing-keys:
     placement: internal.placement.routing-key
-    game-placement: internal.game-placement.routing-key
+    game: internal.game.routing-key

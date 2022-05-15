@@ -1,6 +1,6 @@
 package com.github.harboat.core.games;
 
-import com.github.harboat.clients.board.Size;
+import com.github.harboat.clients.core.board.Size;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,6 +15,7 @@ public class Game {
     @Id private String id;
     private String gameId;
     private Collection<String> players;
+    private String ownerId;
     private Size size;
     private Boolean started;
 }

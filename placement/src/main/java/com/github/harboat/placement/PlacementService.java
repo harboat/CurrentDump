@@ -1,8 +1,8 @@
 package com.github.harboat.placement;
 
-import com.github.harboat.clients.placement.PlacementRequest;
-import com.github.harboat.clients.placement.PlacementResponse;
-import com.github.harboat.clients.placement.ShipDto;
+import com.github.harboat.clients.core.placement.GamePlacement;
+import com.github.harboat.clients.core.placement.PlacementRequest;
+import com.github.harboat.clients.core.placement.ShipDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +23,9 @@ public class PlacementService {
                 .playerId(placementRequest.playerId())
                 .ships(ships)
                 .build();
-        PlacementResponse response = new PlacementResponse(placementRequest.gameId(), placementRequest.playerId(), ships);
         repository.save(placement);
-        sender.sendResponse(response);
+        GamePlacement gamePlacement = new GamePlacement(placementRequest.gameId(), placementRequest.playerId(), ships);
+        sender.sendPlacement(gamePlacement);
     }
 
 }

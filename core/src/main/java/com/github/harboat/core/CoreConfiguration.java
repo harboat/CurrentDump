@@ -25,11 +25,11 @@ public class CoreConfiguration {
     @Value("${rabbitmq.exchanges.core}")
     private String internalCoreExchange;
 
-    @Value("${rabbitmq.queues.game-creation-response}")
-    private String gameCreationResponseQueue;
+    @Value("${rabbitmq.queues.core}")
+    private String coreQueue;
 
-    @Value("${rabbitmq.routing-keys.core-game-creation-response}")
-    private String internalCoreGameCreationResponseRoutingKey;
+    @Value("${rabbitmq.routing-keys.core}")
+    private String internalCoreRoutingKey;
 
     @Bean
     public TopicExchange internalNotificationExchange() {
@@ -55,16 +55,16 @@ public class CoreConfiguration {
     }
 
     @Bean
-    public Queue gameCreationResponseQueue() {
-        return new Queue(gameCreationResponseQueue);
+    public Queue coreQueue() {
+        return new Queue(coreQueue);
     }
 
     @Bean
-    public Binding internalCoreToGameCreationResponseBinding() {
+    public Binding internalCoreToCoreBinding() {
         return BindingBuilder
-                .bind(gameCreationResponseQueue())
+                .bind(coreQueue())
                 .to(internalCoreExchange())
-                .with(internalCoreGameCreationResponseRoutingKey);
+                .with(internalCoreRoutingKey);
     }
 
 }

@@ -19,6 +19,7 @@ public class Game {
     private Collection<String> playerIds;
 
     @DocumentReference(lazy = true)
+    // TODO: double check ids or do lookup
     private Collection<Board> boardIds;
 
     @DocumentReference(lazy = true)

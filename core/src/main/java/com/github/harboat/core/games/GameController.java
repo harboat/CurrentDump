@@ -1,4 +1,4 @@
-package com.github.harboat.core.placement;
+package com.github.harboat.core.games;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,19 +11,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/games/{gameId}/placements")
-@AllArgsConstructor
+@RequestMapping("/api/v1/games")
 @Validated
-public class PlacementController {
+@AllArgsConstructor
+public class GameController {
 
-    private PlacementService service;
+    private final GameService service;
 
     @PostMapping
-    public ResponseEntity<?> randomPlacement(
-            @AuthenticationPrincipal UserDetails details,
+    public ResponseEntity<?> create(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        service.create(userDetails.getUsername());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("{gameId}")
+    public ResponseEntity<?> join(
+            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String gameId
     ) {
-        service.palaceShips(gameId, details.getUsername());
+        service.join(userDetails.getUsername(), gameId);
         return ResponseEntity.ok().build();
     }
 

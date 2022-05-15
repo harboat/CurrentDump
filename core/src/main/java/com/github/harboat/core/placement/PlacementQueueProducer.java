@@ -1,6 +1,6 @@
 package com.github.harboat.core.placement;
 
-import com.github.harboat.clients.placement.PlacementRequest;
+import com.github.harboat.clients.core.placement.PlacementRequest;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

@@ -27,10 +27,8 @@ rabbitmq:
     core: internal-core.exchange
     notification: internal-notification.exchange
   queues:
-    game-creation: game-creation.queue
-    game-placement: game-placement.queue
+    game: game.queue
   routing-keys:
-    game-creation: internal.game-creation.routing-key
-    game-placement: internal.game-placement.routing-key
+    game: internal.game.routing-key
+    core: internal.core.routing-key
     notification: internal.notification.routing-key
-    core-game-creation-response: internal.core-game-creation-response.routing-key

@@ -1,6 +1,6 @@
 package com.github.harboat.placement;
 
-import com.github.harboat.clients.placement.PlacementResponse;
+import com.github.harboat.clients.core.placement.GamePlacement;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +15,11 @@ public class PlacementSender {
     @Value("${rabbitmq.exchanges.game}")
     private String internalExchange;
 
-    @Value("${rabbitmq.routing-keys.game-placement}")
-    private String gamePlacementRoutingKey;
+    @Value("${rabbitmq.routing-keys.game}")
+    private String gameRoutingKey;
 
-    void sendResponse(PlacementResponse placementResponse) {
-        producer.publish(placementResponse, internalExchange, gamePlacementRoutingKey);
+    void sendPlacement(GamePlacement gamePlacement) {
+        producer.publish(gamePlacement, internalExchange, gameRoutingKey);
     }
 
 }

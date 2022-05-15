@@ -1,0 +1,40 @@
+package com.github.harboat.battleships;
+
+import com.github.harboat.battleships.board.BoardService;
+import com.github.harboat.battleships.fleet.FleetService;
+import com.github.harboat.battleships.game.GameService;
+import com.github.harboat.clients.core.board.BoardCreation;
+import com.github.harboat.clients.core.game.GameCreation;
+import com.github.harboat.clients.core.placement.GamePlacement;
+import lombok.AllArgsConstructor;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+
+@Component
+@AllArgsConstructor
+@RabbitListener(
+        queues = {"${rabbitmq.queues.game}"}
+)
+public class GameQueueConsumer {
+
+    private GameService gameService;
+    private BoardService boardService;
+    private FleetService fleetService;
+
+    @RabbitHandler
+    public void consume(GameCreation gameCreation) {
+        gameService.createGame(gameCreation);
+    }
+
+    @RabbitHandler
+    public void consume(BoardCreation boardCreation) {
+        boardService.createBoard(boardCreation);
+    }
+
+    @RabbitHandler
+    public void consume(GamePlacement gamePlacement) {
+        fleetService.create(gamePlacement);
+    }
+
+}

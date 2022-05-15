@@ -1,6 +1,6 @@
 package com.github.harboat.placement;
 
-import com.github.harboat.clients.placement.ShipDto;
+import com.github.harboat.clients.core.placement.ShipDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

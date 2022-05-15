@@ -2,10 +2,10 @@ package com.github.harboat.battleships.fleet;
 
 import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.board.BoardService;
+import com.github.harboat.clients.core.placement.GamePlacement;
+import com.github.harboat.clients.core.placement.Masts;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.clients.notification.NotificationRequest;
-import com.github.harboat.clients.placement.Masts;
-import com.github.harboat.clients.placement.PlacementResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,26 +22,26 @@ public class FleetService {
     private BoardService boardService;
 
     @Transactional
-    public void create(PlacementResponse response) {
-        List<Ship> ships = getShips(response);
-        Fleet fleet = buildFleet(response, ships);
+    public void create(GamePlacement placement) {
+        List<Ship> ships = getShips(placement);
+        Fleet fleet = buildFleet(placement.playerId(), placement, ships);
         repository.save(fleet);
-        boardService.markOccupied(response.gameId(), response.playerId(), fleet.getAllCells());
+        boardService.markOccupied(placement.gameId(), placement.playerId(), fleet.getAllCells());
         NotificationRequest<FleetDto> notificationRequest = new NotificationRequest<>(
-                response.playerId(), EventType.FLEET_CREATED, fleet.toDto()
+                placement.playerId(), EventType.FLEET_CREATED, fleet.toDto()
         );
         producer.sendNotification(notificationRequest);
     }
 
-    private Fleet buildFleet(PlacementResponse response, List<Ship> ships) {
+    private Fleet buildFleet(String playerId, GamePlacement placement, List<Ship> ships) {
         return Fleet.builder()
-                .gameId(response.gameId())
-                .playerId(response.playerId())
+                .gameId(placement.gameId())
+                .playerId(playerId)
                 .ships(ships)
                 .build();
     }
 
-    private List<Ship> getShips(PlacementResponse response) {
+    private List<Ship> getShips(GamePlacement response) {
         return response.ships()
                 .stream()
                 .map(s -> Ship.builder()

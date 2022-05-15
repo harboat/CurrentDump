@@ -1,6 +1,8 @@
 package com.github.harboat.battleships.board;
 
-import com.github.harboat.clients.board.Size;
+import com.github.harboat.battleships.CoreQueueProducer;
+import com.github.harboat.clients.core.board.BoardCreation;
+import com.github.harboat.clients.core.board.BoardCreationResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +15,20 @@ import java.util.stream.IntStream;
 @AllArgsConstructor
 public class BoardService {
 
-    private final BoardRepository repository;
+    private BoardRepository repository;
+    private CoreQueueProducer producer;
 
-    public Board createBoard(String gameId, String playerId, Size size) {
+    public void createBoard(BoardCreation boardCreation) {
         Board board = Board.builder()
-                .gameId(gameId)
-                .playerId(playerId)
-                .size(size)
-                .cells(initCells(size.width(), size.height()))
+                .gameId(boardCreation.gameId())
+                .playerId(boardCreation.playerId())
+                .size(boardCreation.size())
+                .cells(initCells(boardCreation.size().width(), boardCreation.size().height()))
                 .build();
-        return repository.save(board);
+        repository.save(board);
+        producer.sendResponse(
+                new BoardCreationResponse(boardCreation.gameId(), board.getPlayerId(), boardCreation.size())
+        );
     }
 
     private Map<Integer, Cell> initCells(int width, int height) {

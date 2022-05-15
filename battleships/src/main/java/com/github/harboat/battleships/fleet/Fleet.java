@@ -1,6 +1,5 @@
 package com.github.harboat.battleships.fleet;
 
-import com.github.harboat.clients.placement.OccupiedCells;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

@@ -1,7 +1,7 @@
 package com.github.harboat.battleships.fleet;
 
-import com.github.harboat.clients.placement.OccupiedCells;
-import com.github.harboat.clients.placement.ShipType;
+import com.github.harboat.clients.core.placement.OccupiedCells;
+import com.github.harboat.clients.core.placement.ShipType;
 import lombok.*;
 
 @AllArgsConstructor @NoArgsConstructor

@@ -1,8 +1,8 @@
 package com.github.harboat.core.placement;
 
-import com.github.harboat.clients.board.Size;
+import com.github.harboat.clients.core.board.Size;
+import com.github.harboat.clients.core.placement.PlacementRequest;
 import com.github.harboat.clients.exceptions.BadRequest;
-import com.github.harboat.clients.placement.PlacementRequest;
 import com.github.harboat.core.games.GameService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class PlacementService {
     private PlacementQueueProducer producer;
 
     public void palaceShips(String gameId, String playerId) {
-        Optional<Size> size = gameService.getGameSize(gameId, playerId);
+        Optional<Size> size = gameService.getGameSizeForUser(gameId, playerId);
         if (size.isEmpty()) throw new BadRequest("Game not found for the user!");
         producer.sendRequest(
                 new PlacementRequest(gameId, playerId, size.get())

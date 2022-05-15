@@ -1,10 +1,10 @@
 package com.github.harboat.placement;
 
-import com.github.harboat.clients.board.Size;
-import com.github.harboat.clients.placement.Masts;
-import com.github.harboat.clients.placement.OccupiedCells;
-import com.github.harboat.clients.placement.ShipDto;
-import com.github.harboat.clients.placement.ShipType;
+import com.github.harboat.clients.core.board.Size;
+import com.github.harboat.clients.core.placement.Masts;
+import com.github.harboat.clients.core.placement.OccupiedCells;
+import com.github.harboat.clients.core.placement.ShipDto;
+import com.github.harboat.clients.core.placement.ShipType;
 
 import java.util.HashSet;
 import java.util.Set;

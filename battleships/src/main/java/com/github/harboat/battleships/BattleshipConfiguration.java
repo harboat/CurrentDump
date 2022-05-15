@@ -16,17 +16,11 @@ public class BattleshipConfiguration {
     @Value("${rabbitmq.exchanges.game}")
     private String internalGameExchange;
 
-    @Value("${rabbitmq.queues.game-placement}")
-    private String gamePlacementQueue;
+    @Value("${rabbitmq.queues.game}")
+    private String gameQueue;
 
-    @Value("${rabbitmq.routing-keys.game-placement}")
-    private String internalGamePlacementResponseRoutingKey;
-
-    @Value("${rabbitmq.queues.game-creation}")
-    private String gameCreationQueue;
-
-    @Value("${rabbitmq.routing-keys.game-creation}")
-    private String internalGameCreationRoutingKey;
+    @Value("${rabbitmq.routing-keys.game}")
+    private String internalGameRoutingKey;
 
     @Bean
     public TopicExchange internalTopicExchange() {
@@ -34,29 +28,17 @@ public class BattleshipConfiguration {
     }
 
     @Bean
-    public Queue placementQueue() {
-        return new Queue(gamePlacementQueue);
+    public Queue gameQueue() {
+        return new Queue(gameQueue);
     }
 
     @Bean
     public Binding internalToPlacementBinding() {
         return BindingBuilder
-                .bind(placementQueue())
+                .bind(gameQueue())
                 .to(internalTopicExchange())
-                .with(internalGamePlacementResponseRoutingKey);
+                .with(internalGameRoutingKey);
     }
 
-    @Bean
-    public Queue gameCreationQueue() {
-        return new Queue(gameCreationQueue);
-    }
-
-    @Bean
-    public Binding internalToGameCreationBinding() {
-        return BindingBuilder
-                .bind(gameCreationQueue())
-                .to(internalTopicExchange())
-                .with(internalGameCreationRoutingKey);
-    }
 
 }

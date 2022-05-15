@@ -1,11 +1,8 @@
 package com.github.harboat.battleships.game;
 
-import com.github.harboat.battleships.board.Board;
-import com.github.harboat.battleships.fleet.Fleet;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.Collection;
 

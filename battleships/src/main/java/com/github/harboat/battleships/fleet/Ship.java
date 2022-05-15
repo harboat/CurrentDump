@@ -16,6 +16,7 @@ public class Ship {
         return ShipDto.builder()
                 .masts(masts.getMasts().keySet())
                 .cells(cells.getPositions())
+                .shipType(shipType)
                 .build();
     }
 }

@@ -3,11 +3,8 @@ package com.github.harboat.core.placement;
 import com.github.harboat.clients.core.board.Size;
 import com.github.harboat.clients.core.placement.PlacementRequest;
 import com.github.harboat.clients.exceptions.BadRequest;
-import com.github.harboat.core.games.GameService;
 import com.github.harboat.core.games.GameUtility;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

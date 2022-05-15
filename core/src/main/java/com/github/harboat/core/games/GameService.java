@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -78,7 +77,6 @@ public class GameService {
         game.setStarted(true);
         game.setPlayers(players);
         repository.save(game);
-
         placementService.palaceShips(game.getGameId(), playerJoinedResponse.playerId());
         websocketService.notifyFrontEnd(
                 playerJoinedResponse.playerId(),

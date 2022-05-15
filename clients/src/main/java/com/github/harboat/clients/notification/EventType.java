@@ -11,5 +11,6 @@ public enum EventType {
     GAME_STARTED,
     ENEMY_SHOT,
     ENEMY_WIN,
-    ENEMY_MISS
+    ENEMY_MISS,
+    HIT,
 }

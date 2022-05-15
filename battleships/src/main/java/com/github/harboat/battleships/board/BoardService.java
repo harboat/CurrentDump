@@ -48,4 +48,12 @@ public class BoardService {
         Board board = repository.findByGameId(gameId).orElseThrow();
         createBoard(new BoardCreation(gameId, playerId, board.getSize()));
     }
+
+    // TODO: Error handling
+    public void markHit(String gameId, String username, Integer cellId) {
+        var board = repository.findByGameIdAndPlayerId(gameId, username).orElseThrow();
+        var currentState = board.getCells();
+        currentState.put(cellId, Cell.HIT);
+        repository.save(board);
+    }
 }

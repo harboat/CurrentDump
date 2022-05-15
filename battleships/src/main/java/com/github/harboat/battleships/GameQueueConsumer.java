@@ -3,10 +3,12 @@ package com.github.harboat.battleships;
 import com.github.harboat.battleships.board.BoardService;
 import com.github.harboat.battleships.fleet.FleetService;
 import com.github.harboat.battleships.game.GameService;
+import com.github.harboat.battleships.shot.ShotService;
 import com.github.harboat.clients.core.board.BoardCreation;
 import com.github.harboat.clients.core.game.GameCreation;
 import com.github.harboat.clients.core.game.PlayerJoin;
 import com.github.harboat.clients.core.placement.GamePlacement;
+import com.github.harboat.clients.core.shot.ShotRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -22,6 +24,7 @@ public class GameQueueConsumer {
     private GameService gameService;
     private BoardService boardService;
     private FleetService fleetService;
+    private ShotService shotService;
 
     @RabbitHandler
     public void consume(GameCreation gameCreation) {
@@ -41,6 +44,11 @@ public class GameQueueConsumer {
     @RabbitHandler
     public void consume(PlayerJoin playerJoin) {
         gameService.playerJoin(playerJoin);
+    }
+
+    @RabbitHandler
+    public void consumer(ShotRequest shotRequest) {
+        shotService.takeAShoot(shotRequest);
     }
 
 }

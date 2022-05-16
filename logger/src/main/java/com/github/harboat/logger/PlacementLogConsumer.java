@@ -17,7 +17,7 @@ public class PlacementLogConsumer {
     private PlacementLogService service;
 
     @RabbitHandler
-    public void consume(GenericLog genericLog) {
+    public void consume(GenericLog<?> genericLog) {
         service.log(genericLog);
     }
 

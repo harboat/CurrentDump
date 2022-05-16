@@ -16,9 +16,14 @@ public class PlacementLogService {
 
     }
 
-    public void log(GenericLog genericLog) {
+    public void log(GenericLog<?> genericLog) {
+        System.out.println(genericLog);
         placementLogRepository.save(
                 PlacementLog.builder()
+                        .serviceId(genericLog.getService())
+                        .message(genericLog.getMessage())
+                        .data(genericLog.getContent())
+                        .createdAt(genericLog.getCreatedAt())
                         .build()
         );
     }

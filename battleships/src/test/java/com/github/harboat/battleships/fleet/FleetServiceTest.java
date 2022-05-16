@@ -1,11 +1,10 @@
 package com.github.harboat.battleships.fleet;
 
+import com.github.harboat.battleships.CoreQueueProducer;
 import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.board.BoardService;
-import com.github.harboat.clients.core.placement.GamePlacement;
-import com.github.harboat.clients.core.placement.Masts;
-import com.github.harboat.clients.core.placement.OccupiedCells;
-import com.github.harboat.clients.core.placement.ShipType;
+import com.github.harboat.clients.core.placement.ShipDto;
+import com.github.harboat.clients.core.placement.*;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.clients.notification.NotificationRequest;
 import org.mockito.ArgumentCaptor;
@@ -15,12 +14,13 @@ import org.mockito.testng.MockitoTestNGListener;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import com.github.harboat.clients.core.placement.ShipDto;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
-import static org.testng.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertEquals;
 
 @Listeners({MockitoTestNGListener.class})
 public class FleetServiceTest {
@@ -37,10 +37,11 @@ public class FleetServiceTest {
     private ShipDto ship1;
     private ShipDto ship2;
     private Fleet fleet;
+    private CoreQueueProducer coreQueueProducer;
 
     @BeforeMethod
     public void setUp() {
-        service = new FleetService(repository, producer, boardService);
+        service = new FleetService(repository, producer, coreQueueProducer, boardService);
         ship1 = new ShipDto(ShipType.DESTROYER, new Masts(List.of(1)), new OccupiedCells(List.of(2, 11, 12)));
         ship2 = new ShipDto(ShipType.DESTROYER, new Masts(List.of(3, 4)), new OccupiedCells(List.of(2, 12, 13, 14, 15, 5)));
     }

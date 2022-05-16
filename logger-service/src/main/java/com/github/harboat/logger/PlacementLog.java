@@ -1,7 +1,8 @@
 package com.github.harboat.logger;
 
-import com.github.harboat.clients.logger.ServiceType;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Timestamp;

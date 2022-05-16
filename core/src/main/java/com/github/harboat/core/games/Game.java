@@ -18,4 +18,5 @@ public class Game {
     private String ownerId;
     private Size size;
     private Boolean started;
+    private Boolean ended;
 }

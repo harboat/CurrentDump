@@ -49,4 +49,12 @@ public class GameService {
                 new PlayerJoinedResponse(game.getId(), playerJoin.playerId(), startingPlayerId)
         );
     }
+
+
+    public String getEnemyId(String gameId, String playerId) {
+        return repository.findById(gameId).orElseThrow()
+                .getPlayerIds().stream()
+                .filter(pid -> !pid.equals(playerId))
+                .findFirst().orElseThrow();
+    }
 }

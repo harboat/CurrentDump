@@ -1,4 +1,4 @@
-package com.github.harboat.clients.logger;
+package com.github.harboat.logger;
 
 public enum LogType {
     INFO,

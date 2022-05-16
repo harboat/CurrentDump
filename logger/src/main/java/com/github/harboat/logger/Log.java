@@ -1,26 +1,23 @@
 package com.github.harboat.logger;
 
-import com.github.harboat.clients.logger.ServiceType;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-@Getter @Setter
-abstract class Log<T> {
-    @Id
-    protected String id;
-    protected ServiceType serviceType;
+@Setter @Getter
+public abstract class Log {
+    protected LogType type;
+    protected ServiceType service;
     protected Timestamp createdAt;
-    protected String message;
-    protected T data;
 
-    public Log(String id, ServiceType serviceType, Timestamp createdAt, String message, T data) {
-        this.id = id;
-        this.serviceType = serviceType;
-        this.createdAt = createdAt;
-        this.message = message;
-        this.data = data;
+    public Log(ServiceType service, LogType logType) {
+        this.type = logType;
+        this.service = service;
+        createdAt = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    public Log() {
     }
 }

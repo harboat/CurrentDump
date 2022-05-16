@@ -33,7 +33,6 @@ public class RabbitMQConfig {
 
     @Bean
     MessageConverter jacksonConverter() {
-        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
-        return converter;
+        return new Jackson2JsonMessageConverter();
     }
 }

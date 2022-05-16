@@ -23,6 +23,7 @@
         <rabbitmq.version>0.1.1</rabbitmq.version>
         <clients.version>0.1.1</clients.version>
         <spring-multirabbit.version>2.6.0</spring-multirabbit.version>
+        <logger.version>0.1.1</logger.version>
     </properties>
 
     <profiles>
@@ -84,6 +85,11 @@
             <groupId>com.github.harboat</groupId>
             <artifactId>clients</artifactId>
             <version>${clients.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.harboat</groupId>
+            <artifactId>logger</artifactId>
+            <version>${logger.version}</version>
         </dependency>
         <dependency>
             <groupId>com.free-now.multirabbit</groupId>

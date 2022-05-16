@@ -9,9 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter @Setter @ToString
 @Builder
 class Shot {
-
     @Id private String id;
     private String gameId;
-    private String username;
+    private String playerId;
     private Integer cellId;
+    private Boolean hit;
 }

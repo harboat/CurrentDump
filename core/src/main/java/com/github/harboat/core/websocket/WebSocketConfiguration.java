@@ -11,15 +11,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-@RequiredArgsConstructor
 class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
-    private final RabbitTemplate rabbitTemplate;
-
     @Value("${broker.application-destination-prefix}")
-    private String applicationDestinationPrefix;
-
-    @Value("${broker.destination-prefix}")
     private String destinationPrefix;
 
     @Value("${broker.endpoint}")
@@ -37,22 +31,28 @@ class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
     @Value("${broker.client-passcode}")
     private String clientPasscode;
 
+    @Value("${broker.system-login}")
+    private String systemLogin;
+
+    @Value("${broker.system-passcode}")
+    private String systemPasscode;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry
                 .enableStompBrokerRelay("/topic", "/queue")
                 .setRelayHost(relayHost)
                 .setRelayPort(relayPort)
-                .setClientLogin("guest")
-                .setClientPasscode("guest")
-                .setSystemLogin("guest")
-                .setSystemPasscode("guest");
-        registry.setApplicationDestinationPrefixes("/app");
+                .setClientLogin(clientLogin)
+                .setClientPasscode(clientPasscode)
+                .setSystemLogin(systemLogin)
+                .setSystemPasscode(systemPasscode);
+        registry.setApplicationDestinationPrefixes(destinationPrefix);
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-            registry.addEndpoint("/websocket")
+            registry.addEndpoint(endpoint)
                     .withSockJS();
     }
 }

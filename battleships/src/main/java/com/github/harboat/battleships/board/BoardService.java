@@ -50,8 +50,8 @@ public class BoardService {
     }
 
     // TODO: Error handling
-    public void markHit(String gameId, String username, Integer cellId) {
-        var board = repository.findByGameIdAndPlayerId(gameId, username).orElseThrow();
+    public void markHit(String gameId, String playerId, Integer cellId) {
+        var board = repository.findByGameIdAndPlayerId(gameId, playerId).orElseThrow();
         var currentState = board.getCells();
         currentState.put(cellId, Cell.HIT);
         repository.save(board);

@@ -53,6 +53,9 @@ public class RandomShipsPlacementGenerator {
                 .get(new SecureRandom().nextInt(0, allLegalShipPositions.size()));
         Masts masts = new Masts(randomShipPosition);
         ShipCreator shipCreator = new ShipCreator(size, shipType, masts);
+        ShipDto shipDto = shipCreator.create();
+        occupiedCells.addAll(shipDto.getCells().getPositions());
+        occupiedCells.addAll(shipDto.getMasts().getPositions());
         return shipCreator.create();
     }
 }

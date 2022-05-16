@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,6 +28,19 @@ public class Fleet {
                         )
                 )
                 .collect(Collectors.toSet());
+    }
+
+    Boolean isAlive() {
+        return ships.stream()
+                .anyMatch(Ship::isAlive);
+    }
+
+    Optional<Ship> takeAShot(Integer cellId) {
+        return ships.stream()
+                .map(s -> s.hit(cellId))
+                .filter(Optional::isPresent)
+                .findFirst()
+                .flatMap(ship -> ship);
     }
 
     FleetDto toDto() {

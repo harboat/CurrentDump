@@ -5,6 +5,7 @@ import com.github.harboat.clients.core.game.GameCreation;
 import com.github.harboat.clients.core.game.GameCreationResponse;
 import com.github.harboat.clients.core.game.PlayerJoin;
 import com.github.harboat.clients.core.game.PlayerJoinedResponse;
+import com.github.harboat.clients.core.shot.PlayerWon;
 import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.notification.EventType;
@@ -26,6 +27,7 @@ public class GameService {
     private GameQueueProducer producer;
     private PlacementService placementService;
     private WebsocketService websocketService;
+    private GameUtility gameUtility;
 
     public void create(String playerId) {
         producer.sendRequest(
@@ -40,6 +42,7 @@ public class GameService {
                         .players(List.of(creationResponse.playerId()))
                         .ownerId(creationResponse.playerId())
                         .started(false)
+                        .ended(false)
                         .build()
         );
         websocketService.notifyFrontEnd(
@@ -82,7 +85,20 @@ public class GameService {
         );
         websocketService.notifyFrontEnd(
                 game.getOwnerId(),
-                new Event<>(EventType.ENEMY_JOIN, playerJoinedResponse)
+                new Event<>(EventType.GAME_JOINED, playerJoinedResponse)
+        );
+    }
+
+    public void endGame(PlayerWon playerWon) {
+        Game game = repository.findByGameId(playerWon.gameId()).orElseThrow();
+        game.setEnded(true);
+        repository.save(game);
+        String enemyId = gameUtility.getEnemyId(game.getGameId(), playerWon.playerId()).orElseThrow();
+        websocketService.notifyFrontEnd(
+                playerWon.playerId(), new Event<>(EventType.GAME_END, playerWon)
+        );
+        websocketService.notifyFrontEnd(
+                enemyId, new Event<>(EventType.GAME_END, playerWon)
         );
     }
 }

@@ -22,5 +22,12 @@ public class GameUtility {
         return repository.findByGameId(gameId);
     }
 
+    public Optional<String> getEnemyId(String gameId, String playerId) {
+        return findByGameId(gameId).orElseThrow()
+                .getPlayers().stream()
+                .filter(s -> !s.equals(playerId))
+                .findFirst();
+    }
+
 
 }

@@ -3,9 +3,19 @@ server:
   error:
     include-message: always
 
+# For tests, remove later
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
+
 spring:
   application:
-    name: battleships
+    name: core
   data:
     mongodb:
       uri: ${mongo_uri}
@@ -21,8 +31,7 @@ spring:
         username: ${rabbit_logger_username}
         password: ${rabbit_logger_password}
       clients:
-        host: 104.248.100.188
-        port: 5673
+        addresses: ${rabbit_clients_host}:${rabbit_clients_port}
         username: ${rabbit_clients_username}
         password: ${rabbit_clients_password}
 
@@ -45,7 +54,9 @@ broker:
   application-destination-prefix: ${rabbit_clients_stomp_application_destination}
   destination-prefix: ${rabbit_clients_stomp_destination_prefix}
   endpoint: ${rabbit_clients_stomp_endpoint}
-  relay-host: ${rabbit_clients_host}
+  relay-host: ${rabbit_clients_stomp_host}
   relay-port: ${rabbit_clients_stomp_port}
   client-login: ${rabbit_clients_stomp_username}
   client-passcode: ${rabbit_clients_stomp_passcode}
+  system-login: ${rabbit_clients_username}
+  system-passcode: ${rabbit_clients_password}

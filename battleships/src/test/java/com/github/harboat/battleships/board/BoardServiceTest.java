@@ -12,8 +12,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
 import static org.mockito.BDDMockito.*;
+import static org.testng.Assert.assertEquals;
 
 @Listeners({MockitoTestNGListener.class})
 public class BoardServiceTest {

@@ -1,19 +1,28 @@
 package com.github.harboat.battleships.fleet;
 
+import com.github.harboat.battleships.CoreQueueProducer;
 import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.board.BoardService;
-import com.github.harboat.battleships.shot.ShotResult;
+import com.github.harboat.battleships.game.GameRepository;
+import com.github.harboat.battleships.game.GameService;
 import com.github.harboat.clients.core.placement.GamePlacement;
 import com.github.harboat.clients.core.placement.Masts;
+import com.github.harboat.clients.core.shot.Cell;
+import com.github.harboat.clients.core.shot.PlayerWon;
 import com.github.harboat.clients.core.shot.ShotRequest;
+import com.github.harboat.clients.core.shot.ShotResponse;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.clients.notification.NotificationRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +30,9 @@ import java.util.stream.Collectors;
 public class FleetService {
 
     private FleetRepository repository;
+    private GameService gameService;
     private NotificationProducer producer;
+    private CoreQueueProducer coreQueueProducer;
     private BoardService boardService;
 
     @Transactional
@@ -63,27 +74,38 @@ public class FleetService {
         );
     }
 
-    // TODO: ERROR HANDLING
-    @Transactional
-    public ShotResult shoot(ShotRequest shotRequest) {
+    public void shoot(ShotRequest shotRequest) {
         var gameId = shotRequest.gameId();
-        var username = shotRequest.username();
+        var playerId = shotRequest.playerId();
         var cellId = shotRequest.cellId();
-        var currentFleet = repository.findByGameIdAndPlayerId(gameId, username).orElseThrow();
-        var ships = currentFleet.getShips();
-        var ship = ships.stream()
-                .filter(s -> s.getMasts().getMasts().containsKey(cellId))
-                .findFirst();
-        AtomicReference<ShotResult> shotResult = new AtomicReference<>(ShotResult.HIT_WATER);
-        ship.ifPresent(value -> {
-            value.getMasts().getMasts().put(cellId, MastState.HIT);
-            currentFleet.setShips(ships);
-            repository.save(currentFleet);
-            shotResult.set(ShotResult.HIT_SHIP);
-
-        });
-        boardService.markHit(gameId, username, cellId);
-        return shotResult.get();
+        var enemyId = gameService.getEnemyId(gameId, playerId);
+        var currentFleet = repository.findByGameIdAndPlayerId(gameId, enemyId).orElseThrow();
+        Optional<Ship> ship = currentFleet.takeAShot(cellId);
+        boardService.markHit(gameId, playerId, cellId);
+        if (ship.isEmpty()) {
+            coreQueueProducer.sendResponse(
+                    new ShotResponse(gameId, playerId, Set.of(new Cell(cellId, false)))
+            );
+            return;
+        }
+        if (!currentFleet.isAlive()) {
+            coreQueueProducer.sendResponse(
+                    new PlayerWon(gameId, playerId)
+            );
+        }
+        Ship s = ship.get();
+        Set<Cell> cells = new HashSet<>();
+        cells.add(new Cell(cellId, true));
+        if (!s.isAlive()) {
+            s.getCells().getPositions()
+                    .forEach(c -> cells.add(new Cell(c, false)));
+            s.getMasts().getMasts().keySet()
+                    .forEach(m -> cells.add(new Cell(m, true)));
+        }
+        repository.save(currentFleet);
+        coreQueueProducer.sendResponse(
+                new ShotResponse(gameId, playerId, cells)
+        );
     }
 
 }

@@ -9,11 +9,12 @@
     <version>0.1.1</version>
     <modules>
         <module>rabbitmq</module>
-        <module>logger</module>
+        <module>logger-service</module>
         <module>clients</module>
         <module>battleships</module>
         <module>placement</module>
         <module>core</module>
+        <module>logger</module>
     </modules>
     <packaging>pom</packaging>
     <name>ships</name>

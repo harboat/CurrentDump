@@ -4,6 +4,8 @@ import com.github.harboat.battleships.CoreQueueProducer;
 import com.github.harboat.battleships.board.BoardService;
 import com.github.harboat.clients.core.game.GameCreation;
 import com.github.harboat.clients.core.game.GameCreationResponse;
+import com.github.harboat.clients.core.game.PlayerJoin;
+import com.github.harboat.clients.core.game.PlayerJoinedResponse;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -13,6 +15,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.testng.Assert.*;
 import  static  org.mockito.BDDMockito.*;
@@ -28,12 +31,15 @@ public class GameServiceTest {
     private CoreQueueProducer producer;
     private GameService service;
     @Captor
-    ArgumentCaptor<GameCreationResponse> captor;
+    ArgumentCaptor<GameCreationResponse> gameCaptor;
+    @Captor
+    ArgumentCaptor<PlayerJoinedResponse> playerCaptor;
+    private Game game;
 
     @BeforeMethod
     public void setUp() {
         service = new GameService(repository, boardService, producer);
-        Game game = new Game("test", List.of("testPlayer"),"testPlayer");
+        game = new Game("test", List.of("testPlayer"),"testPlayer");
         given(repository.save(any())).willReturn(game);
     }
 
@@ -42,8 +48,8 @@ public class GameServiceTest {
         //given
         //when
         service.createGame(new GameCreation("testPlayer"));
-        verify(producer).sendResponse(captor.capture());
-        GameCreationResponse actual = captor.getValue();
+        verify(producer).sendResponse(gameCaptor.capture());
+        GameCreationResponse actual = gameCaptor.getValue();
         //then
         assertEquals(actual.playerId(), "testPlayer");
     }
@@ -52,10 +58,9 @@ public class GameServiceTest {
         //given
         //when
         service.createGame(new GameCreation("testPlayer"));
-        verify(producer).sendResponse(captor.capture());
-        GameCreationResponse actual = captor.getValue();
+        verify(producer).sendResponse(gameCaptor.capture());
+        GameCreationResponse actual = gameCaptor.getValue();
         //then
         assertNotNull(actual.gameId());
     }
-
 }

@@ -140,4 +140,12 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>repsy</id>
+            <name>Repsy Repository</name>
+            <url>https://repo.repsy.io/mvn/ciechanowiec/parentpom</url>
+        </repository>
+    </distributionManagement>
+
 </project>

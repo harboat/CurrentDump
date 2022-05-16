@@ -105,4 +105,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>repsy</id>
+            <name>Repsy Repository</name>
+            <url>https://repo.repsy.io/mvn/ciechanowiec/parentpom</url>
+        </repository>
+    </repositories>
+
 </project>

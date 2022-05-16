@@ -12,6 +12,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import static org.testng.Assert.*;
 import  static  org.mockito.BDDMockito.*;
 
@@ -31,18 +33,29 @@ public class GameServiceTest {
     @BeforeMethod
     public void setUp() {
         service = new GameService(repository, boardService, producer);
-        given(repository.save(any())).willReturn(null);
+        Game game = new Game("test", List.of("testPlayer"),"testPlayer");
+        given(repository.save(any())).willReturn(game);
     }
-//
-//    @Test
-//    public void shouldCreateGameWithProperPlayerId() {
-//        //given
-//        //when
-//        service.createGame(new GameCreation("testPlayer"));
-//        verify(producer).sendResponse(captor.capture());
-//        GameCreationResponse actual = captor.getValue();
-//        //then
-//        assertEquals(actual.playerId(), "testPlayer");
-//    }
+
+    @Test
+    public void shouldCreateGameWithProperPlayerId() {
+        //given
+        //when
+        service.createGame(new GameCreation("testPlayer"));
+        verify(producer).sendResponse(captor.capture());
+        GameCreationResponse actual = captor.getValue();
+        //then
+        assertEquals(actual.playerId(), "testPlayer");
+    }
+    @Test
+    public void shouldCreateGameWithNotEmptyId() {
+        //given
+        //when
+        service.createGame(new GameCreation("testPlayer"));
+        verify(producer).sendResponse(captor.capture());
+        GameCreationResponse actual = captor.getValue();
+        //then
+        assertNotNull(actual.gameId());
+    }
 
 }

@@ -24,6 +24,8 @@
         <clients.version>0.1.1</clients.version>
         <spring-multirabbit.version>2.6.0</spring-multirabbit.version>
         <logger.version>0.1.1</logger.version>
+        <mockito-testng.version>0.4.22</mockito-testng.version>
+        <version.dependency.testng>7.5</version.dependency.testng>
     </properties>
 
     <profiles>
@@ -95,6 +97,18 @@
             <groupId>com.free-now.multirabbit</groupId>
             <artifactId>spring-multirabbit</artifactId>
             <version>${spring-multirabbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${version.dependency.testng}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-testng</artifactId>
+            <version>${mockito-testng.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

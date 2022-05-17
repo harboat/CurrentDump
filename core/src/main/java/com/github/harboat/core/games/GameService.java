@@ -90,6 +90,7 @@ public class GameService {
         Game game = repository.findByGameId(gameId).orElseThrow();
         if (!game.getOwnerId().equals(playerId)) throw new BadRequest("You are not an owner of this lobby!");
         if (game.getFeelWasSet().contains(false)) throw new BadRequest("Game is not ready!");
+        if (game.getStarted()) throw new BadRequest("Game already started!");
         producer.sendRequest(
                 new GameStart(gameId)
         );

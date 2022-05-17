@@ -32,7 +32,7 @@ public class UserService {
         return user.toDto();
     }
 
-    UserGetDTO get(String email) {
+    public UserGetDTO get(String email) {
         User user = repository.findByEmail(email).orElseThrow(() -> new ResourceNotFound("User not found!"));
         return user.toDto();
     }

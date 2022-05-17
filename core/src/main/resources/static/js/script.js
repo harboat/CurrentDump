@@ -1,3 +1,9 @@
+//TODO: REFACTOR
+//TODO: FORFEIT BUTTON
+//TODO: BETTER UI
+//TODO: GAME END, EXCEPTION, SERVER ERROR
+//TODO: ERROR HANDLING
+
 const body = document.getElementsByTagName("body")[0]
 
 const ip = 'http://localhost'
@@ -20,6 +26,15 @@ let enemyId
 let ships
 
 connect();
+
+function forfeit() {
+    const requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/forfeit"
+    const request = new Request(requestURL, {
+        method: 'POST',
+        mode: 'cors'
+    })
+    const response = fetch(request)
+}
 
 function connect() {
     const socket = new SockJS('/websocket')
@@ -68,6 +83,7 @@ function connect() {
                     break
                 }
                 case "GAME_END": {
+                    alert('konieckurwa' + object['winningPlayer'])
                     break
                 }
                 case "HIT": {
@@ -82,20 +98,11 @@ function connect() {
 }
 
 async function markCells(shootingPlayerId, cells) {
-    cells.forEach(cell => {
-        const cellId = cell['cellId']
-        const wasShip = cell['wasShip']
-        const playerCell = document.getElementById(cellId.toString() + ":player")
-        const enemyCell = document.getElementById(cellId.toString() + ":enemy")
-        if (wasShip) {
-            playerCell.classList.add('shipHit')
-            enemyCell.classList.add('shipHit')
-            activateCells()
-        } else {
-            playerCell.classList.add('cellHit')
-            enemyCell.classList.add('cellHit')
-        }
-    })
+    if (shootingPlayerId === playerId) {
+        await markCellsHelper(cells, 'enemy')
+    } else {
+        await markCellsHelper(cells, 'player')
+    }
     if (cells.length === 1) {
         cells.forEach(cell => {
             if (!cell['wasShip']) {
@@ -105,14 +112,32 @@ async function markCells(shootingPlayerId, cells) {
     }
 }
 
+async function markCellsHelper(cells, type) {
+    cells.forEach(cell => {
+        const cellId = cell['cellId']
+        const wasShip = cell['wasShip']
+        const playerCell = document.getElementById(cellId.toString() + ":" + type)
+        if (wasShip) {
+            playerCell.classList.add('shipHit')
+            activateCells()
+        } else {
+            playerCell.classList.add('cellHit')
+        }
+    })
+}
+
 function startGame() {
     const requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/start"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors'
     })
-    const response = fetch(request)
-    document.getElementById("boardContainer").removeChild(document.getElementById('startGameButton'))
+    const response = fetch(request).then(response => {
+        if (response.status === 200) {
+            document.getElementById("boardContainer")
+                .removeChild(document.getElementById('startGameButton'))
+        }
+    })
 }
 
 function setUpBoardsBasedOnPlayerTurn() {

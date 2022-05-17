@@ -53,6 +53,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-sleuth-zipkin</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot-starter-web.version}</version>
@@ -78,6 +82,10 @@
             <version>${spring-boot-starter-amqp.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.github.harboat</groupId>
             <artifactId>rabbitmq</artifactId>
             <version>${rabbitmq.version}</version>
@@ -86,11 +94,6 @@
             <groupId>com.github.harboat</groupId>
             <artifactId>clients</artifactId>
             <version>${clients.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.free-now.multirabbit</groupId>
-            <artifactId>spring-multirabbit</artifactId>
-            <version>${spring-multirabbit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>

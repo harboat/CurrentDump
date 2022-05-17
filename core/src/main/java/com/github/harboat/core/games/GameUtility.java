@@ -2,6 +2,7 @@ package com.github.harboat.core.games;
 
 import com.github.harboat.clients.core.board.Size;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -23,10 +24,11 @@ public class GameUtility {
     }
 
     public Optional<String> getEnemyId(String gameId, String playerId) {
-        return findByGameId(gameId).orElseThrow()
+        Game game = repository.findByGameId(gameId).orElseThrow();
+        return game
                 .getPlayers().stream()
-                .filter(s -> !s.equals(playerId))
-                .findFirst();
+                .dropWhile(s -> s.equals(playerId))
+                .findAny();
     }
 
 

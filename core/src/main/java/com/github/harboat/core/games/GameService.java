@@ -78,7 +78,7 @@ public class GameService {
         game.setStarted(true);
         game.setPlayers(players);
         repository.save(game);
-        placementService.palaceShips(game.getGameId(), playerJoinedResponse.playerId());
+        placementService.palaceShips(playerJoinedResponse.gameId(), playerJoinedResponse.playerId());
         websocketService.notifyFrontEnd(
                 playerJoinedResponse.playerId(),
                 new Event<>(EventType.GAME_JOINED, playerJoinedResponse)

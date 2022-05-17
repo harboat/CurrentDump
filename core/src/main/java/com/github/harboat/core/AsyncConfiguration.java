@@ -12,23 +12,44 @@ public class AsyncConfiguration {
     @Bean
     public Executor websocketServiceThreads() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
+        executor.setCorePoolSize(3);
         executor.setMaxPoolSize(4);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("WebsocketService-");
+        executor.setThreadNamePrefix("websocket-thread-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.initialize();
         return executor;
     }
 
     @Bean
-    public Executor gameQueueConsumerThreads() {
+    public Executor coreQueueConsumerThreads() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(2);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("GameQueueConsumer-");
+        executor.setCorePoolSize(3);
+        executor.setMaxPoolSize(4);
+        executor.setThreadNamePrefix("core-queue-thread-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.initialize();
+        return executor;
+    }
+    @Bean
+    public Executor gameQueueProducerThreads() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(3);
+        executor.setMaxPoolSize(4);
+        executor.setThreadNamePrefix("game-queue-thread-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.initialize();
         return executor;
     }
 
+
+    @Bean
+    public Executor shotServiceProducerThreads() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(3);
+        executor.setMaxPoolSize(4);
+        executor.setThreadNamePrefix("shot-service-thread-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.initialize();
+        return executor;
+    }
 }

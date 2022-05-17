@@ -11,13 +11,25 @@ spring:
     addresses: ${rabbit_uri}
     username: ${rabbit_username}
     password: ${rabbit_password}
-  multirabbitmq:
-    enabled: true
-    connections:
-      logger:
-        addresses: ${rabbit_logger_uri}
-        username: ${rabbit_logger_username}
-        password: ${rabbit_logger_password}
+  zipkin:
+    base-url: http://localhost:9411
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+# For tests, remove later
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
 
 rabbitmq:
   exchanges:

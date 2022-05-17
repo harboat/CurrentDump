@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 @RabbitListener(
         queues = {"${rabbitmq.queues.core}"}
 )
-@Async("gameQueueConsumerThreads")
 public class CoreQueueConsumer {
 
     private GameService gameService;
@@ -27,21 +26,25 @@ public class CoreQueueConsumer {
     private ShotService shotService;
 
     @RabbitHandler
+    @Async("coreQueueConsumerThreads")
     public void consume(GameCreationResponse creationResponse) {
         gameService.create(creationResponse);
     }
 
     @RabbitHandler
+    @Async("coreQueueConsumerThreads")
     public void consume(BoardCreationResponse creationResponse) {
         boardService.create(creationResponse);
     }
 
     @RabbitHandler
+    @Async("coreQueueConsumerThreads")
     public void consume(PlayerJoinedResponse playerJoinedResponse) {
         gameService.playerJoined(playerJoinedResponse);
     }
 
     @RabbitHandler
+    @Async("coreQueueConsumerThreads")
     public void consume(ShotResponse shotResponse) {
         shotService.takeAShoot(shotResponse);
     }

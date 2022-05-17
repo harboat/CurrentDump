@@ -38,7 +38,7 @@ public class ShotService {
     public void takeAShoot(ShotResponse shotResponse) {
         String playerId = shotResponse.playerId();
         String enemyId = gameUtility.getEnemyId(shotResponse.gameId(), playerId);
-        if (shotResponse.cells().size() > 1 || ((List<Cell>)shotResponse.cells()).get(0).wasShip()) {
+        if (shotResponse.cells().size() == 1 && !((List<Cell>)shotResponse.cells()).get(0).wasShip()) {
             gameUtility.switchTurn(shotResponse.gameId(), enemyId);
         }
         websocketService.notifyFrontEnd(

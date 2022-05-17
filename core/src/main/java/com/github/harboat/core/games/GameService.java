@@ -11,6 +11,7 @@ import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.core.GameQueueProducer;
 import com.github.harboat.core.placement.PlacementService;
+import com.github.harboat.core.stats.StatsService;
 import com.github.harboat.core.websocket.Event;
 import com.github.harboat.core.websocket.WebsocketService;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class GameService {
     private GameRepository repository;
     private GameQueueProducer producer;
     private PlacementService placementService;
+    private StatsService statsService;
     private WebsocketService websocketService;
     private GameUtility gameUtility;
 
@@ -97,6 +99,7 @@ public class GameService {
         websocketService.notifyFrontEnd(
                 playerWon.playerId(), new Event<>(EventType.GAME_END, playerWon)
         );
+        statsService.updateStats(playerWon.playerId());
         websocketService.notifyFrontEnd(
                 enemyId, new Event<>(EventType.GAME_END, playerWon)
         );

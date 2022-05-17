@@ -1,7 +1,6 @@
 package com.github.harboat.core.stats;
 
-import com.github.harboat.core.users.User;
-import com.github.harboat.core.users.UserGetDTO;
+import com.github.harboat.clients.exceptions.ResourceNotFound;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,25 +12,31 @@ public class StatsService {
         this.statsRepository = gameResultRepository;
     }
 
-    public String createStats(User player) {
-        PlayerStats playerStats = new PlayerStats(player);
+    public String createStats(String playerId, String playerName) {
+        PlayerStats playerStats = new PlayerStats(playerId, playerName);
         statsRepository.save(playerStats);
 //        Logger.info(String.format("User %s statistics created", playerStats.getPlayer()));
         return "create stats";
     }
 
-    public StatisticsGetDTO getStats() {
+    StatisticsGetDTO getStats() {
         Statistics statistics = new Statistics(statsRepository.findAll());
 //        Logger.info(String.format("Statistics provided"));
         return new StatisticsGetDTO(statistics.getStatistics());
     }
 
-    public String updateStats(UserGetDTO user) {
-        PlayerStats playerStats = statsRepository.findByPlayerEmail(user.getEmail()).get();
-        playerStats.increment();
+    public void updateStats(String playerId) {
+        PlayerStats playerStats = statsRepository.findByPlayerId(playerId).
+                orElseThrow(() -> new ResourceNotFound("User not found!"));
+        playerStats.incrementWinnings();
         statsRepository.save(playerStats);
 //        Logger.info(String.format("User: %s statistics updated - winnings: %d",
-//                playerStats.getPlayer().getName(), playerStats.getWinnings()));
-        return String.format("%s - winnings: %d", playerStats.getPlayer().getName(), playerStats.getWinnings());
+//                playerStats.getPlayerName(), playerStats.getWinnings()));
+    }
+
+    public void updateStats(String playerId, int shot) {
+        PlayerStats playerStats = statsRepository.findByPlayerId(playerId).
+                orElseThrow(() -> new ResourceNotFound("User not found!"));
+        playerStats.incrementShots(shot);
     }
 }

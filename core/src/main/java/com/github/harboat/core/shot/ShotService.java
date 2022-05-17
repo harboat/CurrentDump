@@ -7,6 +7,7 @@ import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.core.GameQueueProducer;
 import com.github.harboat.core.games.GameUtility;
+import com.github.harboat.core.stats.StatsService;
 import com.github.harboat.core.websocket.Event;
 import com.github.harboat.core.websocket.WebsocketService;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class ShotService {
     private GameQueueProducer producer;
     private GameUtility gameUtility;
     private WebsocketService websocketService;
+    private StatsService statsService;
 
     public void takeAShoot(String gameId, String playerId, Integer cellId) {
         var game = gameUtility.findByGameId(gameId)
@@ -39,5 +41,6 @@ public class ShotService {
         websocketService.notifyFrontEnd(
                 enemyId, new Event<>(EventType.HIT, shotResponse)
         );
+        statsService.updateStats(shotResponse.playerId(), shotResponse.cells().size());
     }
 }

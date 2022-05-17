@@ -1,6 +1,5 @@
 package com.github.harboat.core.stats;
 
-import com.github.harboat.core.users.UserGetDTO;
 import com.github.harboat.core.users.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +24,4 @@ class StatsController {
         StatisticsGetDTO statisticsGetDTO = statsService.getStats();
         return new ResponseEntity<>(statisticsGetDTO, HttpStatus.OK);
     }
-
-//    @PostMapping
-//    public ResponseEntity<String> createStats() {
-//        UserGetDTO userDTO = userService.get("rwar@s.s");
-//        String s = statsService.createStats(userService.get("rwar@s.s"));
-//        return new ResponseEntity<>(s, HttpStatus.OK);
-//    }
-
-//    @PutMapping
-//    public ResponseEntity<String> updateStat() {
-//        String response = statsService.updateStats(userService.get("rwar@s.s"));
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
 }

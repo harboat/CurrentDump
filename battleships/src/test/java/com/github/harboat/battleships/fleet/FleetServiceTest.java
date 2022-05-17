@@ -3,6 +3,7 @@ package com.github.harboat.battleships.fleet;
 import com.github.harboat.battleships.CoreQueueProducer;
 import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.board.BoardService;
+import com.github.harboat.battleships.game.GameUtility;
 import com.github.harboat.clients.core.placement.ShipDto;
 import com.github.harboat.clients.core.placement.*;
 import com.github.harboat.clients.notification.EventType;
@@ -31,6 +32,8 @@ public class FleetServiceTest {
     private NotificationProducer producer;
     @Mock
     private BoardService boardService;
+    @Mock
+    private GameUtility gameUtility;
     private FleetService service;
     @Captor
     private ArgumentCaptor<NotificationRequest<FleetDto>> captor;
@@ -41,7 +44,7 @@ public class FleetServiceTest {
 
     @BeforeMethod
     public void setUp() {
-        service = new FleetService(repository, producer, coreQueueProducer, boardService);
+        service = new FleetService(repository, gameUtility, producer, coreQueueProducer, boardService);
         ship1 = new ShipDto(ShipType.DESTROYER, new Masts(List.of(1)), new OccupiedCells(List.of(2, 11, 12)));
         ship2 = new ShipDto(ShipType.DESTROYER, new Masts(List.of(3, 4)), new OccupiedCells(List.of(2, 12, 13, 14, 15, 5)));
     }

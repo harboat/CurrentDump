@@ -2,16 +2,28 @@ package com.github.harboat.core.games;
 
 import com.github.harboat.clients.core.board.Size;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
-@Component
+@Service
 @AllArgsConstructor
 public class GameUtility {
 
     private GameRepository repository;
+
+    public void setBoardSizeForGame(String gameId, Size size) {
+        Game game = repository.findByGameId(gameId).orElseThrow();
+        game.setSize(size);
+        repository.save(game);
+    }
+
+    public Collection<String> getNotStartedGamesIdsForUser(String playerId) {
+        return repository.findGamesByOwnerIdAndNotStarted(playerId).stream()
+                .map(Game::getGameId)
+                .toList();
+    }
 
     public Optional<Size> getGameSizeForUser(String gameId, String playerId) {
         Optional<Game> game = repository.findGameByGameIdAndPlayersContains(gameId, playerId);
@@ -23,13 +35,22 @@ public class GameUtility {
         return repository.findByGameId(gameId);
     }
 
-    public Optional<String> getEnemyId(String gameId, String playerId) {
+    public void markFleetSet(String gameId) {
         Game game = repository.findByGameId(gameId).orElseThrow();
-        return game
-                .getPlayers().stream()
-                .dropWhile(s -> s.equals(playerId))
-                .findAny();
+        Collection<Boolean> feelWasSet = game.getFeelWasSet();
+        feelWasSet.remove(false);
+        feelWasSet.add(true);
+        repository.save(game);
     }
 
-
+    public String switchTurnAndGetEnemyId(String gameId, String playerId) {
+        Game game = repository.findByGameId(gameId).orElseThrow();
+        String enemyId = game
+                .getPlayers().stream()
+                .dropWhile(s -> s.equals(playerId))
+                .findAny().orElseThrow();
+        game.setPlayerTurn(enemyId);
+        repository.save(game);
+        return enemyId;
+    }
 }

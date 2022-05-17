@@ -3,10 +3,11 @@ package com.github.harboat.battleships.fleet;
 import com.github.harboat.battleships.CoreQueueProducer;
 import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.board.BoardService;
-import com.github.harboat.battleships.game.GameRepository;
 import com.github.harboat.battleships.game.GameService;
+import com.github.harboat.battleships.game.GameUtility;
 import com.github.harboat.clients.core.placement.GamePlacement;
 import com.github.harboat.clients.core.placement.Masts;
+import com.github.harboat.clients.core.placement.PlacementResponse;
 import com.github.harboat.clients.core.shot.Cell;
 import com.github.harboat.clients.core.shot.PlayerWon;
 import com.github.harboat.clients.core.shot.ShotRequest;
@@ -17,8 +18,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +29,7 @@ import java.util.stream.Collectors;
 public class FleetService {
 
     private FleetRepository repository;
-    private GameService gameService;
+    private GameUtility gameUtility;
     private NotificationProducer producer;
     private CoreQueueProducer coreQueueProducer;
     private BoardService boardService;
@@ -45,6 +44,9 @@ public class FleetService {
                 placement.playerId(), EventType.FLEET_CREATED, fleet.toDto()
         );
         producer.sendNotification(notificationRequest);
+        coreQueueProducer.sendResponse(
+                new PlacementResponse(placement.gameId(), placement.playerId())
+        );
     }
 
     private Fleet buildFleet(String playerId, GamePlacement placement, List<Ship> ships) {
@@ -78,7 +80,7 @@ public class FleetService {
         var gameId = shotRequest.gameId();
         var playerId = shotRequest.playerId();
         var cellId = shotRequest.cellId();
-        var enemyId = gameService.getEnemyId(gameId, playerId);
+        var enemyId = gameUtility.getEnemyId(gameId, playerId);
         var currentFleet = repository.findByGameIdAndPlayerId(gameId, enemyId).orElseThrow();
         Optional<Ship> ship = currentFleet.takeAShot(cellId);
         boardService.markHit(gameId, playerId, cellId);

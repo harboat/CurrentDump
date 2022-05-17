@@ -2,26 +2,25 @@ package com.github.harboat.battleships.game;
 
 import com.github.harboat.battleships.CoreQueueProducer;
 import com.github.harboat.battleships.board.BoardService;
-import com.github.harboat.clients.core.game.GameCreation;
-import com.github.harboat.clients.core.game.GameCreationResponse;
-import com.github.harboat.clients.core.game.PlayerJoin;
-import com.github.harboat.clients.core.game.PlayerJoinedResponse;
+import com.github.harboat.clients.core.game.*;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class GameService {
 
     private final GameRepository repository;
     private final BoardService boardService;
     private final CoreQueueProducer producer;
-    private Random random = new SecureRandom();
+    private final Random random = new SecureRandom();
     @Transactional
     public void createGame(GameCreation gameCreation) {
         Game game = Game.builder()
@@ -36,25 +35,25 @@ public class GameService {
 
     public void playerJoin(PlayerJoin playerJoin) {
         Game game = repository.findById(playerJoin.gameId()).orElseThrow();
-        List<String> playerIds = (List<String>) game.getPlayerIds();
+        Collection<String> playerIds = game.getPlayerIds();
         playerIds.add(playerJoin.playerId());
-        String startingPlayerId = playerIds.get(random.nextInt(0, 2));
         game.setPlayerIds(playerIds);
-        game.setTurnOfPlayer(startingPlayerId);
         repository.save(game);
         boardService.createBoardForSecondPlayer(
                 game.getId(), playerJoin.playerId()
         );
         producer.sendResponse(
-                new PlayerJoinedResponse(game.getId(), playerJoin.playerId(), startingPlayerId)
+                new PlayerJoinedResponse(game.getId(), playerJoin.playerId())
         );
     }
 
-
-    public String getEnemyId(String gameId, String playerId) {
-        return repository.findById(gameId).orElseThrow()
-                .getPlayerIds().stream()
-                .filter(pid -> !pid.equals(playerId))
-                .findFirst().orElseThrow();
+    public void start(GameStart gameStart) {
+        Game game = repository.findById(gameStart.gameId()).orElseThrow();
+        List<String> playerIds = (List<String>) game.getPlayerIds();
+        String startingPlayerId = playerIds.get(random.nextInt(0, 2));
+        game.setTurnOfPlayer(startingPlayerId);
+        producer.sendResponse(
+                new GameStartResponse(game.getId(), startingPlayerId)
+        );
     }
 }

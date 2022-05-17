@@ -18,12 +18,13 @@
         <spring-boot-starter-data-mongodb.version>2.6.7</spring-boot-starter-data-mongodb.version>
         <spring-boot-starter-validation.version>2.6.7</spring-boot-starter-validation.version>
         <spring-cloud-starter-sleuth.version>3.1.2</spring-cloud-starter-sleuth.version>
-        <spring-cloud-sleuth-zipkin.version>3.1.1</spring-cloud-sleuth-zipkin.version>
         <spring-boot-starter-amqp.version>2.6.7</spring-boot-starter-amqp.version>
         <rabbitmq.version>0.1.1</rabbitmq.version>
         <clients.version>0.1.1</clients.version>
         <spring-multirabbit.version>2.6.0</spring-multirabbit.version>
         <logger.version>0.1.1</logger.version>
+        <spring-cloud-starter-netflix-eureka-client.version>3.1.2</spring-cloud-starter-netflix-eureka-client.version>
+        <spring-cloud-sleuth-zipkin.version>3.1.2</spring-cloud-sleuth-zipkin.version>
     </properties>
 
     <profiles>
@@ -52,14 +53,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-sleuth-zipkin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot-starter-web.version}</version>
@@ -83,6 +76,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
             <version>${spring-boot-starter-amqp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-sleuth-zipkin</artifactId>
+            <version>${spring-cloud-sleuth-zipkin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <version>${spring-cloud-starter-netflix-eureka-client.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.harboat</groupId>

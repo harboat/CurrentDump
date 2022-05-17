@@ -19,7 +19,6 @@ public class AsyncConfiguration {
         executor.initialize();
         return executor;
     }
-
     @Bean
     public Executor coreQueueConsumerThreads() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -40,8 +39,6 @@ public class AsyncConfiguration {
         executor.initialize();
         return executor;
     }
-
-
     @Bean
     public Executor shotServiceProducerThreads() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

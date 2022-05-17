@@ -7,8 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @RestController
 @RequestMapping("api/v1/games/{gameId}/shoot")

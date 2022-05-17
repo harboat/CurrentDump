@@ -7,6 +7,7 @@ import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.core.GameQueueProducer;
 import com.github.harboat.core.games.GameService;
+import com.github.harboat.core.games.GameUtility;
 import com.github.harboat.core.websocket.Event;
 import com.github.harboat.core.websocket.WebsocketService;
 import lombok.AllArgsConstructor;
@@ -17,12 +18,12 @@ import org.springframework.stereotype.Service;
 public class BoardService {
 
     private final GameQueueProducer producer;
-    private final GameService gameService;
+    private final GameUtility gameUtility;
     private final WebsocketService service;
 
     public void create(String gameId, String playerId, Size size) {
         // todo: better error
-        if (!gameService.getNotStartedGamesIdsForUser(playerId).contains(gameId))
+        if (!gameUtility.getNotStartedGamesIdsForUser(playerId).contains(gameId))
             throw new BadRequest("You are not in this game!");
         producer.sendRequest(
                 new BoardCreation(gameId, playerId, size)
@@ -30,7 +31,7 @@ public class BoardService {
     }
 
     public void create(BoardCreationResponse response) {
-        gameService.setBoardSizeForGame(response.gameId(), response.size());
+        gameUtility.setBoardSizeForGame(response.gameId(), response.size());
         service.notifyFrontEnd(
                 response.playerId(),
                 new Event<>(EventType.BOARD_CREATED, response.size())

@@ -1,6 +1,5 @@
 package com.github.harboat.core.shot;
 
-import com.github.harboat.clients.core.shot.Cell;
 import com.github.harboat.clients.core.shot.ShotRequest;
 import com.github.harboat.clients.core.shot.ShotResponse;
 import com.github.harboat.clients.exceptions.BadRequest;
@@ -12,13 +11,7 @@ import com.github.harboat.core.websocket.Event;
 import com.github.harboat.core.websocket.WebsocketService;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +25,9 @@ public class ShotService {
     public void takeAShoot(String gameId, String playerId, Integer cellId) {
         var game = gameUtility.findByGameId(gameId)
                 .orElseThrow(() -> new ResourceNotFound("Game not found!"));
-        if (!game.getPlayers().contains(playerId)) throw new BadRequest("Player's not in the game!");
+        if (!game.getPlayers().contains(playerId)) throw new BadRequest("Player is not in the game!");
+        if (!game.getStarted()) throw new BadRequest("Game has not started!");
+        if (!game.getPlayerTurn().equals(playerId)) throw new BadRequest("It is not your turn!");
         producer.sendRequest(
                 new ShotRequest(gameId, playerId, cellId)
         );
@@ -40,12 +35,13 @@ public class ShotService {
 
     @Async("shotServiceProducerThreads")
     public void takeAShoot(ShotResponse shotResponse) {
-        Optional<String> enemyId = gameUtility.getEnemyId(shotResponse.gameId(), shotResponse.playerId());
+        String playerId = shotResponse.gameId();
+        String enemyId = gameUtility.switchTurnAndGetEnemyId(shotResponse.gameId(), playerId);
         websocketService.notifyFrontEnd(
-                shotResponse.playerId(), new Event<>(EventType.HIT, shotResponse)
+                playerId, new Event<>(EventType.HIT, new ShotResult(playerId, shotResponse.cells()))
         );
         websocketService.notifyFrontEnd(
-                enemyId.orElseThrow(), new Event<>(EventType.HIT, shotResponse)
+                enemyId, new Event<>(EventType.HIT, new ShotResult(playerId, shotResponse.cells()))
         );
     }
 }

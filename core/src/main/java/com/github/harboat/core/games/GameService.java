@@ -1,10 +1,7 @@
 package com.github.harboat.core.games;
 
 import com.github.harboat.clients.core.board.Size;
-import com.github.harboat.clients.core.game.GameCreation;
-import com.github.harboat.clients.core.game.GameCreationResponse;
-import com.github.harboat.clients.core.game.PlayerJoin;
-import com.github.harboat.clients.core.game.PlayerJoinedResponse;
+import com.github.harboat.clients.core.game.*;
 import com.github.harboat.clients.core.shot.PlayerWon;
 import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.clients.exceptions.ResourceNotFound;
@@ -25,9 +22,7 @@ public class GameService {
 
     private GameRepository repository;
     private GameQueueProducer producer;
-    private PlacementService placementService;
     private WebsocketService websocketService;
-    private GameUtility gameUtility;
 
     public void create(String playerId) {
         producer.sendRequest(
@@ -36,36 +31,31 @@ public class GameService {
     }
 
     public void create(GameCreationResponse creationResponse) {
-        Game game = repository.save(
+        repository.save(
                 Game.builder()
                         .gameId(creationResponse.gameId())
                         .players(List.of(creationResponse.playerId()))
                         .ownerId(creationResponse.playerId())
+                        .playerTurn(creationResponse.playerId())
+                        .feelWasSet(List.of(false, false))
                         .started(false)
                         .ended(false)
                         .build()
         );
         websocketService.notifyFrontEnd(
                 creationResponse.playerId(),
-                new Event<>(EventType.GAME_CREATED, game)
+                new Event<>(
+                        EventType.GAME_CREATED,
+                        new GameCreated(creationResponse.gameId())
+                )
         );
-    }
-
-    public Collection<String> getNotStartedGamesIdsForUser(String playerId) {
-        return repository.findGamesByOwnerIdAndNotStarted(playerId).stream()
-                .map(Game::getGameId)
-                .toList();
-    }
-
-    public void setBoardSizeForGame(String gameId, Size size) {
-        Game game = repository.findByGameId(gameId).orElseThrow();
-        game.setSize(size);
-        repository.save(game);
     }
 
     public void join(String playerId, String gameId) {
         Game game = repository.findByGameId(gameId).orElseThrow(() -> new ResourceNotFound("Game not found!"));
         if (game.getPlayers().contains(playerId)) throw new BadRequest("You are already in this game!");
+        if (game.getStarted()) throw new BadRequest("Game already started!");
+        if (game.getEnded()) throw new BadRequest("Game has ended!");
         producer.sendRequest(
                 new PlayerJoin(gameId, playerId)
         );
@@ -75,17 +65,44 @@ public class GameService {
         Game game = repository.findByGameId(playerJoinedResponse.gameId()).orElseThrow();
         Collection<String> players = game.getPlayers();
         players.add(playerJoinedResponse.playerId());
-        game.setStarted(true);
         game.setPlayers(players);
         repository.save(game);
-        placementService.palaceShips(playerJoinedResponse.gameId(), playerJoinedResponse.playerId());
+        String joinedPlayerId = playerJoinedResponse.playerId();
+        String enemyId = game.getOwnerId();
         websocketService.notifyFrontEnd(
-                playerJoinedResponse.playerId(),
-                new Event<>(EventType.GAME_JOINED, playerJoinedResponse)
+                joinedPlayerId,
+                new Event<>(
+                        EventType.GAME_JOINED,
+                        new PlayerJoined(joinedPlayerId, enemyId)
+                )
         );
         websocketService.notifyFrontEnd(
-                game.getOwnerId(),
-                new Event<>(EventType.GAME_JOINED, playerJoinedResponse)
+                enemyId,
+                new Event<>(
+                        EventType.GAME_JOINED,
+                        new PlayerJoined(enemyId, joinedPlayerId)
+                )
+        );
+    }
+
+    public void start(String playerId, String gameId) {
+        Game game = repository.findByGameId(gameId).orElseThrow();
+        if (!game.getOwnerId().equals(playerId)) throw new BadRequest("You are not an owner of this lobby!");
+        if (game.getFeelWasSet().contains(false)) throw new BadRequest("Game is not ready!");
+        producer.sendRequest(
+                new GameStart(gameId)
+        );
+    }
+
+    public void start(GameStartResponse response) {
+        Game game = repository.findByGameId(response.gameId()).orElseThrow();
+        game.setStarted(true);
+        repository.save(game);
+        game.getPlayers().forEach(p ->
+                websocketService.notifyFrontEnd(
+                        p,
+                        new Event<>(EventType.GAME_STARTED, new GameStarted(response.playerTurn()))
+                )
         );
     }
 
@@ -93,12 +110,12 @@ public class GameService {
         Game game = repository.findByGameId(playerWon.gameId()).orElseThrow();
         game.setEnded(true);
         repository.save(game);
-        String enemyId = gameUtility.getEnemyId(game.getGameId(), playerWon.playerId()).orElseThrow();
-        websocketService.notifyFrontEnd(
-                playerWon.playerId(), new Event<>(EventType.GAME_END, playerWon)
-        );
-        websocketService.notifyFrontEnd(
-                enemyId, new Event<>(EventType.GAME_END, playerWon)
+        game.getPlayers().forEach(p ->
+                websocketService.notifyFrontEnd(
+                        p,
+                        new Event<>(EventType.GAME_END, new GameEnded(playerWon.playerId()))
+                )
         );
     }
+
 }

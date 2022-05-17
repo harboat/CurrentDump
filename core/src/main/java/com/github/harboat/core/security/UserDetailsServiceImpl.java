@@ -3,14 +3,11 @@ package com.github.harboat.core.security;
 import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.core.users.User;
 import com.github.harboat.core.users.UserRepository;
-import com.gs.collections.impl.bimap.mutable.HashBiMap;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

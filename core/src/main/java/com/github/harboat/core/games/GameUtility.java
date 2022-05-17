@@ -43,14 +43,17 @@ public class GameUtility {
         repository.save(game);
     }
 
-    public String switchTurnAndGetEnemyId(String gameId, String playerId) {
+    public void switchTurn(String gameId, String enemyId) {
         Game game = repository.findByGameId(gameId).orElseThrow();
-        String enemyId = game
+        game.setPlayerTurn(enemyId);
+        repository.save(game);
+    }
+
+    public String getEnemyId(String gameId, String playerId) {
+        Game game = repository.findByGameId(gameId).orElseThrow();
+        return game
                 .getPlayers().stream()
                 .dropWhile(s -> s.equals(playerId))
                 .findAny().orElseThrow();
-        game.setPlayerTurn(enemyId);
-        repository.save(game);
-        return enemyId;
     }
 }

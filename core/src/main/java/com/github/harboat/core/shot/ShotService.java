@@ -1,5 +1,6 @@
 package com.github.harboat.core.shot;
 
+import com.github.harboat.clients.core.shot.Cell;
 import com.github.harboat.clients.core.shot.ShotRequest;
 import com.github.harboat.clients.core.shot.ShotResponse;
 import com.github.harboat.clients.exceptions.BadRequest;
@@ -12,6 +13,8 @@ import com.github.harboat.core.websocket.WebsocketService;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -34,7 +37,10 @@ public class ShotService {
 
     public void takeAShoot(ShotResponse shotResponse) {
         String playerId = shotResponse.playerId();
-        String enemyId = gameUtility.switchTurnAndGetEnemyId(shotResponse.gameId(), playerId);
+        String enemyId = gameUtility.getEnemyId(shotResponse.gameId(), playerId);
+        if (shotResponse.cells().size() > 1 || ((List<Cell>)shotResponse.cells()).get(0).wasShip()) {
+            gameUtility.switchTurn(shotResponse.gameId(), enemyId);
+        }
         websocketService.notifyFrontEnd(
                 playerId, new Event<>(EventType.HIT, new ShotResult(playerId, shotResponse.cells()))
         );

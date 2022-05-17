@@ -109,6 +109,15 @@ public class GameService {
         );
     }
 
+    public void forfeit(String playerId, String gameId) {
+        Game game = repository.findByGameId(gameId).orElseThrow();
+        if (!game.getPlayers().contains(playerId)) throw new BadRequest("You are not in this game");
+        String enemyId = game.getPlayers().stream()
+                .dropWhile(p -> !p.equals(playerId))
+                .findFirst().orElseThrow();
+        endGame(new PlayerWon(gameId, enemyId));
+    }
+
     public void endGame(PlayerWon playerWon) {
         Game game = repository.findByGameId(playerWon.gameId()).orElseThrow();
         game.setEnded(true);

@@ -44,4 +44,12 @@ public class GameController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("{gameId}/forfeit")
+    public ResponseEntity<?> forfeit(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable String gameId
+    ) {
+        service.forfeit(userDetails.getUsername(), gameId);
+        return ResponseEntity.ok().build();
+    }
 }

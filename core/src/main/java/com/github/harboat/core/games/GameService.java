@@ -99,6 +99,7 @@ public class GameService {
     public void start(GameStartResponse response) {
         Game game = repository.findByGameId(response.gameId()).orElseThrow();
         game.setStarted(true);
+        game.setPlayerTurn(response.playerTurn());
         repository.save(game);
         game.getPlayers().forEach(p ->
                 websocketService.notifyFrontEnd(

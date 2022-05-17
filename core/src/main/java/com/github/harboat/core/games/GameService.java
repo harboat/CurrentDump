@@ -67,20 +67,21 @@ public class GameService {
         players.add(playerJoinedResponse.playerId());
         game.setPlayers(players);
         repository.save(game);
+        String gameId = playerJoinedResponse.gameId();
         String joinedPlayerId = playerJoinedResponse.playerId();
         String enemyId = game.getOwnerId();
         websocketService.notifyFrontEnd(
                 joinedPlayerId,
                 new Event<>(
                         EventType.GAME_JOINED,
-                        new PlayerJoined(joinedPlayerId, enemyId)
+                        new PlayerJoined(gameId, joinedPlayerId, enemyId)
                 )
         );
         websocketService.notifyFrontEnd(
                 enemyId,
                 new Event<>(
                         EventType.GAME_JOINED,
-                        new PlayerJoined(enemyId, joinedPlayerId)
+                        new PlayerJoined(gameId, enemyId, joinedPlayerId)
                 )
         );
     }

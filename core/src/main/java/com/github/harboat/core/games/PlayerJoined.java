@@ -1,4 +1,4 @@
 package com.github.harboat.core.games;
 
-public record PlayerJoined(String playerId, String enemyId) {
+public record PlayerJoined(String gameId, String playerId, String enemyId) {
 }

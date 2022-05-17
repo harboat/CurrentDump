@@ -21,7 +21,7 @@ public class ShotService {
     private WebsocketService websocketService;
 
 
-    @Async("shotServiceProducerThreads")
+//    @Async("shotServiceProducerThreads")
     public void takeAShoot(String gameId, String playerId, Integer cellId) {
         var game = gameUtility.findByGameId(gameId)
                 .orElseThrow(() -> new ResourceNotFound("Game not found!"));
@@ -33,7 +33,7 @@ public class ShotService {
         );
     }
 
-    @Async("shotServiceProducerThreads")
+//    @Async("shotServiceProducerThreads")
     public void takeAShoot(ShotResponse shotResponse) {
         String playerId = shotResponse.gameId();
         String enemyId = gameUtility.switchTurnAndGetEnemyId(shotResponse.gameId(), playerId);

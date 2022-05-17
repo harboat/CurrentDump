@@ -45,13 +45,10 @@ function connect() {
                     break
                 }
                 case "GAME_JOINED": {
-                    // gameId = object['gameId']
                     playerId = object['playerId']
                     enemyId = object['enemyId']
                     createGameIdElement()
                     requestPlacement()
-
-
                     break
                 }
                 case "BOARD_CREATED": {
@@ -74,11 +71,38 @@ function connect() {
                     break
                 }
                 case "HIT": {
+                    const shootingPlayerId = object['playerId']
+                    const cells = object['cells']
+                    await markCells(shootingPlayerId, cells)
                     break
                 }
             }
         })
     });
+}
+
+async function markCells(shootingPlayerId, cells) {
+    cells.forEach(cell => {
+        const cellId = cell['cellId']
+        const wasShip = cell['wasShip']
+        const playerCell = document.getElementById(cellId.toString() + ":player")
+        const enemyCell = document.getElementById(cellId.toString() + ":enemy")
+        if (wasShip) {
+            playerCell.classList.add('shipHit')
+            enemyCell.classList.add('shipHit')
+            activateCells()
+        } else {
+            playerCell.classList.add('cellHit')
+            enemyCell.classList.add('cellHit')
+        }
+    })
+    if (cells.length === 1) {
+        cells.forEach(cell => {
+            if (!cell['wasShip']) {
+                swapBoards()
+            }
+        })
+    }
 }
 
 function startGame() {
@@ -233,11 +257,11 @@ async function resetBoardContainer() {
 
 function swapBoards() {
 
-    if (document.getElementById('turn').innerText === enemyTurn) {
-        document.getElementById('turn').innerText = yourTurn
-    } else if (document.getElementById('turn').innerText === yourTurn) {
-        document.getElementById('turn').innerText = enemyTurn
-    }
+    // if (document.getElementById('turn').innerText === enemyTurn) {
+    //     document.getElementById('turn').innerText = yourTurn
+    // } else if (document.getElementById('turn').innerText === yourTurn) {
+    //     document.getElementById('turn').innerText = enemyTurn
+    // }
 
     document.getElementById('enemy').style.left = playerLeft
     document.getElementById('player').style.left = enemyLeft
@@ -246,6 +270,7 @@ function swapBoards() {
     playerLeft = enemyLeft
     enemyLeft = temp1
 
+    activateCells()
     boardAnimation()
 }
 
@@ -299,4 +324,22 @@ function createGameIdElement() {
     displayId.classList.add('gameId')
     displayId.textContent = 'game-id: ' + gameId
     body.appendChild(displayId)
+}
+
+function shoot(cell) {
+    deactivateCells()
+    const header = new Headers()
+    header.append('Content-Type', 'application/json')
+    const cellId = cell.id.toString().split(":")[0]
+    const shoot = {
+        "cellId": cellId
+    }
+    const requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/shoot"
+    const request = new Request(requestURL, {
+        method: 'POST',
+        body: JSON.stringify(shoot),
+        headers: header,
+        mode: 'cors'
+    })
+    const response = fetch(request)
 }

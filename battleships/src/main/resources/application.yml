@@ -14,10 +14,10 @@ spring:
   zipkin:
     base-url: ${zipkin_base_url}
 
-eureka:
-  client:
-    service-url:
-      defaultZone: ${eureka_service_url}
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: ${eureka_service_url}
 
 # For tests, remove later
 logging:

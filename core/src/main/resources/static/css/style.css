@@ -170,7 +170,7 @@ body {
 }
 
 .cellHit {
-    background-color: var(--nord1);
+    background-color: var(--nord15);
     cursor: default;
     pointer-events: none;
 }

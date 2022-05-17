@@ -113,7 +113,7 @@ public class GameService {
         Game game = repository.findByGameId(gameId).orElseThrow();
         if (!game.getPlayers().contains(playerId)) throw new BadRequest("You are not in this game");
         String enemyId = game.getPlayers().stream()
-                .dropWhile(p -> !p.equals(playerId))
+                .dropWhile(p -> p.equals(playerId))
                 .findFirst().orElseThrow();
         endGame(new PlayerWon(gameId, enemyId));
     }

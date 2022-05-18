@@ -47,6 +47,7 @@ public class ShotServiceTest {
         ShotRequest shotRequest = new ShotRequest("test", "testUsername", 1);
         //when
         service.takeAShoot(shotRequest);
+
         verify(fleetService).shoot(captor.capture());
         var actual = captor.getValue();
         //then

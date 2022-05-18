@@ -1,27 +1,49 @@
 package com.github.harboat.core.room;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Herman Ciechanowiec
  */
+@RestController
+@RequestMapping("/api/v1/rooms")
+@AllArgsConstructor
 class RoomsController {
 
-//    @GetMapping
-//    String roomsPage(@AuthenticationPrincipal UserDetails userDetails,
-//                     Model model) {
-//        System.out.println("\n\n\n\n\n\nUSERNAME:");
-//        System.out.println(userDetails.getUsername());
-////        model.a
-//        return "all_rooms.html";
-//    }
+    //TODO: remove the player from the room if the player has left the room page
+    private final RoomsService roomsService;
 
+    @GetMapping("/all")
+    ResponseEntity<RoomsCollection> getAllRooms() {
+        RoomsCollection roomsCollection = roomsService.getRoomsCollection();
+        return ResponseEntity.ok(roomsCollection);
+    }
 
+    @GetMapping("/{roomNumber}")
+    ResponseEntity<Room> getRoom(@PathVariable(name = "roomNumber")
+                                 String roomNumber) {
+        Room requestedRoom = roomsService.getRoom(roomNumber);
+        return ResponseEntity.ok(requestedRoom);
+    }
 
+    // TODO: get username from @AuthenticationPrincipal UserDetails userDetails
+    @PutMapping("/{roomNumber}")
+    ResponseEntity<String> addPlayerToRoom(@PathVariable(name = "roomNumber")
+                                           String roomNumber,
+                                           @RequestParam
+                                           String username) {
+        String responseMessage = roomsService.addPlayerToRoom(roomNumber, username);
+        return ResponseEntity.ok(responseMessage);
+    }
+
+    @DeleteMapping("/{roomNumber}")
+    ResponseEntity<String> deletePlayerFromRoom(@PathVariable(name = "roomNumber")
+                                                String roomNumber,
+                                                @RequestParam
+                                                String username) {
+        String responseMessage = roomsService.deletePlayerFromRoom(roomNumber, username);
+        return ResponseEntity.ok(responseMessage);
+    }
 }

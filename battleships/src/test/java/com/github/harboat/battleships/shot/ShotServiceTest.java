@@ -18,20 +18,15 @@ import static org.mockito.BDDMockito.*;
 
 @Listeners({MockitoTestNGListener.class})
 public class ShotServiceTest {
-
-    @Mock
-    private ShotRepository repository;
     @Mock
     private FleetService fleetService;
-    @Mock
-    private NotificationProducer notificationProducer;
     private ShotService service;
     @Captor
-    private ArgumentCaptor<NotificationRequest> captor;
+    private ArgumentCaptor<ShotRequest> captor;
 
     @BeforeMethod
     public void setUp() {
-        service = new ShotService(repository, fleetService, notificationProducer);
+        service = new ShotService(fleetService);
     }
 
     @Test
@@ -40,38 +35,34 @@ public class ShotServiceTest {
         ShotRequest shotRequest = new ShotRequest("test", "testUsername", 1);
         //when
         service.takeAShoot(shotRequest);
-        verify(notificationProducer).sendNotification(captor.capture());
+        verify(fleetService).shoot(captor.capture());
         var actual = captor.getValue();
         //then
-        assertEquals(actual.userId(), "testUsername");
+        assertEquals(actual.playerId(), "testUsername");
     }
 
     @Test
-    public void shouldTakeAShotWithProperEventType() {
+    public void shouldTakeAShotWithProperGameId() {
         //given
         ShotRequest shotRequest = new ShotRequest("test", "testUsername", 1);
         //when
         service.takeAShoot(shotRequest);
-        verify(notificationProducer).sendNotification(captor.capture());
+        verify(fleetService).shoot(captor.capture());
         var actual = captor.getValue();
         //then
-        assertEquals(actual.type(), EventType.HIT);
+        assertEquals(actual.gameId(), "test");
     }
 
     @Test
-    public void shouldTakeAShotWithProperBody() {
+    public void shouldTakeAShotWithProperCellId() {
         //given
         ShotRequest shotRequest = new ShotRequest("test", "testUsername", 1);
-        Shot expected = Shot.builder()
-                .gameId("test")
-                .playerId("testUsername")
-                .cellId(1)
-                .shotResult(null).build();
         //when
         service.takeAShoot(shotRequest);
-        verify(notificationProducer).sendNotification(captor.capture());
+        verify(fleetService).shoot(captor.capture());
         var actual = captor.getValue();
         //then
-        assertEquals(actual.body().toString(), expected.toString());
+        assertEquals(actual.cellId(), 1);
     }
+
 }

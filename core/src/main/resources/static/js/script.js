@@ -1,6 +1,4 @@
 //TODO: REFACTOR
-//TODO: FORFEIT BUTTON
-//TODO: BETTER UI
 //TODO: GAME END, EXCEPTION, SERVER ERROR
 //TODO: ERROR HANDLING
 
@@ -80,10 +78,11 @@ function connect() {
                 case "GAME_STARTED": {
                     playerTurn = object['playerTurn']
                     setUpBoardsBasedOnPlayerTurn()
+                    createForfeitButton()
                     break
                 }
                 case "GAME_END": {
-                    alert('konieckurwa' + object['winningPlayer'])
+                    alert(object['winningPlayer'])
                     break
                 }
                 case "HIT": {
@@ -95,6 +94,15 @@ function connect() {
             }
         })
     });
+}
+
+function createForfeitButton() {
+    let button = document.createElement('button')
+    button.setAttribute('id', 'forfeitButton')
+    button.setAttribute('onclick', 'forfeit()')
+    button.innerText = "Forfeit"
+    button.classList.add('forfeitButton')
+    body.appendChild(button)
 }
 
 async function markCells(shootingPlayerId, cells) {
@@ -202,6 +210,7 @@ function requestBoard() {
 }
 
 function initializeBoard(type, fleet) {
+    let index = 1
     let container = document.createElement("div")
     container.classList.add('container')
     container.classList.add(type)
@@ -210,10 +219,10 @@ function initializeBoard(type, fleet) {
     let horizontalCoordinates = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
         'Q', 'R', 'S', 'T']
 
-    for (let i = 1; i <= width * height; i++) {
+    for (let i = 0; i < width * height; i++) {
         let cell = document.createElement("div")
         cell.classList.add('cell')
-        cell.setAttribute('id', i.toString() + ':' + type)
+        cell.setAttribute('id', index.toString() + ':' + type)
 
         if (type === 'enemy') {
             cell.setAttribute('onclick', 'shoot(this)')
@@ -226,6 +235,7 @@ function initializeBoard(type, fleet) {
             cell.appendChild(displayCellCoordinate)
         }
         container.appendChild(cell)
+        index++
     }
     body.appendChild(container)
 

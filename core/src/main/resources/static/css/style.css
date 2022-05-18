@@ -44,6 +44,18 @@ body {
 }
 
 /*Containers*/
+.container {
+    position: center;
+    margin: auto;
+    background-color: var(--nord1);
+    display: flex;
+    width: 61.5vw;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    border: solid var(--nord1);
+    border-radius: 10px;
+}
+
 .roomContainer {
     height: 20vw;
     width: 30vw;
@@ -52,19 +64,6 @@ body {
     border-radius: 10px;
     margin: auto;
     background-color: var(--nord2);
-}
-
-.container {
-    position: center;
-    margin: 4.2vw auto;
-    background-color: var(--nord1);
-    display: flex;
-    height: 41.5vw;
-    width: 61.5vw;
-    flex-flow: row wrap;
-    justify-content: space-evenly;
-    border: solid var(--nord1);
-    border-radius: 10px;
 }
 
 /*Text-Based*/

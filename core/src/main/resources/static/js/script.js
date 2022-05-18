@@ -10,15 +10,13 @@ const ip = 'http://localhost:8080'
 const apiVersion = 'v1'
 
 let statisticsButton
-
+let roomsNumber = 4
 let gameid
 // CELL INDEXING FROM [
 let id = 1
 
 // CONNECT WITH BACKEND
-// connect()
 showRoom()
-
 
 function showRoom() {
     menuMusic.pause()
@@ -31,7 +29,7 @@ async function showRoomContainer() {
     let container = document.createElement("div")
     container.classList.add('container')
 
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < roomsNumber + 1; i++) {
         let roomContainer = document.createElement("div")
         roomContainer.classList.add("roomContainer")
         roomContainer.setAttribute('id', "roomContainer" + i)
@@ -64,6 +62,8 @@ async function showRoomContainer() {
         player2Text.setAttribute("id", "player2Text" + i)
         player2Text.classList.add("roomText")
         player2Text.textContent = "-"
+
+        container.style.height = 10.3 * roomsNumber + 0.3 + "vw"
 
         roomButton.appendChild(buttonText)
         roomContainer.appendChild(roomText)

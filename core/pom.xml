@@ -12,8 +12,6 @@
     <artifactId>core</artifactId>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
         <spring-boot-starter-web.version>2.6.7</spring-boot-starter-web.version>
         <spring-boot-starter-data-mongodb.version>2.6.7</spring-boot-starter-data-mongodb.version>
         <spring-boot-starter-validation.version>2.6.7</spring-boot-starter-validation.version>
@@ -55,7 +53,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.6.7</version>
             </plugin>
         </plugins>
     </build>

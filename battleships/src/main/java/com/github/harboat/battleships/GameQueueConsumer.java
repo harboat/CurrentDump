@@ -6,6 +6,7 @@ import com.github.harboat.battleships.game.GameService;
 import com.github.harboat.battleships.shot.ShotService;
 import com.github.harboat.clients.core.board.BoardCreation;
 import com.github.harboat.clients.core.game.GameCreation;
+import com.github.harboat.clients.core.game.GameStart;
 import com.github.harboat.clients.core.game.PlayerJoin;
 import com.github.harboat.clients.core.placement.GamePlacement;
 import com.github.harboat.clients.core.shot.ShotRequest;
@@ -49,6 +50,11 @@ public class GameQueueConsumer {
     @RabbitHandler
     public void consumer(ShotRequest shotRequest) {
         shotService.takeAShoot(shotRequest);
+    }
+
+    @RabbitHandler
+    public void consumer(GameStart gameStart) {
+        gameService.start(gameStart);
     }
 
 }

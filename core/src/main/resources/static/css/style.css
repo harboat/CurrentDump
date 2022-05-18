@@ -6,9 +6,15 @@
     --nord4: #d8dee9;
     --nord5: #e5e9f0;
     --nord6: #eceff4;
+    --nord7: #8fbcbb;
+    --nord8: #88c0d0;
+    --nord9: #81a1c1;
+    --nord10: #5e81ac;
     --nord11: #bf616a;
-    --nord12: #F2B7BD;
-
+    --nord12: #d08770;
+    --nord13: #ebcb8b;
+    --nord14: #a3be8c;
+    --nord15: #b48ead;
 }
 
 body {
@@ -135,7 +141,7 @@ body {
     transition: 0.6s;
     color: var(--nord2);
     text-align: center;
-    font-family: 'VT323-Regular';
+    font-family: 'VT323-Regular', serif;
     font-size: 3vw;
 }
 
@@ -170,7 +176,7 @@ body {
 }
 
 .cellSunk {
-    background-color: var(--nord12);
+    background-color: var(--nord15);
     cursor: default;
     pointer-events: none;
 }

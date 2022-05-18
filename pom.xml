@@ -15,6 +15,7 @@
         <module>placement</module>
         <module>core</module>
         <module>logger</module>
+        <module>eureka</module>
     </modules>
     <packaging>pom</packaging>
     <name>ships</name>

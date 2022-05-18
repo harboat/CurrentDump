@@ -11,13 +11,14 @@ spring:
     addresses: ${rabbit_uri}
     username: ${rabbit_username}
     password: ${rabbit_password}
-  multirabbitmq:
-    enabled: true
-    connections:
-      logger:
-        addresses: ${rabbit_logger_uri}
-        username: ${rabbit_logger_username}
-        password: ${rabbit_logger_password}
+  zipkin:
+    base-url: ${zipkin_base_url}
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${eureka_service_url}
 
 rabbitmq:
   exchanges:

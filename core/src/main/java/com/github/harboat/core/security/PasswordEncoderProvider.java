@@ -11,6 +11,6 @@ import java.security.SecureRandom;
 class PasswordEncoderProvider {
     @Bean
     PasswordEncoder getInstance() {
-        return new BCryptPasswordEncoder(13, new SecureRandom());
+        return new BCryptPasswordEncoder(8, new SecureRandom());
     }
 }

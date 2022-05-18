@@ -31,7 +31,7 @@ public class BoardServiceTest {
     private CoreQueueProducer producer;
     private BoardService service;
     private final String gameId = "test";
-    private final  String playerId = "testPlayer";
+    private final String playerId = "testPlayer";
     private final Size size = new Size(10, 10);
     @Captor
     ArgumentCaptor<BoardCreationResponse> captor;
@@ -80,13 +80,14 @@ public class BoardServiceTest {
     }
 
     @DataProvider
-    public static Object[][] listOfCellsFor10x10Board () {
-        return new Object [][] {
-        {List.of(1, 2, 15)}
-        ,{List.of(1)}
-        ,{List.of(1, 100)}
+    public static Object[][] listOfCellsFor10x10Board() {
+        return new Object[][]{
+                {List.of(1, 2, 15)}
+                , {List.of(1)}
+                , {List.of(1, 100)}
         };
     }
+
     @Test(dataProvider = "listOfCellsFor10x10Board")
     public void shouldMarkOccupied(Collection<Integer> cells) {
         //given
@@ -109,13 +110,14 @@ public class BoardServiceTest {
     }
 
     @DataProvider
-    public static Object[][] cellIdsFor10x10Board () {
-        return new Object [][] {
-        {1}
-        ,{100}
-        ,{10}
+    public static Object[][] cellIdsFor10x10Board() {
+        return new Object[][]{
+                {1}
+                , {100}
+                , {10}
         };
     }
+
     @Test(dataProvider = "cellIdsFor10x10Board")
     public void shouldMarkHit(int cellId) {
         //given

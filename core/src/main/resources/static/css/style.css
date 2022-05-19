@@ -320,7 +320,7 @@ body {
     color: var(--nord2);
     text-align: center;
     font-family: 'VT323-Regular', serif;
-    opacity: 1;
+    opacity: 0;
 }
 
 .cellCoordinate:hover {

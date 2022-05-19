@@ -22,6 +22,7 @@ body {
     background-color: var(--nord0);
 }
 
+
 .heightLabel {
     text-align: center;
     transition: 0.2s;
@@ -219,7 +220,7 @@ body {
 }
 
 /*Text-Based*/
-.gameId {
+.roomId {
     transition: 0.5s;
     color: var(--nord4);
     margin: auto;

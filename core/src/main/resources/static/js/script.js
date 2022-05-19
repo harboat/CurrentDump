@@ -3,7 +3,6 @@
 //TODO: ERROR HANDLING
 //TODO: AUDIO
 //TODO: DYNAMIC CELL SIZE FIX
-//TODO: FIX COORDINATES
 
 const body = document.getElementsByTagName("body")[0]
 
@@ -22,9 +21,12 @@ let height
 let width
 let yourTurn
 let enemyTurn
+let readyPlayer
+let fleetGenerated = false
 
 let playerTurn
 let gameId
+let roomId
 let playerId
 let enemyId
 let ships
@@ -56,18 +58,19 @@ function connect() {
                 case "SERVER_ERROR": {
                     break
                 }
-                case "GAME_CREATED": {
-                    gameId = object['gameId']
-                    createGameIdElement()
+                case "ROOM_CREATED": {
+                    roomId = object['roomId']
+                    createRoomIdElement()
                     createBoardConfigForm()
+                    startGameButton()
                     break
                 }
-                case "GAME_JOINED": {
+                case "ROOM_JOINED": {
                     playerId = object['playerId']
                     enemyId = object['enemyId']
-                    createGameIdElement()
-                    if (document.getElementById('fleetGenButton') === null) {
-                        createGenerateFleetButton()
+                    createRoomIdElement()
+                    if (document.getElementById('startGameButton') === null) {
+                        createReadyButton()
                     }
                     break
                 }
@@ -79,26 +82,30 @@ function connect() {
                     break
                 }
                 case "FLEET_CREATED": {
-                    ships = object['ships']
+                    ships = object
+                    console.log(ships);
                     document.getElementById('fleetGenButton').innerText = 'Reroll fleet'
-                    initializeBoard('player', ships)
+                    await initializeBoard('player', ships)
                     let playerBoard = document.getElementById('player')
                     playerBoard.style.left = "30vw"
                     playerBoard.style.opacity = "1"
-                    initializeBoard('enemy', ships)
-                    startGameButton()
+                    await initializeBoard('enemy', ships)
+                    fleetGenerated = true
+                    checkIfGameIsReady()
                     break
                 }
                 case "GAME_STARTED": {
                     playerTurn = object['playerTurn']
+                    gameId = object['gameId']
                     setUpBoardsBasedOnPlayerTurn()
                     createForfeitButton()
                     removeButtons()
-                    createTurnElement()
+                    await createTurnElement()
                     break
                 }
                 case "GAME_END": {
                     alert(object['winningPlayer'])
+                    window.location.reload()
                     break
                 }
                 case "HIT": {
@@ -107,9 +114,45 @@ function connect() {
                     await markCells(shootingPlayerId, cells)
                     break
                 }
+                case "PLAYER_READY": {
+                    readyPlayer = object['playerId']
+                    if (document.getElementById('readyButton') !== null && playerId === readyPlayer) {
+                        document.getElementById('readyButton').style.backgroundColor = "#a3be8c"
+                        document.getElementById('readyButton').style.borderColor = "#a3be8c"
+                    }
+                    checkIfGameIsReady()
+                }
             }
         })
     });
+}
+
+function checkIfGameIsReady() {
+    if (readyPlayer === null) {
+        return
+    }
+    if (document.getElementById('startGameButton') !== null && playerId !== readyPlayer && fleetGenerated === true) {
+        document.getElementById('startGameButton').style.backgroundColor = "#a3be8c"
+        document.getElementById('startGameButton').style.borderColor = "#a3be8c"
+    }
+}
+
+function createReadyButton() {
+    const button = document.createElement('button')
+    button.setAttribute('id', 'readyButton')
+    button.setAttribute('onclick', 'ready()')
+    button.classList.add('startGameButton')
+    button.innerText = 'Ready'
+    body.appendChild(button)
+}
+
+function ready() {
+    const requestURLReady = requestURLBase + "rooms/" + roomId + "/ready"
+    const requestReady = new Request(requestURLReady, {
+        method: 'POST',
+        mode: 'cors'
+    })
+    const responseReady = fetch(requestReady)
 }
 
 function createBoardConfigForm() {
@@ -159,7 +202,7 @@ function createBoardConfigForm() {
     body.appendChild(button)
 }
 
-function createTurnElement() {
+async function createTurnElement() {
     let turn = document.createElement('p')
     turn.setAttribute('id', 'turn')
     turn.classList.add('turn')
@@ -174,6 +217,9 @@ function removeButtons() {
         body.removeChild(document.getElementById('formWidth'))
         body.removeChild(document.getElementById('formHeight'))
         body.removeChild(document.getElementById('setBoardSizeButton'))
+    }
+    if (document.getElementById('readyButton') !== null) {
+        body.removeChild(document.getElementById('readyButton'))
     }
 }
 
@@ -225,16 +271,23 @@ async function markCellsHelper(cells, type) {
 }
 
 function startGame() {
-    const requestURL = requestURLBase + "games/" + gameId + "/start"
-    const request = new Request(requestURL, {
+    const requestURLReady = requestURLBase + "rooms/" + roomId + "/ready"
+    const requestURLStart = requestURLBase + "rooms/" + roomId + "/start"
+    const requestReady = new Request(requestURLReady, {
         method: 'POST',
         mode: 'cors'
     })
-    const response = fetch(request).then(response => {
-        if (response.status === 200) {
-            document.getElementById("boardContainer")
-                .removeChild(document.getElementById('startGameButton'))
-        }
+    const request = new Request(requestURLStart, {
+        method: 'POST',
+        mode: 'cors'
+    })
+    const responseReady = fetch(requestReady).then(() => {
+        const response = fetch(request).then(response => {
+            if (response.status === 200) {
+                document.getElementById("boardContainer")
+                    .removeChild(document.getElementById('startGameButton'))
+            }
+        })
     })
 }
 
@@ -262,7 +315,7 @@ function setUpBoardsBasedOnPlayerTurn() {
 
 //TODO: ERROR HANDLING
 function requestPlacement() {
-    const requestURL = requestURLBase + "games/" + gameId + "/placements"
+    const requestURL = requestURLBase + "rooms/" + roomId + "/placements"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors'
@@ -287,7 +340,7 @@ function requestBoard() {
     let height = document.getElementById('boardHeight')
     let heightValue = height.options[height.selectedIndex].value
 
-    const requestURL = requestURLBase + "games/" + gameId + "/boards"
+    const requestURL = requestURLBase + "rooms/" + roomId + "/size"
     const board = {
         "width": widthValue,
         "height": heightValue
@@ -303,7 +356,7 @@ function requestBoard() {
     const response = fetch(request)
 }
 
-function initializeBoard(type, fleet) {
+async function initializeBoard(type, fleet) {
     let index = 1
     let container = document.createElement("div")
     container.classList.add('container')
@@ -328,7 +381,7 @@ function initializeBoard(type, fleet) {
             cell.style.cursor = 'crosshair'
 
             // let coordinate = horizontalCoordinates[i % width] + +(((i / width * 10 - i % 10) / 10) + 1)
-            let coordinate = horizontalCoordinates[i % width] + +(parseInt(i/width) + 1)
+            let coordinate = horizontalCoordinates[i % width] + +(parseInt(i / width) + 1)
             let displayCellCoordinate = document.createElement('div')
             displayCellCoordinate.classList.add('cellCoordinate')
             displayCellCoordinate.style.fontSize = 27 / width + "vw"
@@ -354,7 +407,7 @@ function initializeBoard(type, fleet) {
 
 async function createShips(fleet, type) {
     if (type === 'player') {
-        fleet.forEach(ship => ship["masts"].forEach(cellID => {
+        fleet.forEach(ship => ship["masts"]['positions'].forEach(cellID => {
             document.getElementById(cellID + ":" + type).classList.add("ship")
         }))
     }
@@ -364,7 +417,7 @@ async function createShips(fleet, type) {
 
 async function createGame() {
     await resetBoardContainer()
-    const requestURL = requestURLBase + "games"
+    const requestURL = requestURLBase + "rooms"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors',
@@ -375,7 +428,7 @@ async function createGame() {
 
 async function joinGame(gameId) {
     await resetBoardContainer()
-    const requestURL = requestURLBase + "games/" + gameId + "/join"
+    const requestURL = requestURLBase + "rooms/" + roomId + "/join"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors',
@@ -418,7 +471,7 @@ function getGameIDFromPlayer() {
         joinGame(gameIdFromPlayer).then(() => {
         })
     }
-    gameId = gameIdFromPlayer
+    roomId = gameIdFromPlayer
 }
 
 function boardAnimation() {
@@ -454,12 +507,12 @@ const delay = millis => new Promise((resolve, reject) => {
     setTimeout(_ => resolve(), millis)
 });
 
-function createGameIdElement() {
-    if (document.getElementById('gameId') !== null) return
+function createRoomIdElement() {
+    if (document.getElementById('roomId') !== null) return
     let displayId = document.createElement('p')
-    displayId.setAttribute('id', 'gameId')
-    displayId.classList.add('gameId')
-    displayId.textContent = 'game-id: ' + gameId
+    displayId.setAttribute('id', 'roomId')
+    displayId.classList.add('roomId')
+    displayId.textContent = 'room-id: ' + roomId
     body.appendChild(displayId)
 }
 

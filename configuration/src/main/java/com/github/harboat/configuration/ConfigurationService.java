@@ -94,10 +94,9 @@ public class ConfigurationService {
                         setShipsPosition.playerId()
                 )
         );
-        configuration.getPlayersConfiguration().keySet()
-                .forEach(p -> notificationProducer.sendNotification(
-                        new NotificationRequest<>(p, EventType.FLEET_CREATED, setShipsPosition.ships())
-                ));
+        notificationProducer.sendNotification(
+                new NotificationRequest<>(setShipsPosition.playerId(), EventType.FLEET_CREATED, setShipsPosition.ships())
+        );
     }
 
     void createGame(CreateGame createGame) {

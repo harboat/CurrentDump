@@ -90,6 +90,7 @@ public class RoomService {
     public void joinPlayer(RoomPlayerJoin roomPlayerJoin) {
         Room room = repository.findById(roomPlayerJoin.roomId()).orElseThrow(() -> new ResourceNotFound("Couldn't find the room!"));
         if (room.getPlayers().size() == 2) throw new BadRequest("Room is full!");
+        if (room.getPlayers().containsKey(roomPlayerJoin.playerId())) throw new BadRequest("You are already in this room!");
         room.addPlayer(roomPlayerJoin.playerId());
         repository.save(room);
         configQueueProducer.sendPlayerJoin(

@@ -84,6 +84,15 @@ body {
     margin: 4.2vw auto;
 }
 
+.nukeButton:hover {
+    background: var(--nord12);
+    border-color: var(--nord13);
+}
+
+.nukeButton:target {
+    background: var(--nord11);
+}
+
 /*Text-Based*/
 .gameId {
     transition: 0.5s;

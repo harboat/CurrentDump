@@ -116,6 +116,12 @@ function createNukeButton() {
     button.setAttribute('onclick', 'nuke()')
     button.innerText = "Nuke"
     button.classList.add('nukeButton')
+
+    let checkbox = document.createElement('input');
+    checkbox.setAttribute('type', 'checkbox')
+    checkbox.setAttribute('id', 'nukeCheckbox')
+
+    button.appendChild(checkbox)
     body.appendChild(button)
 }
 

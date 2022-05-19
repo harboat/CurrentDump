@@ -2,6 +2,8 @@
 //TODO: GAME END, EXCEPTION, SERVER ERROR
 //TODO: ERROR HANDLING
 //TODO: AUDIO
+//TODO: DYNAMIC CELL SIZE FIX
+//TODO: FIX COORDINATES
 
 const body = document.getElementsByTagName("body")[0]
 
@@ -57,9 +59,9 @@ function connect() {
                 case "GAME_CREATED": {
                     gameId = object['gameId']
                     createGameIdElement()
-                    requestBoard()
                     startGameButton()
                     createGenerateFleetButton()
+                    createBoardConfigForm()
                     break
                 }
                 case "GAME_JOINED": {
@@ -74,10 +76,12 @@ function connect() {
                 case "BOARD_CREATED": {
                     width = object['width']
                     height = object['height']
+                    alert('Board created successfully')
                     break
                 }
                 case "FLEET_CREATED": {
                     ships = object['ships']
+                    document.getElementById('fleetGenButton').innerText = 'Reroll fleet'
                     initializeBoard('player', ships)
                     let playerBoard = document.getElementById('player')
                     playerBoard.style.left = "30vw"
@@ -108,6 +112,53 @@ function connect() {
     });
 }
 
+function createBoardConfigForm() {
+    const formHeight = document.createElement('form')
+    formHeight.setAttribute('id', 'formHeight')
+    const selectHeight = document.createElement('select')
+    selectHeight.setAttribute('id', 'boardHeight')
+    selectHeight.classList.add('selectHeight')
+    for (let i = 10; i <= 20; i++) {
+        let option = document.createElement('option')
+        option.setAttribute('value', i.toString())
+        option.innerText = i.toString();
+        selectHeight.appendChild(option)
+    }
+    const heightLabel = document.createElement('p')
+    heightLabel.setAttribute('id', 'heightLabel')
+    heightLabel.classList.add('heightLabel')
+    heightLabel.innerText = "Board Height"
+    formHeight.appendChild(heightLabel)
+    formHeight.appendChild(selectHeight)
+    body.appendChild(formHeight)
+
+    const formWidth = document.createElement('form')
+    formWidth.setAttribute('id', 'formWidth')
+    const selectWidth = document.createElement('select')
+    selectWidth.classList.add('selectWidth')
+    selectWidth.setAttribute('id', 'boardWidth')
+    for (let i = 10; i <= 20; i++) {
+        let option = document.createElement('option')
+        option.setAttribute('value', i.toString())
+        option.innerText = i.toString();
+        selectWidth.appendChild(option)
+    }
+    const widthLabel = document.createElement('p')
+    widthLabel.setAttribute('id', 'widthLabel')
+    widthLabel.classList.add('widthLabel')
+    widthLabel.innerText = "Board Width"
+    formWidth.appendChild(widthLabel)
+    formWidth.appendChild(selectWidth)
+    body.appendChild(formWidth)
+
+    let button = document.createElement('button')
+    button.setAttribute('onclick', 'requestBoard()')
+    button.classList.add('setBoardSizeButton')
+    button.setAttribute('id', 'setBoardSizeButton')
+    button.innerText = "Set board size"
+    body.appendChild(button)
+}
+
 function createTurnElement() {
     let turn = document.createElement('p')
     turn.setAttribute('id', 'turn')
@@ -120,6 +171,9 @@ function removeButtons() {
     body.removeChild(document.getElementById('fleetGenButton'))
     if (document.getElementById('startGameButton') !== null) {
         body.removeChild(document.getElementById('startGameButton'))
+        body.removeChild(document.getElementById('formWidth'))
+        body.removeChild(document.getElementById('formHeight'))
+        body.removeChild(document.getElementById('setBoardSizeButton'))
     }
 }
 
@@ -214,8 +268,7 @@ function requestPlacement() {
         mode: 'cors'
     })
     const response = fetch(request)
-    let button = document.getElementById('fleetGenButton')
-    button.innerText = 'Reroll fleet'
+
 }
 
 function startGameButton() {
@@ -229,10 +282,15 @@ function startGameButton() {
 
 //TODO: ERROR HANDLING | USER CAN SET BOARD SIZE
 function requestBoard() {
+    let width = document.getElementById('boardWidth')
+    let widthValue = width.options[width.selectedIndex].value
+    let height = document.getElementById('boardHeight')
+    let heightValue = height.options[height.selectedIndex].value
+
     const requestURL = requestURLBase + "games/" + gameId + "/boards"
     const board = {
-        "width": 10,
-        "height": 10
+        "width": widthValue,
+        "height": heightValue
     }
     const header = new Headers()
     header.append('Content-Type', 'application/json')
@@ -258,6 +316,13 @@ function initializeBoard(type, fleet) {
     for (let i = 0; i < width * height; i++) {
         let cell = document.createElement("div")
         cell.classList.add('cell')
+
+        let cellWidth = 40 / width - 0.4
+        let cellHeight = 40 / height - 0.4
+        // let fontSize = 40 / width
+        cell.style.width = cellWidth.toString() + 'vw'
+        cell.style.height = cellHeight.toString() + 'vw'
+        // cell.style.fontSize = fontSize.toString() + 'vw'
         cell.setAttribute('id', index.toString() + ':' + type)
 
         if (type === 'enemy') {

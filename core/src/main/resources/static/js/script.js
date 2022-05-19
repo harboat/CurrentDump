@@ -1,6 +1,7 @@
 //TODO: REFACTOR
 //TODO: GAME END, EXCEPTION, SERVER ERROR
 //TODO: ERROR HANDLING
+//TODO: AUDIO
 
 const body = document.getElementsByTagName("body")[0]
 
@@ -29,7 +30,7 @@ let ships
 connect();
 
 function forfeit() {
-    const requestURL = requestURLBase+ "games/" + gameId + "/forfeit"
+    const requestURL = requestURLBase + "games/" + gameId + "/forfeit"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors'
@@ -89,6 +90,7 @@ function connect() {
                     setUpBoardsBasedOnPlayerTurn()
                     createForfeitButton()
                     removeButtons()
+                    createTurnElement()
                     break
                 }
                 case "GAME_END": {
@@ -104,6 +106,14 @@ function connect() {
             }
         })
     });
+}
+
+function createTurnElement() {
+    let turn = document.createElement('p')
+    turn.setAttribute('id', 'turn')
+    turn.classList.add('turn')
+    turn.innerText = yourTurn
+    body.appendChild(turn)
 }
 
 function removeButtons() {
@@ -161,7 +171,7 @@ async function markCellsHelper(cells, type) {
 }
 
 function startGame() {
-    const requestURL = requestURLBase+ "games/" + gameId + "/start"
+    const requestURL = requestURLBase + "games/" + gameId + "/start"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors'
@@ -198,7 +208,7 @@ function setUpBoardsBasedOnPlayerTurn() {
 
 //TODO: ERROR HANDLING
 function requestPlacement() {
-    const requestURL = requestURLBase+ "games/" + gameId + "/placements"
+    const requestURL = requestURLBase + "games/" + gameId + "/placements"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors'
@@ -219,7 +229,7 @@ function startGameButton() {
 
 //TODO: ERROR HANDLING | USER CAN SET BOARD SIZE
 function requestBoard() {
-    const requestURL = requestURLBase+ "games/" + gameId + "/boards"
+    const requestURL = requestURLBase + "games/" + gameId + "/boards"
     const board = {
         "width": 10,
         "height": 10
@@ -288,7 +298,7 @@ async function createShips(fleet, type) {
 
 async function createGame() {
     await resetBoardContainer()
-    const requestURL = requestURLBase+ "games"
+    const requestURL = requestURLBase + "games"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors',
@@ -299,7 +309,7 @@ async function createGame() {
 
 async function joinGame(gameId) {
     await resetBoardContainer()
-    const requestURL = requestURLBase+ "games/" + gameId + "/join"
+    const requestURL = requestURLBase + "games/" + gameId + "/join"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors',
@@ -318,11 +328,11 @@ async function resetBoardContainer() {
 
 function swapBoards() {
 
-    // if (document.getElementById('turn').innerText === enemyTurn) {
-    //     document.getElementById('turn').innerText = yourTurn
-    // } else if (document.getElementById('turn').innerText === yourTurn) {
-    //     document.getElementById('turn').innerText = enemyTurn
-    // }
+    if (document.getElementById('turn').innerText === enemyTurn) {
+        document.getElementById('turn').innerText = yourTurn
+    } else if (document.getElementById('turn').innerText === yourTurn) {
+        document.getElementById('turn').innerText = enemyTurn
+    }
 
     document.getElementById('enemy').style.left = playerLeft
     document.getElementById('player').style.left = enemyLeft
@@ -395,7 +405,7 @@ function shoot(cell) {
     const shoot = {
         "cellId": cellId
     }
-    const requestURL = requestURLBase+ "games/" + gameId + "/shoot"
+    const requestURL = requestURLBase + "games/" + gameId + "/shoot"
     const request = new Request(requestURL, {
         method: 'POST',
         body: JSON.stringify(shoot),

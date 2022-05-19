@@ -62,7 +62,12 @@ public class RoomService {
         room.setVisible(false);
         repository.save(room);
         room.getPlayers()
-                .forEach(p -> websocketService.notifyFrontEnd(p, new Event<>(EventType.ROOM_JOINED, roomPlayerJoined)));
+                .forEach(p -> {
+                    String enemyId = room.getPlayers().stream()
+                                        .dropWhile(i -> !i.equals(p))
+                                        .findFirst().orElseThrow();
+                    websocketService.notifyFrontEnd(p, new Event<>(EventType.ROOM_JOINED, new PlayerRoomJoined(room.getRoomId(), p, enemyId)));
+                });
     }
 
     public void join(String roomId, String playerId) {

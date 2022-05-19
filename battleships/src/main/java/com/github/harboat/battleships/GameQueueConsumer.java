@@ -9,6 +9,7 @@ import com.github.harboat.clients.core.game.GameCreation;
 import com.github.harboat.clients.core.game.GameStart;
 import com.github.harboat.clients.core.game.PlayerJoin;
 import com.github.harboat.clients.core.placement.GamePlacement;
+import com.github.harboat.clients.core.shot.NukeShotRequest;
 import com.github.harboat.clients.core.shot.ShotRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -50,6 +51,11 @@ public class GameQueueConsumer {
     @RabbitHandler
     public void consumer(ShotRequest shotRequest) {
         shotService.takeAShoot(shotRequest);
+    }
+
+    @RabbitHandler
+    public void consumer(NukeShotRequest nukeShotRequest) {
+        shotService.takeAShoot(nukeShotRequest);
     }
 
     @RabbitHandler

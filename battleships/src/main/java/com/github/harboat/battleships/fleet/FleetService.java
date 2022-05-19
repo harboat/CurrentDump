@@ -8,10 +8,7 @@ import com.github.harboat.battleships.game.GameUtility;
 import com.github.harboat.clients.core.placement.GamePlacement;
 import com.github.harboat.clients.core.placement.Masts;
 import com.github.harboat.clients.core.placement.PlacementResponse;
-import com.github.harboat.clients.core.shot.Cell;
-import com.github.harboat.clients.core.shot.PlayerWon;
-import com.github.harboat.clients.core.shot.ShotRequest;
-import com.github.harboat.clients.core.shot.ShotResponse;
+import com.github.harboat.clients.core.shot.*;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.clients.notification.NotificationRequest;
 import lombok.AllArgsConstructor;
@@ -110,4 +107,6 @@ public class FleetService {
         );
     }
 
+    public void shoot(NukeShotRequest nukeShotRequest) {
+    }
 }

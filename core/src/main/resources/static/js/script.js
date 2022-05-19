@@ -391,7 +391,7 @@ function shoot(cell) {
     }
     let requestURL = ""
     if (nukeCheckbox.checked == true) {
-        requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/shoot"
+        requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/nuke"
     } else {
         requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/shoot"
     }

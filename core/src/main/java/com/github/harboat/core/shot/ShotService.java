@@ -35,6 +35,17 @@ public class ShotService {
         );
     }
 
+    public void takeANukeShoot(String gameId, String playerId, Integer cellId) {
+        var game = gameUtility.findByGameId(gameId)
+                .orElseThrow(() -> new ResourceNotFound("Game not found!"));
+        if (!game.getPlayers().contains(playerId)) throw new BadRequest("Player is not in the game!");
+        if (!game.getStarted()) throw new BadRequest("Game has not started!");
+        if (!game.getPlayerTurn().equals(playerId)) throw new BadRequest("It is not your turn!");
+        producer.sendRequest(
+                new ShotRequest(gameId, playerId, cellId)
+        );
+    }
+
     public void takeAShoot(ShotResponse shotResponse) {
         String playerId = shotResponse.playerId();
         String enemyId = gameUtility.getEnemyId(shotResponse.gameId(), playerId);

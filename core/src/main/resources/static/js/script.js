@@ -4,7 +4,6 @@
 //TODO: AUDIO
 //TODO: DYNAMIC CELL SIZE FIX
 //TODO: ROOMS SCREEN
-//TODO: FIX BUG WITH START BUTTON
 
 const body = document.getElementsByTagName("body")[0]
 

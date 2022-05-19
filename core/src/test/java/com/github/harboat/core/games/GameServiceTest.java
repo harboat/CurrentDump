@@ -1,9 +1,7 @@
 package com.github.harboat.core.games;
 
-import com.github.harboat.clients.core.game.GameCreation;
-import com.github.harboat.clients.core.game.GameCreationResponse;
-import com.github.harboat.clients.core.game.GameStart;
-import com.github.harboat.clients.core.game.PlayerJoin;
+import com.github.harboat.clients.core.game.*;
+import com.github.harboat.clients.core.shot.PlayerWon;
 import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.notification.EventType;
@@ -33,6 +31,7 @@ public class GameServiceTest {
     private GameQueueProducer producer;
     @Mock
     private WebsocketService websocketService;
+    @Mock
     private GameService service;
     private String playerId;
     private String enemyId;
@@ -262,4 +261,188 @@ public class GameServiceTest {
         assertEquals(actual.gameId(), gameId);
     }
 
+    @Test(expectedExceptions = NoSuchElementException.class)
+    public void startFromResponseShouldThrowIfThereIsNoGameWithThisId() {
+        //given
+        GameStartResponse response = new GameStartResponse(gameId, playerId);
+        given(repository.findByGameId(gameId)).willReturn(Optional.empty());
+
+        //when
+        service.start(response);
+        //then
+    }
+
+    @Test
+    public void shouldStartFromResponseWithProperPlayersIds() {
+        //given
+        Game game = Game.builder()
+                .gameId(gameId)
+                .players(List.of(playerId))
+                .build();
+        GameStartResponse response = new GameStartResponse(gameId, playerId);
+        given(repository.findByGameId(gameId)).willReturn(Optional.of(game));
+        given(repository.save(any())).willReturn(null);
+        ArgumentCaptor<String> playerCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+        //when
+        service.start(response);
+        verify(websocketService, times(game.getPlayers().size())).notifyFrontEnd(playerCaptor.capture(), eventCaptor.capture());
+        var actual = playerCaptor.getAllValues();
+        //then
+        assertEquals(actual, game.getPlayers());
+    }
+
+    @Test
+    public void shouldStartFromResponseWithProperEventTypes() {
+        //given
+        Game game = Game.builder()
+                .gameId(gameId)
+                .players(List.of(playerId))
+                .build();
+        GameStartResponse response = new GameStartResponse(gameId, playerId);
+        given(repository.findByGameId(gameId)).willReturn(Optional.of(game));
+        given(repository.save(any())).willReturn(null);
+        ArgumentCaptor<String> playerCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+        //when
+        service.start(response);
+        verify(websocketService, times(game.getPlayers().size())).notifyFrontEnd(playerCaptor.capture(), eventCaptor.capture());
+        var actual = eventCaptor.getAllValues();
+        //then
+        System.out.println(actual.size());
+        assertEquals(actual.stream()
+                .map(Event::getEventType)
+                .filter(e -> e == EventType.GAME_STARTED)
+                .count(), game.getPlayers().size());
+    }
+
+    @Test
+    public void shouldStartFromResponseWithProperPlayerTurn() {
+        //given
+        Game game = Game.builder()
+                .gameId(gameId)
+                .players(List.of(playerId))
+                .build();
+        GameStartResponse response = new GameStartResponse(gameId, playerId);
+        given(repository.findByGameId(gameId)).willReturn(Optional.of(game));
+        given(repository.save(any())).willReturn(null);
+        ArgumentCaptor<String> playerCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+        //when
+        service.start(response);
+        verify(websocketService, times(game.getPlayers().size())).notifyFrontEnd(playerCaptor.capture(), eventCaptor.capture());
+        var actual = eventCaptor.getAllValues();
+        //then
+        assertEquals(actual.stream()
+                .map(Event::getContent)
+                .filter(e -> e.equals(new GameStarted(playerId)))
+                .count(), game.getPlayers().size());
+    }
+
+    @Test(expectedExceptions = NoSuchElementException.class)
+    public void forfeitShouldThrowWhenThereIsNoGameWithThisId() {
+        //given
+        given(repository.findByGameId(gameId)).willReturn(Optional.empty());
+        //when
+        service.forfeit(playerId, gameId);
+        //then
+    }
+
+    @Test(expectedExceptions = BadRequest.class, expectedExceptionsMessageRegExp = "You are not in this game")
+    public void forfeitShouldThrowWhenPlayerIsNotInThisGame() {
+        //given
+        Game game = Game.builder()
+                .gameId(gameId)
+                .players(List.of())
+                .build();
+        given(repository.findByGameId(gameId)).willReturn(Optional.of(game));
+        //when
+        service.forfeit(playerId, gameId);
+        //then
+    }
+
+    @Test(expectedExceptions = NoSuchElementException.class)
+    public void forfeitShouldThrowWhenThereIsNoEnemy() {
+        //given
+        Game game = Game.builder()
+                .gameId(gameId)
+                .players(List.of(playerId))
+                .build();
+        given(repository.findByGameId(gameId)).willReturn(Optional.of(game));
+        //when
+        service.forfeit(playerId, gameId);
+        //then
+    }
+
+    @Test(expectedExceptions = NoSuchElementException.class)
+    public void endGameShouldThrowWhenThereIsNoGameWithThisId() {
+        //given
+        PlayerWon playerWon = new PlayerWon(gameId, playerId);
+        given(repository.findByGameId(gameId)).willReturn(Optional.empty());
+        //when
+        service.endGame(playerWon);
+        //then
+    }
+    @Test
+    public void shouldEndGameWithProperPlayers() {
+        //given
+        Game game = Game.builder()
+                .gameId(gameId)
+                .players(List.of(playerId))
+                .build();
+        PlayerWon playerWon = new PlayerWon(gameId, playerId);
+        given(repository.findByGameId(gameId)).willReturn(Optional.of(game));
+        ArgumentCaptor<String> playerCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Event> eventCaptor =ArgumentCaptor.forClass(Event.class);
+        //when
+        service.endGame(playerWon);
+        verify(websocketService).notifyFrontEnd(playerCaptor.capture(), eventCaptor.capture());
+        var actual = playerCaptor.getAllValues();
+        //then
+        assertEquals(actual, game.getPlayers());
+    }
+
+    @Test
+    public void shouldEndGameWithProperEventTypes() {
+        //given
+        Game game = Game.builder()
+                .gameId(gameId)
+                .players(List.of(playerId))
+                .build();
+        PlayerWon playerWon = new PlayerWon(gameId, playerId);
+        given(repository.findByGameId(gameId)).willReturn(Optional.of(game));
+        ArgumentCaptor<String> playerCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Event> eventCaptor =ArgumentCaptor.forClass(Event.class);
+        //when
+        service.endGame(playerWon);
+        verify(websocketService).notifyFrontEnd(playerCaptor.capture(), eventCaptor.capture());
+        var actual = eventCaptor.getAllValues();
+        //then
+        assertEquals(actual.stream()
+                .map(Event::getEventType)
+                .filter(e -> e == EventType.GAME_END)
+                .count(), game.getPlayers().size());
+    }
+
+    @Test
+    public void shouldEndGameWithProperWinner() {
+        //given
+        Game game = Game.builder()
+                .gameId(gameId)
+                .players(List.of(playerId))
+                .build();
+        PlayerWon playerWon = new PlayerWon(gameId, playerId);
+        given(repository.findByGameId(gameId)).willReturn(Optional.of(game));
+        ArgumentCaptor<String> playerCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Event> eventCaptor =ArgumentCaptor.forClass(Event.class);
+        //when
+        service.endGame(playerWon);
+        verify(websocketService).notifyFrontEnd(playerCaptor.capture(), eventCaptor.capture());
+        var actual = eventCaptor.getAllValues();
+        //then
+        assertEquals(actual.stream()
+                .map(Event::getContent)
+                .filter(e -> e.equals(new GameEnded(playerId)))
+                .count(), game.getPlayers().size());
+    }
 }

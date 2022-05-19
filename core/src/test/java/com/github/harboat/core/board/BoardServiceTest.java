@@ -5,7 +5,7 @@ import com.github.harboat.clients.core.board.BoardCreationResponse;
 import com.github.harboat.clients.core.board.Size;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.core.GameQueueProducer;
-import com.github.harboat.core.games.GameService;
+import com.github.harboat.core.games.GameUtility;
 import com.github.harboat.core.websocket.Event;
 import com.github.harboat.core.websocket.WebsocketService;
 import org.mockito.ArgumentCaptor;
@@ -27,7 +27,7 @@ public class BoardServiceTest {
     @Mock
     private GameQueueProducer producer;
     @Mock
-    private GameService gameService;
+    private GameUtility gameUtility;
     @Mock
     private WebsocketService websocketService;
     private BoardService boardService;
@@ -40,14 +40,14 @@ public class BoardServiceTest {
 
     @BeforeMethod
     public void setUp() {
-        boardService = new BoardService(producer, gameService, websocketService);
+        boardService = new BoardService(producer, gameUtility, websocketService);
     }
 
     @Test
     public void shouldCreateBoardWithProperGameId() {
         //given
         Size size = new Size(10, 10);
-        given(gameService.getNotStartedGamesIdsForUser(any())).willReturn(List.of("test"));
+        given(gameUtility.getNotStartedGamesIdsForUser(any())).willReturn(List.of("test"));
         //when
         boardService.create("test", "testPlayer", size);
         verify(producer).sendRequest(boardCreationCaptor.capture());
@@ -60,7 +60,7 @@ public class BoardServiceTest {
     public void shouldCreateBoardWithProperPlayerId() {
         //given
         Size size = new Size(10, 10);
-        given(gameService.getNotStartedGamesIdsForUser(any())).willReturn(List.of("test"));
+        given(gameUtility.getNotStartedGamesIdsForUser(any())).willReturn(List.of("test"));
         //when
         boardService.create("test", "testPlayer", size);
         verify(producer).sendRequest(boardCreationCaptor.capture());
@@ -73,7 +73,7 @@ public class BoardServiceTest {
     public void shouldCreateBoardWithProperSize() {
         //given
         Size size = new Size(10, 10);
-        given(gameService.getNotStartedGamesIdsForUser(any())).willReturn(List.of("test"));
+        given(gameUtility.getNotStartedGamesIdsForUser(any())).willReturn(List.of("test"));
         //when
         boardService.create("test", "testPlayer", size);
         verify(producer).sendRequest(boardCreationCaptor.capture());

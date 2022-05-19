@@ -132,12 +132,16 @@ async function markCells(shootingPlayerId, cells) {
     } else {
         await markCellsHelper(cells, 'player')
     }
-    if (cells.length === 1) {
-        cells.forEach(cell => {
-            if (!cell['wasShip']) {
-                swapBoards()
-            }
-        })
+    let hit = false
+
+    cells.forEach(cell => {
+        if(cell['wasShip']) {
+            hit = true
+        }
+    })
+
+    if(!hit) {
+        swapBoards()
     }
 }
 

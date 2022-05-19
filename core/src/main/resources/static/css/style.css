@@ -22,105 +22,6 @@ body {
     background-color: var(--nord0);
 }
 
-.heightLabel {
-    text-align: center;
-    transition: 0.2s;
-    position: absolute;
-    width: 7.5vw;
-    height: 4vw;
-    top: 4.2vw;
-    left: 14.9vw;
-    background: var(--nord2);
-    border-radius: 0.5vw;
-    border: solid 0.1vw;
-    border-color: var(--nord2);
-    font-size: 1vw;
-    color: var(--nord15);
-    cursor: default;
-}
-
-
-.widthLabel {
-    text-align: center;
-    transition: 0.2s;
-    position: absolute;
-    width: 7.5vw;
-    height: 4vw;
-    top: 4.2vw;
-    left: 7vw;
-    background: var(--nord2);
-    border-radius: 0.5vw;
-    border: solid 0.1vw;
-    border-color: var(--nord2);
-    font-size: 1vw;
-    color: var(--nord15);
-    cursor: default;
-}
-
-.setBoardSizeButton {
-    transition: 0.2s;
-    position: absolute;
-    width: 15.45vw;
-    height: 3vw;
-    top: 10.25vw;
-    left: 7vw;
-    background: var(--nord2);
-    border-radius: 0.5vw;
-    border: solid 0.1vw;
-    border-color: var(--nord2);
-    font-size: 1vw;
-    color: var(--nord15);
-}
-
-.setBoardSizeButton:hover {
-    background-color: var(--nord1);
-}
-
-.setBoardSizeButton:active {
-    background-color: var(--nord0);
-}
-
-
-.selectHeight {
-    text-align: center;
-    transition: 0.2s;
-    position: absolute;
-    width: 7.5vw;
-    height: 2vw;
-    top: 7.25vw;
-    left: 14.95vw;
-    background: var(--nord2);
-    border-radius: 0.5vw;
-    border: solid 0.1vw;
-    border-color: var(--nord15);
-    font-size: 1vw;
-    color: var(--nord15);
-}
-
-.selectHeight:hover {
-    background-color: var(--nord0);
-}
-
-.selectWidth {
-    text-align: center;
-    transition: 0.2s;
-    position: absolute;
-    width: 7.5vw;
-    height: 2vw;
-    top: 7.25vw;
-    left: 7.05vw;
-    background: var(--nord2);
-    border-radius: 0.5vw;
-    border: solid 0.1vw;
-    border-color: var(--nord15);
-    font-size: 1vw;
-    color: var(--nord15);
-}
-
-.selectWidth:hover {
-    background-color: var(--nord0);
-}
-
 /*Buttons*/
 .menuButton {
     transition: 0.2s;
@@ -140,12 +41,12 @@ body {
     position: absolute;
     width: 15vw;
     height: 3vw;
-    bottom: 7.9vw;
+    top: 20.75vw;
     left: 7vw;
     background: var(--nord10);
     border-radius: 0.5vw;
     border: solid 0.1vw;
-    border-color: var(--nord10);
+    border-color: var(--nord0);
     font-size: 1vw;
     color: var(--nord0);
 }
@@ -163,7 +64,7 @@ body {
     position: absolute;
     width: 15vw;
     height: 3vw;
-    bottom: 3.9vw;
+    top: 24.75vw;
     left: 7vw;
     background: var(--nord11);
     border-radius: 0.5vw;
@@ -201,10 +102,6 @@ body {
     color: var(--nord4)
 }
 
-.forfeitButton:active {
-    background-color: var(--nord0);
-}
-
 .menuButton:hover {
     background: var(--nord1);
     border-color: var(--nord0);
@@ -233,18 +130,10 @@ body {
 }
 
 .turn {
-    width: 40vw;
-    height: 3vw;
-    text-align: center;
     transition: 0.5s;
-    border-radius: 10px;
-    border: solid;
-    border-color: var(--nord2);
-    background-color: var(--nord2);
-    top: 0.65vw;
-    left: 30vw;
+    top: 1.3vw;
     position: absolute;
-    color: var(--nord15);
+    color: var(--nord4);
     margin: auto;
     font-size: 2vw;
 }
@@ -297,12 +186,10 @@ body {
     height: 3.6vw;
     width: 3.6vw;
     transition: 0.2s;
-    border: solid var(--nord0);
-    border-width: 0.2vw;
+    border: solid 0.2vw var(--nord0);
     border-radius: 0.5vw;
     margin: auto;
     background-color: var(--nord10);
-    font-size: 0.2vw;
 }
 
 .cell:hover {
@@ -320,6 +207,7 @@ body {
     color: var(--nord2);
     text-align: center;
     font-family: 'VT323-Regular', serif;
+    font-size: 3vw;
     opacity: 0;
 }
 

@@ -310,6 +310,10 @@ body {
     background-color: var(--nord9);
 }
 
+.cell:hover .cellCoordinate {
+    opacity: 1;
+}
+
 @font-face {
     font-family: "VT323-Regular";
     src: url('VT323-Regular.ttf')
@@ -323,11 +327,6 @@ body {
     font-family: 'VT323-Regular', serif;
     opacity: 0;
 }
-
-.cellCoordinate:hover {
-    opacity: 1;
-}
-
 
 .ship {
     border-color: var(--nord2);

@@ -3,6 +3,8 @@
 //TODO: ERROR HANDLING
 //TODO: AUDIO
 //TODO: DYNAMIC CELL SIZE FIX
+//TODO: ROOMS SCREEN
+//TODO: FIX BUG WITH START BUTTON
 
 const body = document.getElementsByTagName("body")[0]
 
@@ -78,10 +80,19 @@ function connect() {
                     width = object['width']
                     height = object['height']
                     alert('Board created successfully')
+                    fleetGenerated = false
                     createGenerateFleetButton()
+                    if (document.getElementById('player') !== null) {
+                        body.removeChild(document.getElementById('player'))
+                        body.removeChild(document.getElementById('enemy'))
+                    }
                     break
                 }
                 case "FLEET_CREATED": {
+                    if (fleetGenerated === true) {
+                        body.removeChild(document.getElementById('player'))
+                        body.removeChild(document.getElementById('enemy'))
+                    }
                     ships = object
                     console.log(ships);
                     document.getElementById('fleetGenButton').innerText = 'Reroll fleet'
@@ -128,12 +139,14 @@ function connect() {
 }
 
 function checkIfGameIsReady() {
-    if (readyPlayer === null) {
-        return
-    }
-    if (document.getElementById('startGameButton') !== null && playerId !== readyPlayer && fleetGenerated === true) {
-        document.getElementById('startGameButton').style.backgroundColor = "#a3be8c"
-        document.getElementById('startGameButton').style.borderColor = "#a3be8c"
+    console.log(readyPlayer)
+    console.log(playerId)
+    if (document.getElementById('startGameButton') !== null && readyPlayer !== undefined && fleetGenerated === true) {
+        if (readyPlayer === playerId) {
+        } else {
+            document.getElementById('startGameButton').style.backgroundColor = "#a3be8c"
+            document.getElementById('startGameButton').style.borderColor = "#a3be8c"
+        }
     }
 }
 
@@ -233,12 +246,14 @@ function createForfeitButton() {
 }
 
 function createGenerateFleetButton() {
-    let button = document.createElement('button')
-    button.setAttribute('id', 'fleetGenButton')
-    button.setAttribute('onclick', 'requestPlacement()')
-    button.innerText = "Generate fleet"
-    button.classList.add('fleetGenButton')
-    body.appendChild(button)
+    if (document.getElementById('fleetGenButton') === null) {
+        let button = document.createElement('button')
+        button.setAttribute('id', 'fleetGenButton')
+        button.setAttribute('onclick', 'requestPlacement()')
+        button.innerText = "Generate fleet"
+        button.classList.add('fleetGenButton')
+        body.appendChild(button)
+    }
 }
 
 async function markCells(shootingPlayerId, cells) {
@@ -380,7 +395,6 @@ async function initializeBoard(type, fleet) {
             cell.setAttribute('onclick', 'shoot(this)')
             cell.style.cursor = 'crosshair'
 
-            // let coordinate = horizontalCoordinates[i % width] + +(((i / width * 10 - i % 10) / 10) + 1)
             let coordinate = horizontalCoordinates[i % width] + +(parseInt(i / width) + 1)
             let displayCellCoordinate = document.createElement('div')
             displayCellCoordinate.classList.add('cellCoordinate')

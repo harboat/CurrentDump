@@ -91,17 +91,19 @@ public class FleetService {
         var enemyId = gameUtility.getEnemyId(gameId, playerId);
         var currentFleet = repository.findByGameIdAndPlayerId(gameId, enemyId).orElseThrow();
 
+        //TODO replace hardcoded board width with variable
+        List<Integer> nukedCells = determineNukedCells(cellId, 10);
+
         Set<Cell> cells = new HashSet<>();
-        //TODO cells instead of hardcoded ints
-
-
-        for (int i = 11; i < 16; i++) {
-            cells.addAll(takeAShoot(gameId, playerId, i, currentFleet));
+        for (Integer cell : nukedCells) {
+            cells.addAll(takeAShoot(gameId, playerId, cell, currentFleet));
         }
 
         repository.save(currentFleet);
         coreQueueProducer.sendResponse(
-                new ShotResponse(gameId, playerId, cells)
+                new
+
+                        ShotResponse(gameId, playerId, cells)
         );
     }
 
@@ -127,4 +129,12 @@ public class FleetService {
         }
         return cells;
     }
+
+    private List<Integer> determineNukedCells(Integer cellId, int boardWidth) {
+        List<Integer> adjacentFields = List.of(cellId, cellId - boardWidth - 1, cellId - boardWidth,
+                cellId - boardWidth + 1, cellId + 1, cellId + boardWidth + 1, cellId + boardWidth,
+                cellId + boardWidth - 1, cellId - 1);
+        return adjacentFields;
+    }
 }
+

@@ -1,13 +1,11 @@
 package com.github.harboat.core.games;
 
-import com.github.harboat.clients.core.board.Size;
 import com.github.harboat.clients.core.game.*;
 import com.github.harboat.clients.core.shot.PlayerWon;
 import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.core.GameQueueProducer;
-import com.github.harboat.core.placement.PlacementService;
 import com.github.harboat.core.websocket.Event;
 import com.github.harboat.core.websocket.WebsocketService;
 import lombok.AllArgsConstructor;
@@ -37,7 +35,7 @@ public class GameService {
                         .players(List.of(creationResponse.playerId()))
                         .ownerId(creationResponse.playerId())
                         .playerTurn(creationResponse.playerId())
-                        .feelWasSet(List.of(false, false))
+                        .fleetWasSet(List.of(false, false))
                         .started(false)
                         .ended(false)
                         .build()
@@ -89,7 +87,7 @@ public class GameService {
     public void start(String playerId, String gameId) {
         Game game = repository.findByGameId(gameId).orElseThrow();
         if (!game.getOwnerId().equals(playerId)) throw new BadRequest("You are not an owner of this lobby!");
-        if (game.getFeelWasSet().contains(false)) throw new BadRequest("Game is not ready!");
+        if (game.getFleetWasSet().contains(false)) throw new BadRequest("Game is not ready!");
         if (game.getStarted()) throw new BadRequest("Game already started!");
         producer.sendRequest(
                 new GameStart(gameId)

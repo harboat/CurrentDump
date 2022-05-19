@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@Getter
 public class BattleshipConfiguration {
 
     @Value("${rabbitmq.exchanges.game}")

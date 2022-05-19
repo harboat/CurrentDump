@@ -18,7 +18,7 @@ public class Game {
     private String ownerId;
     private String playerTurn;
     private Size size;
-    private Collection<Boolean> feelWasSet;
+    private Collection<Boolean> fleetWasSet;
     private Boolean started;
     private Boolean ended;
 }

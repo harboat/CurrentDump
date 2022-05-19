@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8085
 
 spring:
   application:
@@ -14,7 +14,6 @@ spring:
   zipkin:
     base-url: ${zipkin_base_url}
 
-
 eureka:
   client:
     service-url:
@@ -23,11 +22,9 @@ eureka:
 rabbitmq:
   exchanges:
     placement: internal-placement.exchange
-    game: internal-game.exchange
-    logger: internal-logger.exchange
+    config: internal-config.exchange
   queues:
     placement: placement.queue
   routing-keys:
     placement: internal.placement.routing-key
-    game: internal.game.routing-key
-    logger: internal.placement-logger.routing-key
+    config: internal.config.routing-key

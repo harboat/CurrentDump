@@ -16,6 +16,8 @@
         <module>core</module>
         <module>logger</module>
         <module>eureka</module>
+        <module>rooms</module>
+        <module>configuration</module>
     </modules>
     <packaging>pom</packaging>
     <name>ships</name>

@@ -1,6 +1,7 @@
-package com.github.harboat.placement;
+package com.github.harboat.configuration;
 
-import com.github.harboat.clients.core.placement.GamePlacement;
+import com.github.harboat.clients.notification.NotificationRequest;
+import com.github.harboat.clients.rooms.RoomCreated;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PlacementProducer {
+public class PlacementQueueProducer {
 
     private final RabbitMQMessageProducer producer;
 
@@ -18,8 +19,9 @@ public class PlacementProducer {
     @Value("${rabbitmq.routing-keys.game}")
     private String gameRoutingKey;
 
-    void sendPlacement(GamePlacement gamePlacement) {
-        producer.publish(gamePlacement, internalExchange, gameRoutingKey);
+    void sendRoom(RoomCreated roomCreated) {
+        producer.publish(roomCreated, internalExchange, gameRoutingKey);
     }
 
 }
+

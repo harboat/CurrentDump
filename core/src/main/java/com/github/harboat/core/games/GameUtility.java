@@ -37,7 +37,7 @@ public class GameUtility {
 
     public void markFleetSet(String gameId) {
         Game game = repository.findByGameId(gameId).orElseThrow();
-        Collection<Boolean> feelWasSet = game.getFeelWasSet();
+        Collection<Boolean> feelWasSet = game.getFleetWasSet();
         feelWasSet.remove(false);
         feelWasSet.add(true);
         repository.save(game);

@@ -13,7 +13,7 @@ import java.util.Collection;
 @Builder
 public class Placement {
     @Id private String id;
-    private String gameId;
+    private String roomId;
     private String playerId;
     private Collection<ShipDto> ships;
 }

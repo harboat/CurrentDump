@@ -1,6 +1,7 @@
 package com.github.harboat.core.shot;
 
 import com.github.harboat.clients.core.shot.Cell;
+import com.github.harboat.clients.core.shot.NukeShotRequest;
 import com.github.harboat.clients.core.shot.ShotRequest;
 import com.github.harboat.clients.core.shot.ShotResponse;
 import com.github.harboat.clients.exceptions.BadRequest;
@@ -42,7 +43,7 @@ public class ShotService {
         if (!game.getStarted()) throw new BadRequest("Game has not started!");
         if (!game.getPlayerTurn().equals(playerId)) throw new BadRequest("It is not your turn!");
         producer.sendRequest(
-                new ShotRequest(gameId, playerId, cellId)
+                new NukeShotRequest(gameId, playerId, cellId)
         );
     }
 

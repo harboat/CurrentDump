@@ -15,11 +15,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor
@@ -79,13 +77,39 @@ public class FleetService {
         var cellId = shotRequest.cellId();
         var enemyId = gameUtility.getEnemyId(gameId, playerId);
         var currentFleet = repository.findByGameIdAndPlayerId(gameId, enemyId).orElseThrow();
+        Set<Cell> cells = takeAShoot(gameId, playerId, cellId, currentFleet);
+        repository.save(currentFleet);
+        coreQueueProducer.sendResponse(
+                new ShotResponse(gameId, playerId, cells)
+        );
+    }
+
+    public void shoot(NukeShotRequest nukeShotRequest) {
+        var gameId = nukeShotRequest.gameId();
+        var playerId = nukeShotRequest.playerId();
+        var cellId = nukeShotRequest.cellId();
+        var enemyId = gameUtility.getEnemyId(gameId, playerId);
+        var currentFleet = repository.findByGameIdAndPlayerId(gameId, enemyId).orElseThrow();
+
+        Set<Cell> cells = new HashSet<>();
+        //TODO cells instead of hardcoded ints
+
+
+        for (int i = 11; i < 16; i++) {
+            cells.addAll(takeAShoot(gameId, playerId, i, currentFleet));
+        }
+
+        repository.save(currentFleet);
+        coreQueueProducer.sendResponse(
+                new ShotResponse(gameId, playerId, cells)
+        );
+    }
+
+    private Set<Cell> takeAShoot(String gameId, String playerId, Integer cellId, Fleet currentFleet) {
         Optional<Ship> ship = currentFleet.takeAShot(cellId);
         boardService.markHit(gameId, playerId, cellId);
         if (ship.isEmpty()) {
-            coreQueueProducer.sendResponse(
-                    new ShotResponse(gameId, playerId, Set.of(new Cell(cellId, false)))
-            );
-            return;
+            return Set.of(new Cell(cellId, false));
         }
         if (!currentFleet.isAlive()) {
             coreQueueProducer.sendResponse(
@@ -101,12 +125,6 @@ public class FleetService {
             s.getMasts().getMasts().keySet()
                     .forEach(m -> cells.add(new Cell(m, true)));
         }
-        repository.save(currentFleet);
-        coreQueueProducer.sendResponse(
-                new ShotResponse(gameId, playerId, cells)
-        );
-    }
-
-    public void shoot(NukeShotRequest nukeShotRequest) {
+        return cells;
     }
 }

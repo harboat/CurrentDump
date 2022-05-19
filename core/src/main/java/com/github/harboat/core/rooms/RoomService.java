@@ -68,6 +68,7 @@ public class RoomService {
                                         .findFirst().orElseThrow();
                     websocketService.notifyFrontEnd(p, new Event<>(EventType.ROOM_JOINED, new PlayerRoomJoined(room.getRoomId(), p, enemyId)));
                 });
+        websocketService.notifyFrontEnd(roomPlayerJoined.playerId(), new Event<>(EventType.BOARD_CREATED, room.getSize()));
     }
 
     public void join(String roomId, String playerId) {

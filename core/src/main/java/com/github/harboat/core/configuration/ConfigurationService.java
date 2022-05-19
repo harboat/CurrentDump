@@ -28,5 +28,8 @@ public class ConfigurationService {
         Room room = roomRepository.findByRoomId(setGameSize.roomId()).orElseThrow();
         room.setSize(setGameSize.size());
         roomRepository.save(room);
+        room.getPlayers().forEach(p -> websocketService.notifyFrontEnd(
+                p, new Event<>(EventType.BOARD_CREATED, setGameSize.size())
+        ));
     }
 }

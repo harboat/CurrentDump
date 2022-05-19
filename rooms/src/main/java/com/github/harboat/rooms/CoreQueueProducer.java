@@ -2,6 +2,7 @@ package com.github.harboat.rooms;
 
 import com.github.harboat.clients.rooms.RoomCreated;
 import com.github.harboat.clients.rooms.RoomGameStart;
+import com.github.harboat.clients.rooms.RoomPlayerJoined;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,5 +26,9 @@ public class CoreQueueProducer {
 
     public void sendStart(RoomGameStart roomGameStart) {
         producer.publish(roomGameStart, internalExchange, coreRoutingKey);
+    }
+
+    public void sendPlayerJoin(RoomPlayerJoined roomPlayerJoined) {
+        producer.publish(roomPlayerJoined, internalExchange, coreRoutingKey);
     }
 }

@@ -1,6 +1,7 @@
 package com.github.harboat.core.placement;
 
 import com.github.harboat.clients.core.placement.PlacementRequest;
+import com.github.harboat.clients.placement.GeneratePlacement;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +19,8 @@ public class PlacementQueueProducer {
     @Value("${rabbitmq.routing-keys.placement}")
     private String placementRoutingKey;
 
-    public void sendRequest(PlacementRequest placementRequest) {
-        producer.publish(placementRequest, internalExchange, placementRoutingKey);
+    public void send(GeneratePlacement generatePlacement) {
+        producer.publish(generatePlacement, internalExchange, placementRoutingKey);
     }
 
 }

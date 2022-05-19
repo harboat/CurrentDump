@@ -1,5 +1,6 @@
 package com.github.harboat.core.rooms;
 
+import com.github.harboat.clients.rooms.RoomPlayerJoin;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,6 +41,15 @@ public class RoomController {
             @PathVariable String roomId
     ) {
         roomService.start(roomId, userDetails.getUsername());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("{roomId}/join")
+    public ResponseEntity<?> join(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable String roomId
+    ) {
+        roomService.join(roomId, userDetails.getUsername());
         return ResponseEntity.ok().build();
     }
 }

@@ -1,7 +1,7 @@
 package com.github.harboat.configuration;
 
-import com.github.harboat.clients.notification.NotificationRequest;
 import com.github.harboat.clients.rooms.MarkFleetSet;
+import com.github.harboat.clients.rooms.UnmarkFleetSet;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +19,12 @@ public class RoomsQueueProducer {
     @Value("${rabbitmq.routing-keys.rooms}")
     private String roomsRoutingKey;
 
-    public void sendPlacement(MarkFleetSet markFleetSet) {
+    public void setFleet(MarkFleetSet markFleetSet) {
         producer.publish(markFleetSet, internalExchange, roomsRoutingKey);
+    }
+
+    public void unsetFleet(UnmarkFleetSet unmarkFleetSet) {
+        producer.publish(unmarkFleetSet, internalExchange, roomsRoutingKey);
     }
 }
 

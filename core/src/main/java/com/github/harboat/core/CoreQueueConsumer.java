@@ -10,6 +10,7 @@ import com.github.harboat.clients.core.shot.PlayerWon;
 import com.github.harboat.clients.core.shot.ShotResponse;
 import com.github.harboat.clients.rooms.RoomCreated;
 import com.github.harboat.clients.rooms.RoomGameStart;
+import com.github.harboat.clients.rooms.RoomPlayerJoined;
 import com.github.harboat.core.board.BoardService;
 import com.github.harboat.core.configuration.ConfigurationService;
 import com.github.harboat.core.games.GameService;
@@ -48,5 +49,11 @@ public class CoreQueueConsumer {
     @Async("coreQueueConsumerThreads")
     public void consume(SetGameSize setGameSize) {
         configurationService.setSize(setGameSize);
+    }
+
+    @RabbitHandler
+    @Async("coreQueueConsumerThreads")
+    public void consume(RoomPlayerJoined roomPlayerJoined) {
+        roomService.playerJoin(roomPlayerJoined);
     }
 }

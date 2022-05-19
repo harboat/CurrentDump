@@ -1,10 +1,8 @@
 package com.github.harboat.configuration;
 
-import com.github.harboat.clients.configuration.ConfigurationCreate;
-import com.github.harboat.clients.configuration.CreateGame;
-import com.github.harboat.clients.configuration.SetGameSize;
-import com.github.harboat.clients.configuration.SetShipsPosition;
+import com.github.harboat.clients.configuration.*;
 import com.github.harboat.clients.exceptions.BadRequest;
+import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.clients.notification.NotificationRequest;
 import lombok.AllArgsConstructor;
@@ -30,7 +28,7 @@ public class ConfigurationQueueConsumer {
     public void consume(SetGameSize setGameSize) {
         try {
             service.setSize(setGameSize);
-        } catch (BadRequest e) {
+        } catch (BadRequest | ResourceNotFound e) {
             notificationProducer.sendNotification(
                     new NotificationRequest<>(setGameSize.playerId(), EventType.EXCEPTION, e)
             );
@@ -41,7 +39,7 @@ public class ConfigurationQueueConsumer {
     public void consume(SetShipsPosition setShipsPosition) {
         try {
             service.markShipPlacement(setShipsPosition);
-        } catch (BadRequest e) {
+        } catch (BadRequest | ResourceNotFound e) {
             notificationProducer.sendNotification(
                     new NotificationRequest<>(setShipsPosition.playerId(), EventType.EXCEPTION, e)
             );
@@ -52,9 +50,20 @@ public class ConfigurationQueueConsumer {
     public void consume(CreateGame createGame) {
         try {
             service.createGame(createGame);
-        } catch (BadRequest e) {
+        } catch (BadRequest | ResourceNotFound e) {
             notificationProducer.sendNotification(
                     new NotificationRequest<>(createGame.playerId(), EventType.EXCEPTION, e)
+            );
+        }
+    }
+
+    @RabbitHandler
+    public void consume(ConfigurationPlayerJoin playerJoin) {
+        try {
+            service.playerJoin(playerJoin);
+        } catch (BadRequest | ResourceNotFound e) {
+            notificationProducer.sendNotification(
+                    new NotificationRequest<>(playerJoin.playerId(), EventType.EXCEPTION, e)
             );
         }
     }

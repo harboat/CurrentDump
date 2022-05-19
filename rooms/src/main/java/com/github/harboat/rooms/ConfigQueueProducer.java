@@ -1,6 +1,7 @@
 package com.github.harboat.rooms;
 
 import com.github.harboat.clients.configuration.ConfigurationCreate;
+import com.github.harboat.clients.configuration.ConfigurationPlayerJoin;
 import com.github.harboat.clients.configuration.CreateGame;
 import com.github.harboat.clients.rooms.RoomCreated;
 import com.github.harboat.clients.rooms.RoomGameStart;
@@ -27,5 +28,9 @@ public class ConfigQueueProducer {
 
     public void sendCreateGame(CreateGame createGame) {
         producer.publish(createGame, internalExchange, configRoutingKey);
+    }
+
+    public void sendPlayerJoin(ConfigurationPlayerJoin configurationPlayerJoin) {
+        producer.publish(configurationPlayerJoin, internalExchange, configRoutingKey);
     }
 }

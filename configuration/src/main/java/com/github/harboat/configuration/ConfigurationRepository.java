@@ -11,4 +11,5 @@ public interface ConfigurationRepository extends MongoRepository<Configuration, 
 
     Optional<Configuration> findByRoomIdAndPlayersConfigurationContaining(String roomId, String playerId);
 
+    Optional<Configuration> findByRoomId(String roomId);
 }

@@ -2,10 +2,10 @@ package com.github.harboat.configuration;
 
 import com.github.harboat.clients.configuration.*;
 import com.github.harboat.clients.core.board.Size;
-import com.github.harboat.clients.core.placement.GamePlacement;
 import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.rooms.MarkFleetSet;
+import com.github.harboat.clients.rooms.UnmarkFleetSet;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +45,6 @@ public class ConfigurationService {
         );
     }
 
-    @Transactional
     void setSize(SetGameSize setGameSize) {
         Configuration configuration = getOwnerConfigurationFromRequest(setGameSize.roomId(), setGameSize.playerId());
         Map<String, Player> playersConfiguration = configuration.getPlayersConfiguration();
@@ -59,6 +58,10 @@ public class ConfigurationService {
                         )
                 );
         configuration.setSize(setGameSize.size());
+        repository.save(configuration);
+        roomsQueueProducer.unsetFleet(
+                new UnmarkFleetSet(setGameSize.roomId(), setGameSize.playerId())
+        );
         coreQueueProducer.sendSize(
                 setGameSize
         );
@@ -73,7 +76,8 @@ public class ConfigurationService {
                         .ships(setShipsPosition.ships())
                         .build()
         );
-        roomsQueueProducer.sendPlacement(
+        repository.save(configuration);
+        roomsQueueProducer.setFleet(
                 new MarkFleetSet(
                         setShipsPosition.roomId(),
                         setShipsPosition.playerId()
@@ -88,9 +92,9 @@ public class ConfigurationService {
     }
 
     private Configuration getPlayerConfigurationFormRequest(String roomId, String playerId) {
-        Optional<Configuration> configuration = repository.findByRoomIdAndPlayersConfigurationContaining(roomId, playerId);
-        if (configuration.isEmpty()) throw new BadRequest("You are not in this room!");
-        return configuration.get();
+        Configuration configuration = repository.findByRoomId(roomId).orElseThrow( () -> new BadRequest("Room not found!"));
+        if (!configuration.getPlayersConfiguration().containsKey(playerId)) throw new BadRequest("You are not in this room!");
+        return configuration;
     }
 
     private Configuration getOwnerConfigurationFromRequest(String roomId, String playerId) {
@@ -99,4 +103,14 @@ public class ConfigurationService {
         return configuration.get();
     }
 
+    public void playerJoin(ConfigurationPlayerJoin playerJoin) {
+        Configuration configuration = repository.findByRoomId(playerJoin.roomId()).orElseThrow(() -> new ResourceNotFound("Couldn't find a configuration for the room!"));
+        configuration.getPlayersConfiguration().put(
+                playerJoin.playerId(),
+                Player.builder()
+                    .ships(List.of())
+                    .build()
+        );
+        repository.save(configuration);
+    }
 }

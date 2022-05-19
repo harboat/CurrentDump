@@ -3,6 +3,7 @@ package com.github.harboat.core.rooms;
 import com.github.harboat.clients.rooms.ChangePlayerReadiness;
 import com.github.harboat.clients.rooms.MarkStart;
 import com.github.harboat.clients.rooms.RoomCreate;
+import com.github.harboat.clients.rooms.RoomPlayerJoin;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,9 @@ public class RoomQueueProducer {
 
     public void send(MarkStart markStart) {
         producer.publish(markStart, internalExchange, roomRoutingKey);
+    }
+
+    public void send(RoomPlayerJoin roomPlayerJoin) {
+        producer.publish(roomPlayerJoin, internalExchange, roomRoutingKey);
     }
 }

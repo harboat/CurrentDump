@@ -17,6 +17,16 @@ public class Room {
     private String ownerId;
     private Boolean started;
 
+    void addPlayer(String player) {
+        players.put(
+                player,
+                Player.builder()
+                        .ready(false)
+                        .fleetSet(false)
+                        .build()
+        );
+    }
+
     boolean isPlayerInTheRoom(String playerId) {
         return players.containsKey(playerId);
     }
@@ -37,6 +47,13 @@ public class Room {
 
     void markPlayerFleetSet(String playerId) {
         players.get(playerId).setFleetSet(true);
+    }
+
+    void unmarkFleetSets() {
+        players.values().forEach(p -> {
+            p.setFleetSet(false);
+            p.setReady(false);
+        });
     }
 
     boolean areAllPlayersReady() {

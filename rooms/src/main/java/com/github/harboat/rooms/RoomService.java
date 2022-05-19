@@ -1,14 +1,15 @@
 package com.github.harboat.rooms;
 
 import com.github.harboat.clients.configuration.ConfigurationCreate;
+import com.github.harboat.clients.configuration.ConfigurationPlayerJoin;
 import com.github.harboat.clients.configuration.CreateGame;
 import com.github.harboat.clients.exceptions.BadRequest;
+import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.clients.notification.NotificationRequest;
 import com.github.harboat.clients.rooms.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -41,10 +42,10 @@ public class RoomService {
         );
     }
 
-    @Transactional
     public void markFleetSet(MarkFleetSet markFleetSet) {
         Room room = getRoomFromRequest(markFleetSet.roomId(), markFleetSet.playerId());
         room.markPlayerFleetSet(markFleetSet.playerId());
+        repository.save(room);
         room.getPlayers().keySet().forEach(p -> {
             notificationProducer.sendNotification(
                     new NotificationRequest<>(p, EventType.FLEET_CREATED, markFleetSet)
@@ -52,12 +53,18 @@ public class RoomService {
         });
     }
 
-    @Transactional
+    public void unmarkFleet(UnmarkFleetSet unmarkFleetSet) {
+        Room room = getRoomFromRequest(unmarkFleetSet.roomId(), unmarkFleetSet.playerId());
+        room.unmarkFleetSets();
+        repository.save(room);
+    }
+
     public void changeReady(ChangePlayerReadiness playerReadiness) {
         Room room = getRoomFromRequest(playerReadiness.roomId(), playerReadiness.playerId());
         if (!room.isPlayerFleetSet(playerReadiness.playerId()))
             throw new BadRequest("Player fleet is not set yet, you can't change readiness!");
         room.changePlayerReadiness(playerReadiness.playerId());
+        repository.save(room);
         room.getPlayers().keySet().forEach(p -> {
             notificationProducer.sendNotification(
                     new NotificationRequest<>(p, EventType.PLAYER_READY, playerReadiness)
@@ -65,13 +72,14 @@ public class RoomService {
         });
     }
 
-    @Transactional
     public void markStart(MarkStart markStart) {
         Room room = getRoomFromRequest(markStart.roomId(), markStart.playerId());
         if (!room.isPlayerAnOwner(markStart.playerId())) throw new BadRequest("You are not an owner of this game!");
+        if (room.getPlayers().size() != 2) throw new BadRequest("You can't play solo!");
         if (!room.areAllPlayersReady()) throw new BadRequest("Not all players are ready!");
         if (!room.areAllFleetsSet()) throw new BadRequest("Not all players have fleet set!");
         room.setStarted(true);
+        repository.save(room);
         coreQueueProducer.sendStart(new RoomGameStart(markStart.roomId()));
         configQueueProducer.sendCreateGame(
                 new CreateGame(room.getId(), markStart.playerId())
@@ -79,8 +87,21 @@ public class RoomService {
     }
 
     private Room getRoomFromRequest(String roomId, String playerId) {
-        Room room = repository.findById(roomId).orElseThrow();
+        Room room = repository.findById(roomId).orElseThrow(() -> new ResourceNotFound("Couldn't find the game!"));
         if (!room.isPlayerInTheRoom(playerId)) throw new BadRequest("Player is not in the game!");
         return room;
+    }
+
+    public void joinPlayer(RoomPlayerJoin roomPlayerJoin) {
+        Room room = repository.findById(roomPlayerJoin.roomId()).orElseThrow(() -> new ResourceNotFound("Couldn't find the room!"));
+        if (room.getPlayers().size() == 2) throw new BadRequest("Room is full!");
+        room.addPlayer(roomPlayerJoin.playerId());
+        repository.save(room);
+        configQueueProducer.sendPlayerJoin(
+                new ConfigurationPlayerJoin(roomPlayerJoin.roomId(), roomPlayerJoin.playerId())
+        );
+        coreQueueProducer.sendPlayerJoin(
+                new RoomPlayerJoined(roomPlayerJoin.roomId(), roomPlayerJoin.playerId())
+        );
     }
 }

@@ -35,6 +35,53 @@ body {
     font-size: 1.5vw;
 }
 
+
+.fleetGenButton {
+    transition: 0.2s;
+    position: absolute;
+    width: 15vw;
+    height: 3vw;
+    top: 20.75vw;
+    left: 7vw;
+    background: var(--nord10);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord0);
+    font-size: 1vw;
+    color: var(--nord0);
+}
+
+.fleetGenButton:hover {
+    background: var(--nord9);
+}
+
+.fleetGenButton:active {
+    background: var(--nord0);
+}
+
+.startGameButton {
+    transition: 0.2s;
+    position: absolute;
+    width: 15vw;
+    height: 3vw;
+    top: 24.75vw;
+    left: 7vw;
+    background: var(--nord11);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord11);
+    font-size: 1vw;
+    color: var(--nord0);
+}
+
+.startGameButton:hover {
+    background: var(--nord12);
+}
+
+.startGameButton:active {
+    background: var(--nord0);
+}
+
 .forfeitButton {
     transition: 0.2s;
     position: absolute;

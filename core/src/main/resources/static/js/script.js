@@ -8,6 +8,9 @@ const ip = 'http://localhost'
 const port = '8080'
 const apiVersion = 'v1'
 
+const requestURLBase = ip + ":" + port + "/api/" + apiVersion + "/"
+
+
 let enemyAnimation
 let playerAnimation
 let enemyLeft
@@ -26,7 +29,7 @@ let ships
 connect();
 
 function forfeit() {
-    const requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/forfeit"
+    const requestURL = requestURLBase+ "games/" + gameId + "/forfeit"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors'
@@ -55,13 +58,16 @@ function connect() {
                     createGameIdElement()
                     requestBoard()
                     startGameButton()
+                    createGenerateFleetButton()
                     break
                 }
                 case "GAME_JOINED": {
                     playerId = object['playerId']
                     enemyId = object['enemyId']
                     createGameIdElement()
-                    requestPlacement()
+                    if (document.getElementById('fleetGenButton') === null) {
+                        createGenerateFleetButton()
+                    }
                     break
                 }
                 case "BOARD_CREATED": {
@@ -72,6 +78,9 @@ function connect() {
                 case "FLEET_CREATED": {
                     ships = object['ships']
                     initializeBoard('player', ships)
+                    let playerBoard = document.getElementById('player')
+                    playerBoard.style.left = "30vw"
+                    playerBoard.style.opacity = "1"
                     initializeBoard('enemy', ships)
                     break
                 }
@@ -79,6 +88,7 @@ function connect() {
                     playerTurn = object['playerTurn']
                     setUpBoardsBasedOnPlayerTurn()
                     createForfeitButton()
+                    removeButtons()
                     break
                 }
                 case "GAME_END": {
@@ -96,12 +106,28 @@ function connect() {
     });
 }
 
+function removeButtons() {
+    body.removeChild(document.getElementById('fleetGenButton'))
+    if (document.getElementById('startGameButton') !== null) {
+        body.removeChild(document.getElementById('startGameButton'))
+    }
+}
+
 function createForfeitButton() {
     let button = document.createElement('button')
     button.setAttribute('id', 'forfeitButton')
     button.setAttribute('onclick', 'forfeit()')
     button.innerText = "Forfeit"
     button.classList.add('forfeitButton')
+    body.appendChild(button)
+}
+
+function createGenerateFleetButton() {
+    let button = document.createElement('button')
+    button.setAttribute('id', 'fleetGenButton')
+    button.setAttribute('onclick', 'requestPlacement()')
+    button.innerText = "Generate fleet"
+    button.classList.add('fleetGenButton')
     body.appendChild(button)
 }
 
@@ -135,7 +161,7 @@ async function markCellsHelper(cells, type) {
 }
 
 function startGame() {
-    const requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/start"
+    const requestURL = requestURLBase+ "games/" + gameId + "/start"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors'
@@ -172,28 +198,28 @@ function setUpBoardsBasedOnPlayerTurn() {
 
 //TODO: ERROR HANDLING
 function requestPlacement() {
-    const requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/placements"
+    const requestURL = requestURLBase+ "games/" + gameId + "/placements"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors'
     })
     const response = fetch(request)
+    let button = document.getElementById('fleetGenButton')
+    button.innerText = 'Reroll fleet'
 }
 
 function startGameButton() {
     let button = document.createElement('button')
     button.setAttribute('onclick', "startGame()")
     button.setAttribute('id', 'startGameButton')
-    button.classList.add('menuButton')
-    button.classList.add('gameCreate')
-    button.classList.add('text')
+    button.classList.add('startGameButton')
     button.innerText = 'Start Game'
-    document.getElementById('boardContainer').appendChild(button)
+    body.appendChild(button)
 }
 
 //TODO: ERROR HANDLING | USER CAN SET BOARD SIZE
 function requestBoard() {
-    const requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/boards"
+    const requestURL = requestURLBase+ "games/" + gameId + "/boards"
     const board = {
         "width": 10,
         "height": 10
@@ -262,7 +288,7 @@ async function createShips(fleet, type) {
 
 async function createGame() {
     await resetBoardContainer()
-    const requestURL = "http://localhost:8080/api/v1/games"
+    const requestURL = requestURLBase+ "games"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors',
@@ -273,7 +299,7 @@ async function createGame() {
 
 async function joinGame(gameId) {
     await resetBoardContainer()
-    const requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/join"
+    const requestURL = requestURLBase+ "games/" + gameId + "/join"
     const request = new Request(requestURL, {
         method: 'POST',
         mode: 'cors',
@@ -369,7 +395,7 @@ function shoot(cell) {
     const shoot = {
         "cellId": cellId
     }
-    const requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/shoot"
+    const requestURL = requestURLBase+ "games/" + gameId + "/shoot"
     const request = new Request(requestURL, {
         method: 'POST',
         body: JSON.stringify(shoot),

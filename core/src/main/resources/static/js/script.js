@@ -34,6 +34,10 @@ function forfeit() {
     const response = fetch(request)
 }
 
+function nuke() {
+    //TODO to be implmemented
+}
+
 function connect() {
     const socket = new SockJS('/websocket')
     let stompClient = Stomp.over(socket)
@@ -79,6 +83,7 @@ function connect() {
                     playerTurn = object['playerTurn']
                     setUpBoardsBasedOnPlayerTurn()
                     createForfeitButton()
+                    createNukeButton()
                     break
                 }
                 case "GAME_END": {
@@ -102,6 +107,15 @@ function createForfeitButton() {
     button.setAttribute('onclick', 'forfeit()')
     button.innerText = "Forfeit"
     button.classList.add('forfeitButton')
+    body.appendChild(button)
+}
+
+function createNukeButton() {
+    let button = document.createElement('button')
+    button.setAttribute('id', 'nukeButton')
+    button.setAttribute('onclick', 'nuke()')
+    button.innerText = "Nuke"
+    button.classList.add('nukeButton')
     body.appendChild(button)
 }
 

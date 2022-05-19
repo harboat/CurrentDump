@@ -131,10 +131,26 @@ public class FleetService {
     }
 
     private List<Integer> determineNukedCells(Integer cellId, int boardWidth) {
-        List<Integer> adjacentFields = List.of(cellId, cellId - boardWidth - 1, cellId - boardWidth,
-                cellId - boardWidth + 1, cellId + 1, cellId + boardWidth + 1, cellId + boardWidth,
-                cellId + boardWidth - 1, cellId - 1);
-        return adjacentFields;
+        List<Integer> adjacentFields = new ArrayList<>();
+        adjacentFields.add(cellId);
+        adjacentFields.addAll(addLeftCells(cellId, boardWidth));
+        adjacentFields.addAll(addRightCells(cellId, boardWidth));
+        adjacentFields.addAll(addTopandBottomCells(cellId, boardWidth));
+        return adjacentFields.stream().filter(i -> i > 0 && i < boardWidth*boardWidth).collect(Collectors.toList());
+    }
+
+    private List<Integer> addLeftCells(int cellId, int boardWidth) {
+        if(cellId % boardWidth == 1) return Collections.emptyList();
+        return List.of(cellId + boardWidth - 1, cellId - 1, cellId - boardWidth - 1);
+    }
+
+    private List<Integer> addRightCells(int cellId, int boardWidth) {
+        if(cellId % boardWidth == 0) return Collections.emptyList();
+        return List.of(cellId - boardWidth + 1, cellId + 1, cellId + boardWidth + 1);
+    }
+
+    private List<Integer> addTopandBottomCells(int cellId, int boardWidth) {
+        return List.of(cellId - boardWidth, cellId + boardWidth);
     }
 }
 

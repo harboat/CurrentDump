@@ -16,12 +16,13 @@ let height
 let width
 let yourTurn
 let enemyTurn
-let nukeCheckbox
 let playerTurn
 let gameId
 let playerId
 let enemyId
 let ships
+let nukeCheckbox
+let nukesUsed = 0
 
 connect();
 
@@ -391,6 +392,11 @@ function shoot(cell) {
     }
     let requestURL = ""
     if (nukeCheckbox.checked == true) {
+        nukesUsed++
+        if(nukesUsed >= 3) {
+            nukeCheckbox.checked = false
+            nukeCheckbox.style.visibility = 'hidden'
+        }
         requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/nuke"
     } else {
         requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/shoot"

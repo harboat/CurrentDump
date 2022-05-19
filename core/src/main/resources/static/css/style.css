@@ -130,10 +130,18 @@ body {
 }
 
 .turn {
+    width: 40vw;
+    height: 3vw;
+    text-align: center;
     transition: 0.5s;
-    top: 1.3vw;
+    border-radius: 10px;
+    border: solid;
+    border-color: var(--nord2);
+    background-color: var(--nord2);
+    top: 0.65vw;
+    left: 30vw;
     position: absolute;
-    color: var(--nord4);
+    color: var(--nord15);
     margin: auto;
     font-size: 2vw;
 }

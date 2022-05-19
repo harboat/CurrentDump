@@ -1,18 +1,7 @@
 package com.github.harboat.placement;
 
-import com.github.harboat.clients.core.board.Size;
-import com.github.harboat.clients.core.placement.GamePlacement;
-import com.github.harboat.clients.core.placement.PlacementRequest;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.*;
-import static org.mockito.BDDMockito.*;
 
 @Listeners({MockitoTestNGListener.class})
 public class PlacementServiceTest {

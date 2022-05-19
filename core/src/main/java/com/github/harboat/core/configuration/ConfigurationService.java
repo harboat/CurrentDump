@@ -1,12 +1,10 @@
 package com.github.harboat.core.configuration;
 
 import com.github.harboat.clients.configuration.SetGameSize;
-import com.github.harboat.clients.core.board.Size;
+import com.github.harboat.clients.game.Size;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.core.rooms.Room;
 import com.github.harboat.core.rooms.RoomRepository;
-import com.github.harboat.core.rooms.RoomService;
-import com.github.harboat.core.rooms.RoomUtility;
 import com.github.harboat.core.websocket.Event;
 import com.github.harboat.core.websocket.WebsocketService;
 import lombok.AllArgsConstructor;

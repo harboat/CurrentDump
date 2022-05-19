@@ -1,6 +1,5 @@
 package com.github.harboat.core.placement;
 
-import com.github.harboat.clients.core.placement.PlacementRequest;
 import com.github.harboat.clients.placement.GeneratePlacement;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;

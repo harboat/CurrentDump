@@ -1,18 +1,22 @@
 package com.github.harboat.configuration;
 
 import com.github.harboat.clients.configuration.*;
-import com.github.harboat.clients.core.board.Size;
 import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.clients.exceptions.ResourceNotFound;
+import com.github.harboat.clients.game.GameCreate;
+import com.github.harboat.clients.game.ShipDto;
+import com.github.harboat.clients.game.Size;
 import com.github.harboat.clients.rooms.MarkFleetSet;
 import com.github.harboat.clients.rooms.UnmarkFleetSet;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -87,8 +91,11 @@ public class ConfigurationService {
 
     void createGame(CreateGame createGame) {
         Configuration configuration = getOwnerConfigurationFromRequest(createGame.roomId(), createGame.playerId());
-        // TODO: create game with full config
-        System.out.println(configuration);
+        Map<String, Collection<ShipDto>> playerConfiguration = configuration.getPlayersConfiguration().entrySet()
+                        .stream().collect(Collectors.toMap(Map.Entry::getKey, v -> v.getValue().getShips()));
+        gameQueueProducer.sendCreateGame(
+                new GameCreate(configuration.getSize(), playerConfiguration)
+        );
     }
 
     private Configuration getPlayerConfigurationFormRequest(String roomId, String playerId) {

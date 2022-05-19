@@ -1,15 +1,16 @@
 package com.github.harboat.placement;
 
-import com.github.harboat.clients.core.board.Size;
-import com.github.harboat.clients.core.placement.Masts;
-import com.github.harboat.clients.core.placement.OccupiedCells;
-import com.github.harboat.clients.core.placement.ShipType;
+import com.github.harboat.clients.game.Masts;
+import com.github.harboat.clients.game.OccupiedCells;
+import com.github.harboat.clients.game.ShipType;
+import com.github.harboat.clients.game.Size;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 @Test
 public class ShipCreatorTest {

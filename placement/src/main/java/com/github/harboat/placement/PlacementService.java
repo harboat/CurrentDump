@@ -1,9 +1,7 @@
 package com.github.harboat.placement;
 
 import com.github.harboat.clients.configuration.SetShipsPosition;
-import com.github.harboat.clients.core.placement.GamePlacement;
-import com.github.harboat.clients.core.placement.PlacementRequest;
-import com.github.harboat.clients.core.placement.ShipDto;
+import com.github.harboat.clients.game.ShipDto;
 import com.github.harboat.clients.placement.GeneratePlacement;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

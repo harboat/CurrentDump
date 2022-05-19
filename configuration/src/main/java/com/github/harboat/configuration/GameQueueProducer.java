@@ -1,5 +1,6 @@
 package com.github.harboat.configuration;
 
+import com.github.harboat.clients.game.GameCreate;
 import com.github.harboat.clients.rooms.RoomCreated;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,8 @@ public class GameQueueProducer {
     @Value("${rabbitmq.routing-keys.game}")
     private String gameRoutingKey;
 
-    void sendRoom(RoomCreated roomCreated) {
-        producer.publish(roomCreated, internalExchange, gameRoutingKey);
+
+    public void sendCreateGame(GameCreate gameCreate) {
+        producer.publish(gameCreate, internalExchange, gameRoutingKey);
     }
 }

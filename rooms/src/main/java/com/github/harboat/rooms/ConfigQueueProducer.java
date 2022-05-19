@@ -3,8 +3,6 @@ package com.github.harboat.rooms;
 import com.github.harboat.clients.configuration.ConfigurationCreate;
 import com.github.harboat.clients.configuration.ConfigurationPlayerJoin;
 import com.github.harboat.clients.configuration.CreateGame;
-import com.github.harboat.clients.rooms.RoomCreated;
-import com.github.harboat.clients.rooms.RoomGameStart;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

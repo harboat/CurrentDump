@@ -1,9 +1,9 @@
 package com.github.harboat.placement;
 
-import com.github.harboat.clients.core.board.Size;
-import com.github.harboat.clients.core.placement.Masts;
-import com.github.harboat.clients.core.placement.ShipDto;
-import com.github.harboat.clients.core.placement.ShipType;
+import com.github.harboat.clients.game.Masts;
+import com.github.harboat.clients.game.ShipDto;
+import com.github.harboat.clients.game.ShipType;
+import com.github.harboat.clients.game.Size;
 
 import java.security.SecureRandom;
 import java.util.*;

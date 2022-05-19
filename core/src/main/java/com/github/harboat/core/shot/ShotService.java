@@ -1,17 +1,16 @@
 package com.github.harboat.core.shot;
 
-import com.github.harboat.clients.core.shot.Cell;
-import com.github.harboat.clients.core.shot.ShotRequest;
-import com.github.harboat.clients.core.shot.ShotResponse;
 import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.clients.exceptions.ResourceNotFound;
+import com.github.harboat.clients.game.Cell;
+import com.github.harboat.clients.game.ShotRequest;
+import com.github.harboat.clients.game.ShotResponse;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.core.GameQueueProducer;
 import com.github.harboat.core.games.GameUtility;
 import com.github.harboat.core.websocket.Event;
 import com.github.harboat.core.websocket.WebsocketService;
 import lombok.AllArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +27,6 @@ public class ShotService {
         var game = gameUtility.findByGameId(gameId)
                 .orElseThrow(() -> new ResourceNotFound("Game not found!"));
         if (!game.getPlayers().contains(playerId)) throw new BadRequest("Player is not in the game!");
-        if (!game.getStarted()) throw new BadRequest("Game has not started!");
         if (!game.getPlayerTurn().equals(playerId)) throw new BadRequest("It is not your turn!");
         producer.sendRequest(
                 new ShotRequest(gameId, playerId, cellId)

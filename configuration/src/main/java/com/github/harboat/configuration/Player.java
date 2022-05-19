@@ -1,6 +1,6 @@
 package com.github.harboat.configuration;
 
-import com.github.harboat.clients.core.placement.ShipDto;
+import com.github.harboat.clients.game.ShipDto;
 import lombok.*;
 
 import java.util.Collection;

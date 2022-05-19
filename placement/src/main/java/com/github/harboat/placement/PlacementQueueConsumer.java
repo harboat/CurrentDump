@@ -1,6 +1,5 @@
 package com.github.harboat.placement;
 
-import com.github.harboat.clients.core.placement.PlacementRequest;
 import com.github.harboat.clients.placement.GeneratePlacement;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

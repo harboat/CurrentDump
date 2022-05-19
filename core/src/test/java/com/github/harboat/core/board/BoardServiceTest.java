@@ -1,25 +1,7 @@
 package com.github.harboat.core.board;
 
-import com.github.harboat.clients.core.board.BoardCreation;
-import com.github.harboat.clients.core.board.BoardCreationResponse;
-import com.github.harboat.clients.core.board.Size;
-import com.github.harboat.clients.notification.EventType;
-import com.github.harboat.core.GameQueueProducer;
-import com.github.harboat.core.games.GameService;
-import com.github.harboat.core.websocket.Event;
-import com.github.harboat.core.websocket.WebsocketService;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
-
-import java.util.List;
-
-import static org.testng.Assert.*;
-import static org.mockito.BDDMockito.*;
 
 @Listeners({MockitoTestNGListener.class})
 public class BoardServiceTest {

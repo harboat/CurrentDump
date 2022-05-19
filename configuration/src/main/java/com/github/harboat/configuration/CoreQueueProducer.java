@@ -1,8 +1,6 @@
 package com.github.harboat.configuration;
 
 import com.github.harboat.clients.configuration.SetGameSize;
-import com.github.harboat.clients.rooms.RoomCreated;
-import com.github.harboat.clients.rooms.RoomGameStart;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

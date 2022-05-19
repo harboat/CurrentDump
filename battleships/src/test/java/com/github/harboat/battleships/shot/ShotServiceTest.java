@@ -1,10 +1,7 @@
 package com.github.harboat.battleships.shot;
 
-import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.fleet.FleetService;
-import com.github.harboat.clients.core.shot.ShotRequest;
-import com.github.harboat.clients.notification.EventType;
-import com.github.harboat.clients.notification.NotificationRequest;
+import com.github.harboat.clients.game.ShotRequest;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -13,8 +10,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.verify;
+import static org.testng.Assert.assertEquals;
 
 @Listeners({MockitoTestNGListener.class})
 public class ShotServiceTest {

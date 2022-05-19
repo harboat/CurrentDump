@@ -1,6 +1,6 @@
 package com.github.harboat.core.configuration;
 
-import com.github.harboat.clients.core.board.Size;
+import com.github.harboat.clients.game.Size;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

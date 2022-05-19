@@ -1,7 +1,6 @@
 package com.github.harboat.placement;
 
 import com.github.harboat.clients.configuration.SetShipsPosition;
-import com.github.harboat.clients.core.placement.GamePlacement;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

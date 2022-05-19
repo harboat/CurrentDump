@@ -1,6 +1,6 @@
 package com.github.harboat.placement;
 
-import com.github.harboat.clients.core.board.Size;
+import com.github.harboat.clients.game.Size;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;

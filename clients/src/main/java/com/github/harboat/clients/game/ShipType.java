@@ -1,4 +1,4 @@
-package com.github.harboat.clients.core.placement;
+package com.github.harboat.clients.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

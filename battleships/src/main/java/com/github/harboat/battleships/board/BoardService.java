@@ -1,8 +1,6 @@
 package com.github.harboat.battleships.board;
 
-import com.github.harboat.battleships.CoreQueueProducer;
-import com.github.harboat.clients.core.board.BoardCreation;
-import com.github.harboat.clients.core.board.BoardCreationResponse;
+import com.github.harboat.clients.game.Size;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +14,15 @@ import java.util.stream.IntStream;
 public class BoardService {
 
     private BoardRepository repository;
-    private CoreQueueProducer producer;
 
-    public void createBoard(BoardCreation boardCreation) {
+    public void createBoard(String gameId, String playerId, Size size) {
         Board board = Board.builder()
-                .gameId(boardCreation.gameId())
-                .playerId(boardCreation.playerId())
-                .size(boardCreation.size())
-                .cells(initCells(boardCreation.size().width(), boardCreation.size().height()))
+                .gameId(gameId)
+                .playerId(playerId)
+                .size(size)
+                .cells(initCells(size.width(), size.height()))
                 .build();
         repository.save(board);
-        producer.sendResponse(
-                new BoardCreationResponse(boardCreation.gameId(), board.getPlayerId(), boardCreation.size())
-        );
     }
 
     private Map<Integer, Cell> initCells(int width, int height) {
@@ -42,11 +36,6 @@ public class BoardService {
         Map<Integer, Cell> currentState = board.getCells();
         cells.forEach(c -> currentState.put(c, Cell.OCCUPIED));
         repository.save(board);
-    }
-
-    public void createBoardForSecondPlayer(String gameId, String playerId) {
-        Board board = repository.findByGameId(gameId).orElseThrow();
-        createBoard(new BoardCreation(gameId, playerId, board.getSize()));
     }
 
     // TODO: Error handling

@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface GameRepository extends MongoRepository<Game, String> {
-    Optional<Game> findGameByGameIdAndPlayersContains(String gameId, String playerId);
     Optional<Game> findByGameId(String gameId);
     @Query("{ownerId: ?0, started:  false}")
     Collection<Game> findGamesByOwnerIdAndNotStarted(String playerId);

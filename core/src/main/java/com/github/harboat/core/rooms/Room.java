@@ -1,6 +1,6 @@
 package com.github.harboat.core.rooms;
 
-import com.github.harboat.clients.core.board.Size;
+import com.github.harboat.clients.game.Size;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

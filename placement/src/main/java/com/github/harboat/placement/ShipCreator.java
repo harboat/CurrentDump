@@ -1,10 +1,6 @@
 package com.github.harboat.placement;
 
-import com.github.harboat.clients.core.board.Size;
-import com.github.harboat.clients.core.placement.Masts;
-import com.github.harboat.clients.core.placement.OccupiedCells;
-import com.github.harboat.clients.core.placement.ShipDto;
-import com.github.harboat.clients.core.placement.ShipType;
+import com.github.harboat.clients.game.*;
 
 import java.util.HashSet;
 import java.util.Set;

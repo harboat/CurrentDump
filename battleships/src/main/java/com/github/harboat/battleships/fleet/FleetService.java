@@ -3,25 +3,14 @@ package com.github.harboat.battleships.fleet;
 import com.github.harboat.battleships.CoreQueueProducer;
 import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.board.BoardService;
-import com.github.harboat.battleships.game.GameService;
 import com.github.harboat.battleships.game.GameUtility;
-import com.github.harboat.clients.core.placement.GamePlacement;
-import com.github.harboat.clients.core.placement.Masts;
-import com.github.harboat.clients.core.placement.PlacementResponse;
-import com.github.harboat.clients.core.shot.Cell;
-import com.github.harboat.clients.core.shot.PlayerWon;
-import com.github.harboat.clients.core.shot.ShotRequest;
-import com.github.harboat.clients.core.shot.ShotResponse;
-import com.github.harboat.clients.notification.EventType;
-import com.github.harboat.clients.notification.NotificationRequest;
+import com.github.harboat.clients.game.ShipDto;
+import com.github.harboat.clients.game.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,43 +24,34 @@ public class FleetService {
     private BoardService boardService;
 
     @Transactional
-    public void create(GamePlacement placement) {
-        List<Ship> ships = getShips(placement);
-        Fleet fleet = buildFleet(placement.playerId(), placement, ships);
+    public void create(String gameId, String playerId, Collection<com.github.harboat.clients.game.ShipDto> shipDtos) {
+        List<Ship> ships = getShips(shipDtos);
+        Fleet fleet = buildFleet(gameId, playerId, ships);
         repository.save(fleet);
-        boardService.markOccupied(placement.gameId(), placement.playerId(), fleet.getAllCells());
-        NotificationRequest<FleetDto> notificationRequest = new NotificationRequest<>(
-                placement.playerId(), EventType.FLEET_CREATED, fleet.toDto()
-        );
-        producer.sendNotification(notificationRequest);
-        coreQueueProducer.sendResponse(
-                new PlacementResponse(placement.gameId(), placement.playerId())
-        );
+        boardService.markOccupied(gameId, playerId, fleet.getAllCells());
     }
 
-    private Fleet buildFleet(String playerId, GamePlacement placement, List<Ship> ships) {
+    private Fleet buildFleet(String gameId, String playerId, List<Ship> ships) {
         return Fleet.builder()
-                .gameId(placement.gameId())
+                .gameId(gameId)
                 .playerId(playerId)
                 .ships(ships)
                 .build();
     }
 
-    private List<Ship> getShips(GamePlacement response) {
-        return response.ships()
-                .stream()
+    private List<Ship> getShips(Collection<ShipDto> shipDtos) {
+        return shipDtos.stream()
                 .map(s -> Ship.builder()
                         .shipType(s.getType())
-                        .masts(convertMasts(s.getMasts()))
-                        .cells(s.getCells())
+                        .masts(convertMasts(s.getMasts().getPositions()))
+                        .cells(new OccupiedCells(s.getCells().getPositions()))
                         .build()
                 ).toList();
     }
 
-    public MastsState convertMasts(Masts masts) {
+    public MastsState convertMasts(Collection<Integer> masts) {
         return new MastsState(
-                masts.getPositions()
-                        .stream()
+                masts.stream()
                         .collect(Collectors.toMap(m -> m, m -> MastState.ALIVE))
         );
     }

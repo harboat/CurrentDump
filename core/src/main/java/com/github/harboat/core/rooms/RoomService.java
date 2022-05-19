@@ -1,6 +1,6 @@
 package com.github.harboat.core.rooms;
 
-import com.github.harboat.clients.core.board.Size;
+import com.github.harboat.clients.game.Size;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.clients.rooms.*;
 import com.github.harboat.core.websocket.Event;

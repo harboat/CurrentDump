@@ -5,7 +5,6 @@ import com.github.harboat.clients.rooms.MarkStart;
 import com.github.harboat.clients.rooms.RoomCreate;
 import com.github.harboat.clients.rooms.RoomPlayerJoin;
 import com.github.harboat.rabbitmq.RabbitMQMessageProducer;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

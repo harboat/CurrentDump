@@ -327,9 +327,11 @@ function initializeBoard(type, fleet) {
             cell.setAttribute('onclick', 'shoot(this)')
             cell.style.cursor = 'crosshair'
 
-            let coordinate = horizontalCoordinates[i % 10] + +(((i / width * 10 - i % 10) / 10) + 1)
+            // let coordinate = horizontalCoordinates[i % width] + +(((i / width * 10 - i % 10) / 10) + 1)
+            let coordinate = horizontalCoordinates[i % width] + +(parseInt(i/width) + 1)
             let displayCellCoordinate = document.createElement('div')
             displayCellCoordinate.classList.add('cellCoordinate')
+            displayCellCoordinate.style.fontSize = 27 / width + "vw"
             displayCellCoordinate.textContent = coordinate
             body.appendChild(displayCellCoordinate)
             cell.appendChild(displayCellCoordinate)

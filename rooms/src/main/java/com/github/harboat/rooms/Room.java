@@ -61,8 +61,11 @@ public class Room {
                 .allMatch(Player::getReady);
     }
 
-    void changePlayerReadiness(String playerId) {
-        players.get(playerId).setReady(!players.get(playerId).getReady());
+    boolean changePlayerReadiness(String playerId) {
+        Player player = players.get(playerId);
+        Boolean ready = player.getReady();
+        player.setReady(!ready);
+        return ready;
     }
 
 }

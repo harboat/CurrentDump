@@ -1,5 +1,6 @@
 package com.github.harboat.core.websocket;
 
+import com.github.harboat.clients.notification.EventType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,6 +16,16 @@ public class WebsocketService {
 
     @Async("websocketServiceThreads")
     public void notifyFrontEnd(String username, Event<?> event) {
+        if (event.getEventType().equals(EventType.EXCEPTION)) {
+            handleException(username, event);
+            return;
+        }
         messagingTemplate.convertAndSendToUser(username, destination, event);
+    }
+
+    private void handleException(String username, Event<?> event) {
+        String message = ((RuntimeException) event.getContent()).getMessage();
+        messagingTemplate.convertAndSendToUser(username, destination, message);
+        return;
     }
 }

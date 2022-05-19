@@ -6,6 +6,8 @@ import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.game.GameCreate;
 import com.github.harboat.clients.game.ShipDto;
 import com.github.harboat.clients.game.Size;
+import com.github.harboat.clients.notification.EventType;
+import com.github.harboat.clients.notification.NotificationRequest;
 import com.github.harboat.clients.rooms.MarkFleetSet;
 import com.github.harboat.clients.rooms.UnmarkFleetSet;
 import lombok.AllArgsConstructor;
@@ -26,6 +28,7 @@ public class ConfigurationService {
     private RoomsQueueProducer roomsQueueProducer;
     private CoreQueueProducer coreQueueProducer;
     private GameQueueProducer gameQueueProducer;
+    private NotificationProducer notificationProducer;
 
     void create(ConfigurationCreate configurationCreate) {
         Size size = new Size(10, 10);
@@ -69,6 +72,10 @@ public class ConfigurationService {
         coreQueueProducer.sendSize(
                 setGameSize
         );
+        playersConfiguration.keySet()
+                .forEach(p -> notificationProducer.sendNotification(
+                        new NotificationRequest<>(p, EventType.BOARD_CREATED, setGameSize.size())
+                ));
     }
 
     @Transactional
@@ -87,6 +94,10 @@ public class ConfigurationService {
                         setShipsPosition.playerId()
                 )
         );
+        configuration.getPlayersConfiguration().keySet()
+                .forEach(p -> notificationProducer.sendNotification(
+                        new NotificationRequest<>(p, EventType.FLEET_CREATED, setShipsPosition.ships())
+                ));
     }
 
     void createGame(CreateGame createGame) {

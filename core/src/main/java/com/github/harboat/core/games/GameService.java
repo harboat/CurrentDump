@@ -1,6 +1,7 @@
 package com.github.harboat.core.games;
 
 import com.github.harboat.clients.exceptions.BadRequest;
+import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.game.GameCreated;
 import com.github.harboat.clients.game.PlayerWon;
 import com.github.harboat.clients.notification.EventType;
@@ -31,7 +32,7 @@ public class GameService {
     }
 
     public void forfeit(String playerId, String gameId) {
-        Game game = repository.findByGameId(gameId).orElseThrow();
+        Game game = repository.findByGameId(gameId).orElseThrow(() -> new ResourceNotFound("Game not found!"));
         if (!game.getPlayers().contains(playerId)) throw new BadRequest("You are not in this game");
         String enemyId = game.getPlayers().stream()
                 .dropWhile(p -> p.equals(playerId))

@@ -46,11 +46,6 @@ public class RoomService {
         Room room = getRoomFromRequest(markFleetSet.roomId(), markFleetSet.playerId());
         room.markPlayerFleetSet(markFleetSet.playerId());
         repository.save(room);
-        room.getPlayers().keySet().forEach(p -> {
-            notificationProducer.sendNotification(
-                    new NotificationRequest<>(p, EventType.FLEET_CREATED, markFleetSet)
-            );
-        });
     }
 
     public void unmarkFleet(UnmarkFleetSet unmarkFleetSet) {
@@ -63,11 +58,11 @@ public class RoomService {
         Room room = getRoomFromRequest(playerReadiness.roomId(), playerReadiness.playerId());
         if (!room.isPlayerFleetSet(playerReadiness.playerId()))
             throw new BadRequest("Player fleet is not set yet, you can't change readiness!");
-        room.changePlayerReadiness(playerReadiness.playerId());
+        boolean oldValue = room.changePlayerReadiness(playerReadiness.playerId());
         repository.save(room);
         room.getPlayers().keySet().forEach(p -> {
             notificationProducer.sendNotification(
-                    new NotificationRequest<>(p, EventType.PLAYER_READY, playerReadiness)
+                    new NotificationRequest<>(p, oldValue ? EventType.PLAYER_UNREADY : EventType.PLAYER_READY, playerReadiness)
             );
         });
     }

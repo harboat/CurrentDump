@@ -59,8 +59,6 @@ function connect() {
                 case "GAME_CREATED": {
                     gameId = object['gameId']
                     createGameIdElement()
-                    startGameButton()
-                    createGenerateFleetButton()
                     createBoardConfigForm()
                     break
                 }
@@ -77,6 +75,7 @@ function connect() {
                     width = object['width']
                     height = object['height']
                     alert('Board created successfully')
+                    createGenerateFleetButton()
                     break
                 }
                 case "FLEET_CREATED": {
@@ -87,6 +86,7 @@ function connect() {
                     playerBoard.style.left = "30vw"
                     playerBoard.style.opacity = "1"
                     initializeBoard('enemy', ships)
+                    startGameButton()
                     break
                 }
                 case "GAME_STARTED": {
@@ -319,10 +319,8 @@ function initializeBoard(type, fleet) {
 
         let cellWidth = 40 / width - 0.4
         let cellHeight = 40 / height - 0.4
-        // let fontSize = 40 / width
         cell.style.width = cellWidth.toString() + 'vw'
         cell.style.height = cellHeight.toString() + 'vw'
-        // cell.style.fontSize = fontSize.toString() + 'vw'
         cell.setAttribute('id', index.toString() + ':' + type)
 
         if (type === 'enemy') {
@@ -333,6 +331,7 @@ function initializeBoard(type, fleet) {
             let displayCellCoordinate = document.createElement('div')
             displayCellCoordinate.classList.add('cellCoordinate')
             displayCellCoordinate.textContent = coordinate
+            body.appendChild(displayCellCoordinate)
             cell.appendChild(displayCellCoordinate)
         }
         container.appendChild(cell)
@@ -468,7 +467,7 @@ function shoot(cell) {
     header.append('Content-Type', 'application/json')
     const cellId = cell.id.toString().split(":")[0]
     const shoot = {
-        "cellId": cellId
+        "cellId": cellId,
     }
     const requestURL = requestURLBase + "games/" + gameId + "/shoot"
     const request = new Request(requestURL, {

@@ -16,7 +16,7 @@ let height
 let width
 let yourTurn
 let enemyTurn
-
+let nukeCheckbox
 let playerTurn
 let gameId
 let playerId
@@ -117,11 +117,11 @@ function createNukeButton() {
     button.innerText = "Nuke"
     button.classList.add('nukeButton')
 
-    let checkbox = document.createElement('input');
-    checkbox.setAttribute('type', 'checkbox')
-    checkbox.setAttribute('id', 'nukeCheckbox')
+    nukeCheckbox = document.createElement('input');
+    nukeCheckbox.setAttribute('type', 'checkbox')
+    nukeCheckbox.setAttribute('id', 'nukeCheckbox')
 
-    button.appendChild(checkbox)
+    button.appendChild(nukeCheckbox)
     body.appendChild(button)
 }
 
@@ -248,7 +248,7 @@ function initializeBoard(type, fleet) {
             cell.setAttribute('onclick', 'shoot(this)')
             cell.style.cursor = 'crosshair'
 
-            let coordinate = horizontalCoordinates[i % 10] + +(((i / width * 10 - i % 10) / 10) + 1)
+            let coordinate = horizontalCoordinates[i % width] + +(parseInt(i / width) + 1)
             let displayCellCoordinate = document.createElement('div')
             displayCellCoordinate.classList.add('cellCoordinate')
             displayCellCoordinate.textContent = coordinate
@@ -389,7 +389,13 @@ function shoot(cell) {
     const shoot = {
         "cellId": cellId
     }
-    const requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/shoot"
+    let requestURL = ""
+    if (nukeCheckbox.checked == true) {
+        requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/shoot"
+    } else {
+        requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/shoot"
+    }
+
     const request = new Request(requestURL, {
         method: 'POST',
         body: JSON.stringify(shoot),

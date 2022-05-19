@@ -180,8 +180,6 @@ body {
 }
 
 .cellCoordinate {
-    height: 3.6vw;
-    width: 3.6vw;
     position: center;
     transition: 0.2s;
     color: var(--nord2);

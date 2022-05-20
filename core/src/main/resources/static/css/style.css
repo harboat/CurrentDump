@@ -22,6 +22,131 @@ body {
     background-color: var(--nord0);
 }
 
+
+.heightLabel {
+    text-align: center;
+    transition: 0.2s;
+    position: absolute;
+    width: 7.5vw;
+    height: 4vw;
+    top: 4.2vw;
+    left: 14.9vw;
+    background: var(--nord2);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord2);
+    font-size: 1vw;
+    color: var(--nord15);
+    cursor: default;
+}
+
+
+.widthLabel {
+    text-align: center;
+    transition: 0.2s;
+    position: absolute;
+    width: 7.5vw;
+    height: 4vw;
+    top: 4.2vw;
+    left: 7vw;
+    background: var(--nord2);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord2);
+    font-size: 1vw;
+    color: var(--nord15);
+    cursor: default;
+}
+
+.setBoardSizeButton {
+    transition: 0.2s;
+    position: absolute;
+    width: 15.45vw;
+    height: 3vw;
+    top: 10.25vw;
+    left: 7vw;
+    background: var(--nord2);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord2);
+    font-size: 1vw;
+    color: var(--nord15);
+}
+
+.setBoardSizeButton:hover {
+    background-color: var(--nord1);
+}
+
+.setBoardSizeButton:active {
+    background-color: var(--nord0);
+}
+
+
+.selectHeight {
+    text-align: center;
+    transition: 0.2s;
+    position: absolute;
+    width: 7.5vw;
+    height: 2vw;
+    top: 7.25vw;
+    left: 14.95vw;
+    background: var(--nord2);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord15);
+    font-size: 1vw;
+    color: var(--nord15);
+}
+
+.selectHeight:hover {
+    background-color: var(--nord0);
+}
+
+.selectWidth {
+    text-align: center;
+    transition: 0.2s;
+    position: absolute;
+    width: 7.5vw;
+    height: 2vw;
+    top: 7.25vw;
+    left: 7.05vw;
+    background: var(--nord2);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord15);
+    font-size: 1vw;
+    color: var(--nord15);
+}
+
+.selectWidth:hover {
+    background-color: var(--nord0);
+}
+
+.nukeButton {
+    transition: 0.2s;
+    position: absolute;
+    width: 6vw;
+    height: 3vw;
+    top: 1vw;
+    left: 20vw;
+    background: var(--nord13);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord11);
+    font-size: 1vw;
+    color: var(--nord0);
+    margin: 4.2vw auto;
+}
+
+.nukeButton:hover {
+    background: var(--nord12);
+    border-color: var(--nord13);
+}
+
+.nukeButton:target {
+    background: var(--nord11);
+}
+
 /*Buttons*/
 .menuButton {
     transition: 0.2s;
@@ -33,6 +158,53 @@ body {
     border: solid 0.1vw;
     border-color: var(--nord4);
     font-size: 1.5vw;
+}
+
+
+.fleetGenButton {
+    transition: 0.2s;
+    position: absolute;
+    width: 15vw;
+    height: 3vw;
+    bottom: 7.9vw;
+    left: 7vw;
+    background: var(--nord10);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord10);
+    font-size: 1vw;
+    color: var(--nord0);
+}
+
+.fleetGenButton:hover {
+    background: var(--nord9);
+}
+
+.fleetGenButton:active {
+    background: var(--nord0);
+}
+
+.startGameButton {
+    transition: 0.2s;
+    position: absolute;
+    width: 15vw;
+    height: 3vw;
+    bottom: 3.9vw;
+    left: 7vw;
+    background: var(--nord11);
+    border-radius: 0.5vw;
+    border: solid 0.1vw;
+    border-color: var(--nord11);
+    font-size: 1vw;
+    color: var(--nord0);
+}
+
+.startGameButton:hover {
+    background: var(--nord12);
+}
+
+.startGameButton:active {
+    background: var(--nord0);
 }
 
 .forfeitButton {
@@ -55,6 +227,10 @@ body {
     color: var(--nord4)
 }
 
+.forfeitButton:active {
+    background-color: var(--nord0);
+}
+
 .menuButton:hover {
     background: var(--nord1);
     border-color: var(--nord0);
@@ -69,7 +245,7 @@ body {
 }
 
 /*Text-Based*/
-.gameId {
+.roomId {
     transition: 0.5s;
     color: var(--nord4);
     margin: auto;
@@ -83,10 +259,18 @@ body {
 }
 
 .turn {
+    width: 40vw;
+    height: 3vw;
+    text-align: center;
     transition: 0.5s;
-    top: 1.3vw;
+    border-radius: 10px;
+    border: solid;
+    border-color: var(--nord2);
+    background-color: var(--nord2);
+    top: 0.65vw;
+    left: 30vw;
     position: absolute;
-    color: var(--nord4);
+    color: var(--nord15);
     margin: auto;
     font-size: 2vw;
 }
@@ -139,14 +323,20 @@ body {
     height: 3.6vw;
     width: 3.6vw;
     transition: 0.2s;
-    border: solid 0.2vw var(--nord0);
+    border: solid var(--nord0);
+    border-width: 0.2vw;
     border-radius: 0.5vw;
     margin: auto;
     background-color: var(--nord10);
+    font-size: 0.2vw;
 }
 
 .cell:hover {
     background-color: var(--nord9);
+}
+
+.cell:hover .cellCoordinate {
+    opacity: 1;
 }
 
 @font-face {
@@ -160,14 +350,8 @@ body {
     color: var(--nord2);
     text-align: center;
     font-family: 'VT323-Regular', serif;
-    font-size: 3vw;
     opacity: 0;
 }
-
-.cellCoordinate:hover {
-    opacity: 1;
-}
-
 
 .ship {
     border-color: var(--nord2);

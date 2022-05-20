@@ -3,16 +3,6 @@ server:
   error:
     include-message: always
 
-# For tests, remove later
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        data:
-#          mongodb:
-#            core:
-#              MongoTemplate: DEBUG
-
 spring:
   application:
     name: core
@@ -37,6 +27,8 @@ rabbitmq:
     notification: internal-notification.exchange
     placement: internal-placement.exchange
     game: internal-game.exchange
+    rooms: internal-rooms.exchange
+    config: internal-config.exchange
   queues:
     core: core.queue
     notification: notification.queue
@@ -45,6 +37,8 @@ rabbitmq:
     notification: internal.notification.routing-key
     game: internal.game.routing-key
     placement: internal.placement.routing-key
+    rooms: internal.rooms.routing-key
+    config: internal.config.routing-key
 
 broker:
   application-destination-prefix: ${rabbit_clients_stomp_application_destination}

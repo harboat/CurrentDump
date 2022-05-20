@@ -1,7 +1,7 @@
 package com.github.harboat.battleships.fleet;
 
-import com.github.harboat.clients.core.placement.OccupiedCells;
-import com.github.harboat.clients.core.placement.ShipType;
+import com.github.harboat.clients.game.OccupiedCells;
+import com.github.harboat.clients.game.ShipType;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

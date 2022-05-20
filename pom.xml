@@ -16,6 +16,8 @@
         <module>core</module>
         <module>logger</module>
         <module>eureka</module>
+        <module>rooms</module>
+        <module>configuration</module>
     </modules>
     <packaging>pom</packaging>
     <name>ships</name>
@@ -32,7 +34,7 @@
         <spring.cloud-version>2021.0.2</spring.cloud-version>
         <jib-maven-plugin.version>3.2.1</jib-maven-plugin.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <image>harboat/${project.artifactId}:${project.version}</image>
+        <image>yve5/${project.artifactId}:${project.version}</image>
         <jackson-datatype-jsr310.version>2.13.2</jackson-datatype-jsr310.version>
         <spring-boot-starter-parent.version>2.6.7</spring-boot-starter-parent.version>
     </properties>

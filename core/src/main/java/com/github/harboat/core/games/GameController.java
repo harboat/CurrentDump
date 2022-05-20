@@ -18,32 +18,6 @@ public class GameController {
 
     private final GameService service;
 
-    @PostMapping
-    public ResponseEntity<?> create(
-            @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        service.create(userDetails.getUsername());
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("{gameId}/join")
-    public ResponseEntity<?> join(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable String gameId
-    ) {
-        service.join(userDetails.getUsername(), gameId);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("{gameId}/start")
-    public ResponseEntity<?> start(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable String gameId
-    ) {
-        service.start(userDetails.getUsername(), gameId);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("{gameId}/forfeit")
     public ResponseEntity<?> forfeit(
             @AuthenticationPrincipal UserDetails userDetails,

@@ -107,11 +107,6 @@
             <version>${logger.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.free-now.multirabbit</groupId>
-            <artifactId>spring-multirabbit</artifactId>
-            <version>${spring-multirabbit.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${version.dependency.testng}</version>

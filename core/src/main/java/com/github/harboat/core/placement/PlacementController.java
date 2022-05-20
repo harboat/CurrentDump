@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/games/{gameId}/placements")
+@RequestMapping("/api/v1/rooms/{roomId}/placements")
 @AllArgsConstructor
 @Validated
 public class PlacementController {
@@ -21,9 +21,9 @@ public class PlacementController {
     @PostMapping
     public ResponseEntity<?> randomPlacement(
             @AuthenticationPrincipal UserDetails details,
-            @PathVariable String gameId
+            @PathVariable String roomId
     ) {
-        service.palaceShips(gameId, details.getUsername());
+        service.palaceShips(roomId, details.getUsername());
         return ResponseEntity.ok().build();
     }
 

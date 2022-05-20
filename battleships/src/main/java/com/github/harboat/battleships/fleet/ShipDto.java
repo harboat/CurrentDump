@@ -1,6 +1,6 @@
 package com.github.harboat.battleships.fleet;
 
-import com.github.harboat.clients.core.placement.ShipType;
+import com.github.harboat.clients.game.ShipType;
 import lombok.*;
 
 import java.util.Collection;

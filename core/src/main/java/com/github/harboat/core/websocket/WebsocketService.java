@@ -27,6 +27,6 @@ public class WebsocketService {
 
     private void handleException(String username, Event<?> event) {
         String message = ((LinkedHashMap<String, String>) event.getContent()).get("message");
-        messagingTemplate.convertAndSendToUser(username, destination, message);
+        messagingTemplate.convertAndSendToUser(username, destination, new Exception(message));
     }
 }

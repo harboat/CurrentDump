@@ -87,6 +87,7 @@ function connect() {
                         body.removeChild(document.getElementById('player'))
                         body.removeChild(document.getElementById('enemy'))
                     }
+                    resetReadyButtons()
                     break
                 }
                 case "FLEET_CREATED": {
@@ -134,18 +135,34 @@ function connect() {
                         document.getElementById('readyButton').style.borderColor = "#a3be8c"
                     }
                     checkIfGameIsReady()
+                    break
+                }
+                case "PLAYER_UNREADY": {
+                    let unreadyPlayer = object['playerId']
+                    if (playerId === unreadyPlayer) {
+                        resetReadyButtons()
+                    }
+                    break
                 }
             }
         })
     });
 }
 
+function resetReadyButtons() {
+    if (document.getElementById('startGameButton') !== null) {
+        document.getElementById('startGameButton').style.backgroundColor = "#bf616a"
+        document.getElementById('startGameButton').style.borderColor = "#bf616a"
+    }
+    if (document.getElementById('readyButton') !== null) {
+        document.getElementById('readyButton').style.backgroundColor = "#bf616a"
+        document.getElementById('readyButton').style.borderColor = "#bf616a"
+    }
+}
+
 function checkIfGameIsReady() {
-    console.log(readyPlayer)
-    console.log(playerId)
-    if (document.getElementById('startGameButton') !== null && readyPlayer !== undefined && fleetGenerated === true) {
-        if (readyPlayer === playerId) {
-        } else {
+    if (readyPlayer !== undefined) {
+        if (document.getElementById('startGameButton') !== null && readyPlayer !== playerId && fleetGenerated === true) {
             document.getElementById('startGameButton').style.backgroundColor = "#a3be8c"
             document.getElementById('startGameButton').style.borderColor = "#a3be8c"
         }
@@ -270,6 +287,8 @@ function createGenerateFleetButton() {
         button.innerText = "Generate fleet"
         button.classList.add('fleetGenButton')
         body.appendChild(button)
+    } else {
+        document.getElementById('fleetGenButton').innerText = "Generate fleet"
     }
 }
 

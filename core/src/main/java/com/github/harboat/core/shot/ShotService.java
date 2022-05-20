@@ -50,6 +50,9 @@ public class ShotService {
         if (shotResponse.cells().size() == 1 && !((List<Cell>)shotResponse.cells()).get(0).wasShip()) {
             gameUtility.switchTurn(shotResponse.gameId(), enemyId);
         }
+        if (shotResponse.cells().size() == 9 && shotResponse.cells().stream().noneMatch(Cell::wasShip)) {
+            gameUtility.switchTurn(shotResponse.gameId(), enemyId);
+        }
         websocketService.notifyFrontEnd(
                 playerId, new Event<>(EventType.HIT, new ShotResult(playerId, shotResponse.cells()))
         );

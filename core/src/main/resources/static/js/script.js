@@ -2,8 +2,6 @@
 //TODO: GAME END, EXCEPTION, SERVER ERROR
 //TODO: ERROR HANDLING
 //TODO: AUDIO
-//TODO: DYNAMIC CELL SIZE FIX
-//TODO: ROOMS SCREEN
 
 const body = document.getElementsByTagName("body")[0]
 
@@ -267,7 +265,6 @@ function createForfeitButton() {
 function createNukeButton() {
     let button = document.createElement('button')
     button.setAttribute('id', 'nukeButton')
-    button.setAttribute('onclick', 'nuke()')
     button.innerText = "Nuke"
     button.classList.add('nukeButton')
 
@@ -586,9 +583,9 @@ function shoot(cell) {
             nukeCheckbox.checked = false
             nukeCheckbox.style.visibility = 'hidden'
         }
-        requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/nuke"
+        requestURL = requestURLBase + "games/" + gameId + "/nuke"
     } else {
-        requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/shoot"
+        requestURL = requestURLBase + "games/" + gameId + "/shoot"
     }
 
     const request = new Request(requestURL, {

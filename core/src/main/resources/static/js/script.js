@@ -8,7 +8,7 @@ menuMusic.play()
 
 const body = document.getElementsByTagName("body")[0]
 
-const ip = 'http://207.154.222.51'
+const ip = 'http://localhost'
 const port = '8080'
 const apiVersion = 'v1'
 
@@ -122,7 +122,11 @@ function connect() {
                     break
                 }
                 case "GAME_END": {
-                    alert(object['winningPlayer'])
+                    let message = "YOU LOST"
+                    if (object['winningPlayer'] === playerId) {
+                        message = "YOU WIN!"
+                    }
+                    alert(message)
                     window.location.reload()
                     break
                 }

@@ -8,7 +8,7 @@ menuMusic.play()
 
 const body = document.getElementsByTagName("body")[0]
 
-const ip = 'http://207.154.222.51'
+const ip = 'http://localhost'
 const port = '8080'
 const apiVersion = 'v1'
 
@@ -325,13 +325,23 @@ async function markCellsHelper(cells, type) {
         const playerCell = document.getElementById(cellId.toString() + ":" + type)
         if (wasShip) {
             playerCell.classList.add('shipHit')
-            shotWater.load()
-            shotMast.load()
+            try {
+                shotWater.load()
+                shotMast.load()
+            } catch (exception_let) {
+                shotMast.play()
+                activateCells()
+            }
             shotMast.play()
             activateCells()
         } else {
-            shotMast.load()
-            shotWater.load()
+            try {
+                shotMast.load()
+                shotWater.load()
+            } catch (exception_var) {
+                shotWater.play()
+                playerCell.classList.add('cellHit')
+            }
             shotWater.play()
             playerCell.classList.add('cellHit')
         }

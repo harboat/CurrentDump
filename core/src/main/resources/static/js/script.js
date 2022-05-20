@@ -3,9 +3,17 @@
 //TODO: ERROR HANDLING
 //TODO: AUDIO
 
+const menuMusic = new Audio('../assets/audio/menuambience.mp3')
+const gameMusic = new Audio('../assets/audio/gameambience.mp3')
+const shotMast = new Audio('../assets/audio/shot_mast.mp3')
+const shotWater = new Audio('../assets/audio/shot_water.mp3')
+
+menuMusic.loop = true
+menuMusic.play()
+
 const body = document.getElementsByTagName("body")[0]
 
-const ip = 'http://localhost'
+const ip = 'http://207.154.222.51'
 const port = '8080'
 const apiVersion = 'v1'
 
@@ -106,6 +114,9 @@ function connect() {
                     break
                 }
                 case "GAME_STARTED": {
+                    menuMusic.pause()
+                    gameMusic.loop = true
+                    gameMusic.play()
                     playerTurn = object['playerTurn']
                     gameId = object['gameId']
                     setUpBoardsBasedOnPlayerTurn()
@@ -315,8 +326,14 @@ async function markCellsHelper(cells, type) {
         const playerCell = document.getElementById(cellId.toString() + ":" + type)
         if (wasShip) {
             playerCell.classList.add('shipHit')
+            shotWater.load()
+            shotMast.load()
+            shotMast.play()
             activateCells()
         } else {
+            shotMast.load()
+            shotWater.load()
+            shotWater.play()
             playerCell.classList.add('cellHit')
         }
     })

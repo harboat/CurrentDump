@@ -1,8 +1,3 @@
-//TODO: REFACTOR
-//TODO: GAME END, EXCEPTION, SERVER ERROR
-//TODO: ERROR HANDLING
-//TODO: AUDIO
-
 const menuMusic = new Audio('../assets/audio/menuambience.mp3')
 const gameMusic = new Audio('../assets/audio/gameambience.mp3')
 const shotMast = new Audio('../assets/audio/shot_mast.mp3')
@@ -382,7 +377,6 @@ function setUpBoardsBasedOnPlayerTurn() {
     document.getElementById('player').classList.add(playerAnimation)
 }
 
-//TODO: ERROR HANDLING
 function requestPlacement() {
     const requestURL = requestURLBase + "rooms/" + roomId + "/placements"
     const request = new Request(requestURL, {
@@ -402,7 +396,6 @@ function startGameButton() {
     body.appendChild(button)
 }
 
-//TODO: ERROR HANDLING | USER CAN SET BOARD SIZE
 function requestBoard() {
     let width = document.getElementById('boardWidth')
     let widthValue = width.options[width.selectedIndex].value
@@ -480,8 +473,6 @@ async function createShips(fleet, type) {
         }))
     }
 }
-
-//TODO: ERROR HANDLING
 
 async function createGame() {
     await resetBoardContainer()

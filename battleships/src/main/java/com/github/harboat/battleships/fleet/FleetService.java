@@ -68,6 +68,7 @@ public class FleetService {
                 new ShotResponse(gameId, playerId, cells)
         );
     }
+
     public void shoot(NukeShotRequest nukeShotRequest) {
         var gameId = nukeShotRequest.gameId();
         var playerId = nukeShotRequest.playerId();
@@ -75,8 +76,9 @@ public class FleetService {
         var enemyId = gameUtility.getEnemyId(gameId, playerId);
         var currentFleet = repository.findByGameIdAndPlayerId(gameId, enemyId).orElseThrow();
 
-        //TODO replace hardcoded board width with variable
-        List<Integer> nukedCells = determineNukedCells(cellId, 10);
+        Size boardSize = boardService.getBoardSize(gameId, playerId);
+
+        List<Integer> nukedCells = determineNukedCells(cellId, boardSize);
 
         Set<Cell> cells = new HashSet<>();
         for (Integer cell : nukedCells) {
@@ -114,22 +116,23 @@ public class FleetService {
         return cells;
     }
 
-    private List<Integer> determineNukedCells(Integer cellId, int boardWidth) {
+    private List<Integer> determineNukedCells(Integer cellId, Size boardWidth) {
         List<Integer> adjacentFields = new ArrayList<>();
         adjacentFields.add(cellId);
-        adjacentFields.addAll(addLeftCells(cellId, boardWidth));
-        adjacentFields.addAll(addRightCells(cellId, boardWidth));
-        adjacentFields.addAll(addTopandBottomCells(cellId, boardWidth));
-        return adjacentFields.stream().filter(i -> i > 0 && i < boardWidth*boardWidth).collect(Collectors.toList());
+        adjacentFields.addAll(addLeftCells(cellId, boardWidth.width()));
+        adjacentFields.addAll(addRightCells(cellId, boardWidth.width()));
+        adjacentFields.addAll(addTopandBottomCells(cellId, boardWidth.width()));
+        return adjacentFields.stream().filter(i -> i > 0 && i < boardWidth.width() * boardWidth.height()).
+                collect(Collectors.toList());
     }
 
     private List<Integer> addLeftCells(int cellId, int boardWidth) {
-        if(cellId % boardWidth == 1) return Collections.emptyList();
+        if (cellId % boardWidth == 1) return Collections.emptyList();
         return List.of(cellId + boardWidth - 1, cellId - 1, cellId - boardWidth - 1);
     }
 
     private List<Integer> addRightCells(int cellId, int boardWidth) {
-        if(cellId % boardWidth == 0) return Collections.emptyList();
+        if (cellId % boardWidth == 0) return Collections.emptyList();
         return List.of(cellId - boardWidth + 1, cellId + 1, cellId + boardWidth + 1);
     }
 

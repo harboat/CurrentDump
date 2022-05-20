@@ -74,6 +74,13 @@ public class FleetService {
         var playerId = nukeShotRequest.playerId();
         var cellId = nukeShotRequest.cellId();
         var enemyId = gameUtility.getEnemyId(gameId, playerId);
+
+        var myFleet = repository.findByGameIdAndPlayerId(gameId, playerId).orElseThrow();
+        if(!myFleet.hasFourMastShipWithThreeMastsAlive()) {
+            shoot(new ShotRequest(nukeShotRequest.gameId(), nukeShotRequest.playerId(), nukeShotRequest.cellId()));
+            return;
+        }
+
         var currentFleet = repository.findByGameIdAndPlayerId(gameId, enemyId).orElseThrow();
 
         Size boardSize = boardService.getBoardSize(gameId, playerId);

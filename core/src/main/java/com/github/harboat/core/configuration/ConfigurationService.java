@@ -1,6 +1,7 @@
 package com.github.harboat.core.configuration;
 
 import com.github.harboat.clients.configuration.SetGameSize;
+import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.game.Size;
 import com.github.harboat.clients.notification.EventType;
 import com.github.harboat.core.rooms.Room;
@@ -25,7 +26,7 @@ public class ConfigurationService {
     }
 
     public void setSize(SetGameSize setGameSize) {
-        Room room = roomRepository.findByRoomId(setGameSize.roomId()).orElseThrow();
+        Room room = roomRepository.findByRoomId(setGameSize.roomId()).orElseThrow(() -> new ResourceNotFound("Room not found!"));
         room.setSize(setGameSize.size());
         roomRepository.save(room);
         room.getPlayers().forEach(p -> websocketService.notifyFrontEnd(

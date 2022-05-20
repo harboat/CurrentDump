@@ -72,10 +72,6 @@ public class ConfigurationService {
         coreQueueProducer.sendSize(
                 setGameSize
         );
-        playersConfiguration.keySet()
-                .forEach(p -> notificationProducer.sendNotification(
-                        new NotificationRequest<>(p, EventType.BOARD_CREATED, setGameSize.size())
-                ));
     }
 
     @Transactional

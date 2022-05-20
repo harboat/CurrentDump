@@ -7,6 +7,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
+
 @Service
 @RequiredArgsConstructor
 public class WebsocketService {
@@ -24,8 +26,7 @@ public class WebsocketService {
     }
 
     private void handleException(String username, Event<?> event) {
-        String message = ((RuntimeException) event.getContent()).getMessage();
+        String message = ((LinkedHashMap<String, String>) event.getContent()).get("message");
         messagingTemplate.convertAndSendToUser(username, destination, message);
-        return;
     }
 }

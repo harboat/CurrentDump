@@ -31,6 +31,8 @@ let roomId
 let playerId
 let enemyId
 let ships
+let nukeCheckbox
+let nukesUsed = 0
 
 connect();
 
@@ -109,6 +111,7 @@ function connect() {
                     gameId = object['gameId']
                     setUpBoardsBasedOnPlayerTurn()
                     createForfeitButton()
+                    createNukeButton()
                     removeButtons()
                     await createTurnElement()
                     break
@@ -244,6 +247,21 @@ function createForfeitButton() {
     body.appendChild(button)
 }
 
+function createNukeButton() {
+    let button = document.createElement('button')
+    button.setAttribute('id', 'nukeButton')
+    button.setAttribute('onclick', 'nuke()')
+    button.innerText = "Nuke"
+    button.classList.add('nukeButton')
+
+    nukeCheckbox = document.createElement('input');
+    nukeCheckbox.setAttribute('type', 'checkbox')
+    nukeCheckbox.setAttribute('id', 'nukeCheckbox')
+
+    button.appendChild(nukeCheckbox)
+    body.appendChild(button)
+}
+
 function createGenerateFleetButton() {
     if (document.getElementById('fleetGenButton') === null) {
         let button = document.createElement('button')
@@ -261,12 +279,16 @@ async function markCells(shootingPlayerId, cells) {
     } else {
         await markCellsHelper(cells, 'player')
     }
-    if (cells.length === 1) {
-        cells.forEach(cell => {
-            if (!cell['wasShip']) {
-                swapBoards()
-            }
-        })
+    let hit = false
+
+    cells.forEach(cell => {
+        if(cell['wasShip']) {
+            hit = true
+        }
+    })
+
+    if(!hit) {
+        swapBoards()
     }
 }
 
@@ -537,7 +559,19 @@ function shoot(cell) {
     const shoot = {
         "cellId": cellId,
     }
-    const requestURL = requestURLBase + "games/" + gameId + "/shoot"
+
+    let requestURL = ""
+    if (nukeCheckbox.checked == true) {
+        nukesUsed++
+        if(nukesUsed >= 3) {
+            nukeCheckbox.checked = false
+            nukeCheckbox.style.visibility = 'hidden'
+        }
+        requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/nuke"
+    } else {
+        requestURL = "http://localhost:8080/api/v1/games/" + gameId + "/shoot"
+    }
+
     const request = new Request(requestURL, {
         method: 'POST',
         body: JSON.stringify(shoot),

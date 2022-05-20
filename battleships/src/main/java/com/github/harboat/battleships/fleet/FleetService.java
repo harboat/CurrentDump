@@ -62,13 +62,40 @@ public class FleetService {
         var cellId = shotRequest.cellId();
         var enemyId = gameUtility.getEnemyId(gameId, playerId);
         var currentFleet = repository.findByGameIdAndPlayerId(gameId, enemyId).orElseThrow();
+        Set<Cell> cells = takeAShoot(gameId, playerId, cellId, currentFleet);
+        repository.save(currentFleet);
+        coreQueueProducer.sendResponse(
+                new ShotResponse(gameId, playerId, cells)
+        );
+    }
+    public void shoot(NukeShotRequest nukeShotRequest) {
+        var gameId = nukeShotRequest.gameId();
+        var playerId = nukeShotRequest.playerId();
+        var cellId = nukeShotRequest.cellId();
+        var enemyId = gameUtility.getEnemyId(gameId, playerId);
+        var currentFleet = repository.findByGameIdAndPlayerId(gameId, enemyId).orElseThrow();
+
+        //TODO replace hardcoded board width with variable
+        List<Integer> nukedCells = determineNukedCells(cellId, 10);
+
+        Set<Cell> cells = new HashSet<>();
+        for (Integer cell : nukedCells) {
+            cells.addAll(takeAShoot(gameId, playerId, cell, currentFleet));
+        }
+
+        repository.save(currentFleet);
+        coreQueueProducer.sendResponse(
+                new
+
+                        ShotResponse(gameId, playerId, cells)
+        );
+    }
+
+    private Set<Cell> takeAShoot(String gameId, String playerId, Integer cellId, Fleet currentFleet) {
         Optional<Ship> ship = currentFleet.takeAShot(cellId);
         boardService.markHit(gameId, playerId, cellId);
         if (ship.isEmpty()) {
-            coreQueueProducer.sendResponse(
-                    new ShotResponse(gameId, playerId, Set.of(new Cell(cellId, false)))
-            );
-            return;
+            return Set.of(new Cell(cellId, false));
         }
         if (!currentFleet.isAlive()) {
             coreQueueProducer.sendResponse(
@@ -84,10 +111,29 @@ public class FleetService {
             s.getMasts().getMasts().keySet()
                     .forEach(m -> cells.add(new Cell(m, true)));
         }
-        repository.save(currentFleet);
-        coreQueueProducer.sendResponse(
-                new ShotResponse(gameId, playerId, cells)
-        );
+        return cells;
     }
 
+    private List<Integer> determineNukedCells(Integer cellId, int boardWidth) {
+        List<Integer> adjacentFields = new ArrayList<>();
+        adjacentFields.add(cellId);
+        adjacentFields.addAll(addLeftCells(cellId, boardWidth));
+        adjacentFields.addAll(addRightCells(cellId, boardWidth));
+        adjacentFields.addAll(addTopandBottomCells(cellId, boardWidth));
+        return adjacentFields.stream().filter(i -> i > 0 && i < boardWidth*boardWidth).collect(Collectors.toList());
+    }
+
+    private List<Integer> addLeftCells(int cellId, int boardWidth) {
+        if(cellId % boardWidth == 1) return Collections.emptyList();
+        return List.of(cellId + boardWidth - 1, cellId - 1, cellId - boardWidth - 1);
+    }
+
+    private List<Integer> addRightCells(int cellId, int boardWidth) {
+        if(cellId % boardWidth == 0) return Collections.emptyList();
+        return List.of(cellId - boardWidth + 1, cellId + 1, cellId + boardWidth + 1);
+    }
+
+    private List<Integer> addTopandBottomCells(int cellId, int boardWidth) {
+        return List.of(cellId - boardWidth, cellId + boardWidth);
+    }
 }

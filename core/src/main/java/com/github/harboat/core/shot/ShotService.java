@@ -3,6 +3,7 @@ package com.github.harboat.core.shot;
 import com.github.harboat.clients.exceptions.BadRequest;
 import com.github.harboat.clients.exceptions.ResourceNotFound;
 import com.github.harboat.clients.game.Cell;
+import com.github.harboat.clients.game.NukeShotRequest;
 import com.github.harboat.clients.game.ShotRequest;
 import com.github.harboat.clients.game.ShotResponse;
 import com.github.harboat.clients.notification.EventType;
@@ -30,6 +31,16 @@ public class ShotService {
         if (!game.getPlayerTurn().equals(playerId)) throw new BadRequest("It is not your turn!");
         producer.sendRequest(
                 new ShotRequest(gameId, playerId, cellId)
+        );
+    }
+
+    public void takeANukeShoot(String gameId, String playerId, Integer cellId) {
+        var game = gameUtility.findByGameId(gameId)
+                .orElseThrow(() -> new ResourceNotFound("Game not found!"));
+        if (!game.getPlayers().contains(playerId)) throw new BadRequest("Player is not in the game!");
+        if (!game.getPlayerTurn().equals(playerId)) throw new BadRequest("It is not your turn!");
+        producer.sendRequest(
+                new NukeShotRequest(gameId, playerId, cellId)
         );
     }
 

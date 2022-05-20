@@ -3,6 +3,7 @@ package com.github.harboat.battleships;
 import com.github.harboat.battleships.game.GameService;
 import com.github.harboat.battleships.shot.ShotService;
 import com.github.harboat.clients.game.GameCreate;
+import com.github.harboat.clients.game.NukeShotRequest;
 import com.github.harboat.clients.game.ShotRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -28,4 +29,10 @@ public class GameQueueConsumer {
     public void consumer(ShotRequest shotRequest) {
         shotService.takeAShoot(shotRequest);
     }
+
+    @RabbitHandler
+    public void consumer(NukeShotRequest nukeShotRequest) {
+        shotService.takeAShoot(nukeShotRequest);
+    }
+
 }

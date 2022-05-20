@@ -8,7 +8,7 @@ menuMusic.play()
 
 const body = document.getElementsByTagName("body")[0]
 
-const ip = 'http://localhost'
+const ip = 'http://207.154.222.51'
 const port = '8080'
 const apiVersion = 'v1'
 

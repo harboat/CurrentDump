@@ -8,7 +8,7 @@ menuMusic.play()
 
 const body = document.getElementsByTagName("body")[0]
 
-const ip = 'http://localhost'
+const ip = 'http://207.154.222.51'
 const port = '8080'
 const apiVersion = 'v1'
 
@@ -50,7 +50,6 @@ function connect() {
     const socket = new SockJS('/websocket')
     let stompClient = Stomp.over(socket)
     stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame)
         stompClient.subscribe('/user/queue/notification', async function (message) {
             let event = JSON.parse(message.body)
             let eventType = event['eventType']
@@ -97,7 +96,6 @@ function connect() {
                         body.removeChild(document.getElementById('enemy'))
                     }
                     ships = object
-                    console.log(ships);
                     document.getElementById('fleetGenButton').innerText = 'Reroll fleet'
                     await initializeBoard('player', ships)
                     let playerBoard = document.getElementById('player')
@@ -496,7 +494,6 @@ async function createGame() {
         mode: 'cors',
     })
     const response = fetch(request)
-    console.log(response);
 }
 
 async function joinGame(gameId) {
@@ -507,7 +504,6 @@ async function joinGame(gameId) {
         mode: 'cors',
     })
     const response = fetch(request)
-    console.log(response);
 }
 
 async function resetBoardContainer() {

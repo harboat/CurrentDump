@@ -94,9 +94,7 @@ public class FleetService {
 
         repository.save(currentFleet);
         coreQueueProducer.sendResponse(
-                new
-
-                        ShotResponse(gameId, playerId, cells)
+                new ShotResponse(gameId, playerId, cells)
         );
     }
 

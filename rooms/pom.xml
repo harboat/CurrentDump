@@ -100,11 +100,6 @@
             <version>${clients.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.harboat</groupId>
-            <artifactId>logger</artifactId>
-            <version>${logger.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${version.dependency.testng}</version>

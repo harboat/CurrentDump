@@ -4,8 +4,8 @@ import com.github.harboat.battleships.CoreQueueProducer;
 import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.board.BoardService;
 import com.github.harboat.battleships.game.GameUtility;
-import com.github.harboat.clients.game.*;
 import com.github.harboat.clients.game.ShipDto;
+import com.github.harboat.clients.game.*;
 import com.github.harboat.clients.notification.NotificationRequest;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -17,9 +17,10 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.BDDMockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 @Listeners({MockitoTestNGListener.class})
 public class FleetServiceTest {

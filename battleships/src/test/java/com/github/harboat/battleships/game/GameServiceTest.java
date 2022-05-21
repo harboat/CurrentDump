@@ -5,7 +5,6 @@ import com.github.harboat.battleships.board.BoardService;
 import com.github.harboat.battleships.fleet.FleetService;
 import com.github.harboat.clients.game.*;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
 import org.testng.annotations.BeforeMethod;
@@ -17,7 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.mockito.BDDMockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 @Listeners({MockitoTestNGListener.class})
 public class GameServiceTest {

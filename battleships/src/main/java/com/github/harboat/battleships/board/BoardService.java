@@ -30,7 +30,6 @@ public class BoardService {
                 .collect(Collectors.toMap((i) -> i, (i) -> Cell.WATER));
     }
 
-    // TODO: Error handling
     public void markOccupied(String gameId, String playerId, Collection<Integer> cells) {
         Board board = repository.findByGameIdAndPlayerId(gameId, playerId).orElseThrow();
         Map<Integer, Cell> currentState = board.getCells();
@@ -38,7 +37,6 @@ public class BoardService {
         repository.save(board);
     }
 
-    // TODO: Error handling
     public void markHit(String gameId, String playerId, Integer cellId) {
         var board = repository.findByGameIdAndPlayerId(gameId, playerId).orElseThrow();
         var currentState = board.getCells();

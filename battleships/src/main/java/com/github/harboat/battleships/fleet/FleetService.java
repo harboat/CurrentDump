@@ -1,7 +1,6 @@
 package com.github.harboat.battleships.fleet;
 
 import com.github.harboat.battleships.CoreQueueProducer;
-import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.board.BoardService;
 import com.github.harboat.battleships.game.GameUtility;
 import com.github.harboat.clients.game.ShipDto;
@@ -19,7 +18,6 @@ public class FleetService {
 
     private FleetRepository repository;
     private GameUtility gameUtility;
-    private NotificationProducer producer;
     private CoreQueueProducer coreQueueProducer;
     private BoardService boardService;
 

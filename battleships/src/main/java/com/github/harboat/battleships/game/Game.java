@@ -15,11 +15,5 @@ public class Game {
 
     private Collection<String> playerIds;
 
-//    @DocumentReference(lookup = "{'gameId':?#{#self._id} }")
-//    private Collection<Board> boards;
-//
-//    @DocumentReference(lookup = "{'gameId':?#{#self._id} }")
-//    private Collection<Fleet> fleets;
-
     private String turnOfPlayer;
 }

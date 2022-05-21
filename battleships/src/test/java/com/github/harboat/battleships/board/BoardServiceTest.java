@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.mockito.BDDMockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 @Listeners({MockitoTestNGListener.class})
 public class BoardServiceTest {

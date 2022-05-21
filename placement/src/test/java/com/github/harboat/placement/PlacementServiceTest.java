@@ -4,15 +4,15 @@ import com.github.harboat.clients.configuration.SetShipsPosition;
 import com.github.harboat.clients.game.Size;
 import com.github.harboat.clients.placement.GeneratePlacement;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
 import static org.mockito.BDDMockito.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 @Listeners({MockitoTestNGListener.class})
 public class PlacementServiceTest {

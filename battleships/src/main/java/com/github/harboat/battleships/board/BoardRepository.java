@@ -6,5 +6,4 @@ import java.util.Optional;
 
 public interface BoardRepository extends MongoRepository<Board, String> {
     Optional<Board> findByGameIdAndPlayerId(String gameId, String playerId);
-    Optional<Board> findByGameId(String gameId);
 }

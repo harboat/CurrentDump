@@ -1,11 +1,10 @@
 package com.github.harboat.battleships.fleet;
 
 import com.github.harboat.battleships.CoreQueueProducer;
-import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.board.BoardService;
 import com.github.harboat.battleships.game.GameUtility;
-import com.github.harboat.clients.game.*;
 import com.github.harboat.clients.game.ShipDto;
+import com.github.harboat.clients.game.*;
 import com.github.harboat.clients.notification.NotificationRequest;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -17,9 +16,10 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.BDDMockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 @Listeners({MockitoTestNGListener.class})
 public class FleetServiceTest {
@@ -28,8 +28,6 @@ public class FleetServiceTest {
     private FleetRepository repository;
     @Mock
     private GameUtility gameUtility;
-    @Mock
-    private NotificationProducer producer;
     @Mock
     private CoreQueueProducer coreQueueProducer;
     @Mock
@@ -45,7 +43,7 @@ public class FleetServiceTest {
 
     @BeforeMethod
     public void setUp() {
-        service = new FleetService(repository, gameUtility, producer, coreQueueProducer, boardService);
+        service = new FleetService(repository, gameUtility, coreQueueProducer, boardService);
         ship1 = new com.github.harboat.clients.game.ShipDto(ShipType.DESTROYER,
                 new Masts(List.of(1)),
                 new OccupiedCells(List.of(2, 11, 12)));
@@ -128,9 +126,6 @@ public class FleetServiceTest {
         //when
         service.shoot(shotRequest);
         verify(coreQueueProducer, times(2)).sendResponse(any());
-//        var actual = playerWonCaptor.getValue();
-//        //then
-//        assertEquals(actual.playerId(), "testPlayer");
     }
 
     @Test

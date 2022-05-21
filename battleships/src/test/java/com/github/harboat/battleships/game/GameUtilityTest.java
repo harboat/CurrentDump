@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.testng.Assert.*;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.testng.Assert.assertEquals;
 
 @Listeners({MockitoTestNGListener.class})
 public class GameUtilityTest {

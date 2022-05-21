@@ -1,8 +1,3 @@
-//TODO: REFACTOR
-//TODO: GAME END, EXCEPTION, SERVER ERROR
-//TODO: ERROR HANDLING
-//TODO: AUDIO
-
 const menuMusic = new Audio('../assets/audio/menuambience.mp3')
 const gameMusic = new Audio('../assets/audio/gameambience.mp3')
 const shotMast = new Audio('../assets/audio/shot_mast.mp3')
@@ -55,7 +50,6 @@ function connect() {
     const socket = new SockJS('/websocket')
     let stompClient = Stomp.over(socket)
     stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame)
         stompClient.subscribe('/user/queue/notification', async function (message) {
             let event = JSON.parse(message.body)
             let eventType = event['eventType']
@@ -102,7 +96,6 @@ function connect() {
                         body.removeChild(document.getElementById('enemy'))
                     }
                     ships = object
-                    console.log(ships);
                     document.getElementById('fleetGenButton').innerText = 'Reroll fleet'
                     await initializeBoard('player', ships)
                     let playerBoard = document.getElementById('player')
@@ -127,7 +120,11 @@ function connect() {
                     break
                 }
                 case "GAME_END": {
-                    alert(object['winningPlayer'])
+                    let message = "YOU LOST"
+                    if (object['winningPlayer'] === playerId) {
+                        message = "YOU WIN!"
+                    }
+                    alert(message)
                     window.location.reload()
                     break
                 }
@@ -326,13 +323,23 @@ async function markCellsHelper(cells, type) {
         const playerCell = document.getElementById(cellId.toString() + ":" + type)
         if (wasShip) {
             playerCell.classList.add('shipHit')
-            shotWater.load()
-            shotMast.load()
+            try {
+                shotWater.load()
+                shotMast.load()
+            } catch (exception_let) {
+                shotMast.play()
+                activateCells()
+            }
             shotMast.play()
             activateCells()
         } else {
-            shotMast.load()
-            shotWater.load()
+            try {
+                shotMast.load()
+                shotWater.load()
+            } catch (exception_var) {
+                shotWater.play()
+                playerCell.classList.add('cellHit')
+            }
             shotWater.play()
             playerCell.classList.add('cellHit')
         }
@@ -382,7 +389,6 @@ function setUpBoardsBasedOnPlayerTurn() {
     document.getElementById('player').classList.add(playerAnimation)
 }
 
-//TODO: ERROR HANDLING
 function requestPlacement() {
     const requestURL = requestURLBase + "rooms/" + roomId + "/placements"
     const request = new Request(requestURL, {
@@ -402,7 +408,6 @@ function startGameButton() {
     body.appendChild(button)
 }
 
-//TODO: ERROR HANDLING | USER CAN SET BOARD SIZE
 function requestBoard() {
     let width = document.getElementById('boardWidth')
     let widthValue = width.options[width.selectedIndex].value
@@ -481,8 +486,6 @@ async function createShips(fleet, type) {
     }
 }
 
-//TODO: ERROR HANDLING
-
 async function createGame() {
     await resetBoardContainer()
     const requestURL = requestURLBase + "rooms"
@@ -491,7 +494,6 @@ async function createGame() {
         mode: 'cors',
     })
     const response = fetch(request)
-    console.log(response);
 }
 
 async function joinGame(gameId) {
@@ -502,7 +504,6 @@ async function joinGame(gameId) {
         mode: 'cors',
     })
     const response = fetch(request)
-    console.log(response);
 }
 
 async function resetBoardContainer() {

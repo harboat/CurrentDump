@@ -45,4 +45,10 @@ public class BoardService {
         currentState.put(cellId, Cell.HIT);
         repository.save(board);
     }
+
+    public Size getBoardSize(String gameId, String playerId) {
+        var board = repository.findByGameIdAndPlayerId(gameId, playerId).orElseThrow();
+        return board.getSize();
+    }
+
 }

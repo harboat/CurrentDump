@@ -1,5 +1,6 @@
 package com.github.harboat.battleships.fleet;
 
+import com.github.harboat.clients.game.ShipType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -49,5 +50,16 @@ public class Fleet {
                 .playerId(playerId)
                 .ships(ships.stream().map(Ship::toDto).toList())
                 .build();
+    }
+
+    boolean hasFourMastShipWithThreeMastsAlive() {
+        return ships.stream()
+                .filter(s -> s.getShipType().equals(ShipType.BATTLESHIP))
+                .anyMatch(s ->
+                        s.getMasts().getMasts().values()
+                                .stream()
+                                .filter(m -> m.equals(MastState.ALIVE))
+                                .toList().size() >= 3
+                );
     }
 }

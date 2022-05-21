@@ -145,6 +145,7 @@ public class FleetServiceTest {
         given(repository.save(any())).willReturn(null);
         given(gameUtility.getEnemyId("test", "testPlayer")).willReturn("testEnemy");
         Fleet fleet = new Fleet("testFleet", "test","testPlayer", List.of(ship));
+        given(repository.findByGameIdAndPlayerId("test", "testPlayer")).willReturn(Optional.of(fleet));
         given(repository.findByGameIdAndPlayerId("test", "testEnemy")).willReturn(Optional.of(fleet));
         ArgumentCaptor<ShotResponse> captor = ArgumentCaptor.forClass(ShotResponse.class);
         //when
@@ -167,6 +168,7 @@ public class FleetServiceTest {
         given(repository.save(any())).willReturn(null);
         given(gameUtility.getEnemyId("test", "testPlayer")).willReturn("testEnemy");
         Fleet fleet = new Fleet("testFleet", "test","testPlayer", List.of(ship));
+        given(repository.findByGameIdAndPlayerId("test", "testPlayer")).willReturn(Optional.of(fleet));
         given(repository.findByGameIdAndPlayerId("test", "testEnemy")).willReturn(Optional.of(fleet));
         ArgumentCaptor<ShotResponse> captor = ArgumentCaptor.forClass(ShotResponse.class);
         //when

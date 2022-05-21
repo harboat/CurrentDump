@@ -1,7 +1,6 @@
 package com.github.harboat.battleships.fleet;
 
 import com.github.harboat.battleships.CoreQueueProducer;
-import com.github.harboat.battleships.NotificationProducer;
 import com.github.harboat.battleships.board.BoardService;
 import com.github.harboat.battleships.game.GameUtility;
 import com.github.harboat.clients.game.ShipDto;
@@ -30,8 +29,6 @@ public class FleetServiceTest {
     @Mock
     private GameUtility gameUtility;
     @Mock
-    private NotificationProducer producer;
-    @Mock
     private CoreQueueProducer coreQueueProducer;
     @Mock
     private BoardService boardService;
@@ -46,7 +43,7 @@ public class FleetServiceTest {
 
     @BeforeMethod
     public void setUp() {
-        service = new FleetService(repository, gameUtility, producer, coreQueueProducer, boardService);
+        service = new FleetService(repository, gameUtility, coreQueueProducer, boardService);
         ship1 = new com.github.harboat.clients.game.ShipDto(ShipType.DESTROYER,
                 new Masts(List.of(1)),
                 new OccupiedCells(List.of(2, 11, 12)));
@@ -129,9 +126,6 @@ public class FleetServiceTest {
         //when
         service.shoot(shotRequest);
         verify(coreQueueProducer, times(2)).sendResponse(any());
-//        var actual = playerWonCaptor.getValue();
-//        //then
-//        assertEquals(actual.playerId(), "testPlayer");
     }
 
     @Test

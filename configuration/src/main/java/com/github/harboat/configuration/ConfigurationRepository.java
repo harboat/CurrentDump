@@ -9,7 +9,5 @@ import java.util.Optional;
 public interface ConfigurationRepository extends MongoRepository<Configuration, String> {
     Optional<Configuration> findByRoomIdAndOwnerId(String roomId, String ownerId);
 
-    Optional<Configuration> findByRoomIdAndPlayersConfigurationContaining(String roomId, String playerId);
-
     Optional<Configuration> findByRoomId(String roomId);
 }

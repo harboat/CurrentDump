@@ -3,6 +3,7 @@ package com.github.harboat.battleships.fleet;
 import com.github.harboat.clients.game.OccupiedCells;
 import com.github.harboat.clients.game.ShipType;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -98,23 +99,42 @@ public class FleetTest {
         assertFalse(actual);
     }
 
-    @Test
-    public void shouldTakeAShotAndMiss() {
+    @Test(dataProvider = "cellIdsForMissShots")
+    public void shouldTakeAShotAndMiss(int cellId) {
         //given
         //when
-        var actual = fleet.takeAShot(100);
+        var actual = fleet.takeAShot(cellId);
         //then
         assertFalse(actual.isPresent());
     }
 
-    @Test
-    public void shouldTakeAShotAndHit() {
+    @DataProvider(name = "cellIdsForMissShots")
+    public Object[][] cellIdsForMissShots() {
+        return new Object[][] {
+                {5},
+                {6},
+                {11},
+                {14},
+                {16}
+        };
+    }
+
+    @Test(dataProvider = "cellsIdForHitShots")
+    public void shouldTakeAShotAndHit(int cellId) {
         //given
         //when
-        var actual = fleet.takeAShot(3);
+        var actual = fleet.takeAShot(cellId);
         //then
         assertTrue(actual.isPresent());
     }
 
+    @DataProvider(name = "cellsIdForHitShots")
+    public Object[][] cellsIdForHitShots() {
+        return new Object[][] {
+                {1},
+                {3},
+                {4}
+        };
+    }
 
 }
